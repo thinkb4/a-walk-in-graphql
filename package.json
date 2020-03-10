@@ -1,0 +1,30 @@
+{
+  "name": "a-walk-in-graphql",
+  "version": "1.0.0",
+  "description": "A progressive learning path to grok GraphQL from 0 to X as a generic concept with the assistance of different language specific examples.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jaxolotl/a-walk-in-graphql.git"
+  },
+  "keywords": [
+    "javascript",
+    "JS",
+    "ES6",
+    "ECMAScript",
+    "graphql",
+    "python",
+    "apollo"
+  ],
+  "contributors": [
+    "Javier Valderrama <jaxolotl@gmail.com>",
+    "Ezequiel Alvarez",
+    "Ezequiel Tejerina",
+    "Franco Gribaudo"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jaxolotl/a-walk-in-graphql/issues"
+  },
+  "homepage": "https://github.com/Jaxolotl/a-walk-in-graphql#readme",
+  "private": true
+}
