@@ -1,0 +1,19 @@
+{
+  "name": "A Walk in GraphQL",
+  "projects": {
+    "lesson_01_JS": {
+      "includes": ["lessons/day_01/javascript/src/schema/**"]
+    }
+  },
+  "extensions": {
+    "endpoints": {
+      "Default GraphQL Endpoint": {
+        "url": "http://localhost:4000/graphql",
+        "headers": {
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": false
+      }
+    }
+  }
+}
