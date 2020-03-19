@@ -52,7 +52,7 @@ Hopefully your walk will be much easier than ours!
     - Description
     - Learning resources
     - Exercise
-- Day 4
+- Day 3
   - Input Type
     - Description
     - Learning resources
@@ -61,22 +61,22 @@ Hopefully your walk will be much easier than ours!
     - Description
     - Learning resources
     - Exercise
-- Day 5
+- Day 4
   - Mutation
     - Description
     - Learning resources
     - Exercise
-- Day 6
+- Day 5
   - Interfaces
     - Description
     - Learning resources
     - Exercise
-- Day 7
+- Day 6
   - Unions
     - Description
     - Learning resources
     - Exercise
-- Day 8
+- Day 7
   - Errors
     - Description
     - Learning resources
