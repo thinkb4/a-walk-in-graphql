@@ -4,13 +4,14 @@
 
 - What's a graph?
 - What's GraphQL and what's the `graph` part all about
-- GraphQL vs RESTfull
-- Schema basics (Server side)
+- GraphQL vs RESTful
+- Schema Basics
   - SDL
   - Type Definitions
-  - Resolvers
   - Query definitions
   - Mutation definitions
+  - Subscription definitions
+  - Resolvers
 - Client Side
   - Queries
   - Mutations
@@ -52,7 +53,7 @@ Without going in details with things like partial matches, etc., the above state
 - From the **client side** you'll know **upfront** the **shapes** you can **request** and **retrieve**.
 - From the **server side** you'll know **upfront** the **shapes** you will be **requested** and have to **deliver**.
 
-### The relationships
+### The relationships (`graph`)
 
 Here it comes the `graph` thing.
 
@@ -72,9 +73,11 @@ type Person {
 
 ```
 
-`Person` is clearly a `vertex`or `node`, which has many properties related to it, hence we can describe the properties as `nodes` and the relationships as `edges`!!! All the way down! until no edges ar found and all the data structure is returned.  
+`Person` is clearly a `vertex` or `node`, which has many properties related to it, hence we can describe the properties as `nodes` and the relationships as `edges`!!! All the way down! until no edges are found and all the data structure is returned.  
 
-Also did you noticed that `friend` property ( only one possible friend? that's cruel ) can hold a `Person`? That means that:
+Also did you noticed that `friend` property ( only one possible friend? that's cruel ) can hold a `Person`?  
+
+That means:
 
 ```txt
 + A [friend of]-> B [friend of]-> C +
@@ -82,7 +85,8 @@ Also did you noticed that `friend` property ( only one possible friend? that's c
 + <----------[friend of]------------+
 ```
 
-Got the point? We could query the server:
+Got the point?  
+We could perform the following query:
 
 ```graphql
 me {
@@ -129,3 +133,134 @@ and obtain
 All the way down until the max depth defined on the server is reached (that'd be the only limitation)
 
 Let's take a look at the best explanation about this topic we've found:  [GraphQL Concepts Visualized](https://blog.apollographql.com/the-concepts-of-graphql-bc68bd819be3)  by [Dhaivat Pandya](https://blog.apollographql.com/@dpandya)
+
+## GraphQL vs RESTful
+
+There are a [lot of documents on the web](https://www.google.com/search?q=restful+vs+graphql) describing the "differences" between them, some are very precise, detailed and descriptive, but a lot are misleading or inaccurate (that's why the quotes). It's extremely important, before moving forward, to make some of those statements clear.
+
+It:
+
+- WON'T lower down you're database load, it doesn't care how/where you persist your data
+- WON'T lower down the network traffic between your graphQL server and your persistence infrastructure per-se, that's business logic and not graphql ... but
+- WILL tend to lower down the network traffic between the clients and the graphQL server
+- WON'T solve your messy/inconsistent data structure or your legacy mixed persistance infrastructure ... but
+- WILL help you provide a consistent, unified and scalable data structure from graphql to the clients.
+
+That said, we'd like to share with you some enlightening insights from a Facebook Engineering platform's post, see an extract below.
+
+> We evaluated our options for delivering News Feed data to our mobile apps, including RESTful server resources and FQL tables (Facebook’s SQL-like API). **We were frustrated with the differences between the data we wanted to use in our apps and the server queries they required**. We don’t think of data in terms of resource URLs, secondary keys, or join tables; we think about it in terms of a graph of objects and the models we ultimately use in our apps like NSObjects or JSON.
+>
+> There was also a considerable amount of code to write on both the server to prepare the data and on the client to parse it. This frustration inspired a few of us to start the project that ultimately became GraphQL. GraphQL was our opportunity to rethink mobile app data-fetching from the perspective of product designers and developers. It moved the focus of development to the client apps, where designers and developers spend their time and attention.
+>
+> Source: [GraphQL: A data query language](https://engineering.fb.com/core-data/graphql-a-data-query-language/)
+
+It's clear that the perspective shift from the persistance to the consumption point of view is at the GraphQL DNA, and that's VERY CLEAR in the spec!
+
+> **GraphQL has a number of design principles:**
+>
+> **Hierarchical:** Most product development today involves the creation and manipulation of view hierarchies. To achieve congruence with the structure of these applications, a GraphQL query itself is structured hierarchically. The query is shaped just like the data it returns. It is a natural way for clients to describe data requirements.
+>
+> **Product‐centric:** GraphQL is unapologetically driven by the requirements of views and the front‐end engineers that write them. GraphQL starts with their way of thinking and requirements and builds the language and runtime necessary to enable that.
+>
+> **Strong‐typing:** Every GraphQL server defines an application‐specific type system. Queries are executed within the context of that type system. Given a query, tools can ensure that the query is both syntactically correct and valid within the GraphQL type system before execution, i.e. at development time, and the server can make certain guarantees about the shape and nature of the response.
+>
+> **Client‐specified queries:** Through its type system, a GraphQL server publishes the capabilities that its clients are allowed to consume. It is the client that is responsible for specifying exactly how it will consume those published capabilities. These queries are specified at field‐level granularity. In the majority of client‐server applications written without GraphQL, the server determines the data returned in its various scripted endpoints. A GraphQL query, on the other hand, returns exactly what a client asks for and no more.
+>
+> **Introspective:** GraphQL is introspective. A GraphQL server’s type system must be queryable by the GraphQL language itself, as will be described in this specification. GraphQL introspection serves as a powerful platform for building common tools and client software libraries.
+>
+> Source: [GraphQL spec (June 2018 Edition)](http://spec.graphql.org/June2018/#sec-Overview)
+
+And even tough it tends to be agnostic/silent regarding many aspects it's still strongly opinionated regarding best practices as you can see here:
+
+- [Serving over HTTP](https://graphql.org/learn/serving-over-http/)
+- [Response data type](https://graphql.org/learn/best-practices/#json-with-gzip)
+- [API versioning](https://graphql.org/learn/best-practices/#versioning)
+- [Nullability](https://graphql.org/learn/best-practices/#nullability)
+- [Pagination](https://graphql.org/learn/best-practices/#pagination)
+
+## Schema Basics
+
+Even though GraphQL was **internally used since 2012** and **publickly released in 2015** we had to wait until [2018](https://github.com/graphql/graphql-spec/pull/90#event-1465541388) for the **Schema Definition Language** (SDL) to became part of the specification. ( Source: [Wikipedia GraphQL](https://en.wikipedia.org/wiki/GraphQL))
+
+The Schema is a text document that follows the SDL syntax defined on the GraphQL specification, essentially a contract that **declares**, in the form of **Types**, the **shape of your data graph** and the **operations** you can perform with it.
+
+For the time being (March, 2020) type definitions belong to one of the following categories.
+
+### Named Type
+
+- [Scalar Type](http://spec.graphql.org/June2018/#sec-Scalars)
+Scalar types represent primitive leaf values in a GraphQL type system. GraphQL responses take the form of a hierarchical tree; the leaves on these trees are GraphQL scalars.
+  - [Int](http://spec.graphql.org/June2018/#sec-Int)
+  Signed 32‐bit integer
+  - [Float](http://spec.graphql.org/June2018/#sec-Float)
+  Signed double-precision floating-point value
+  - [String](http://spec.graphql.org/June2018/#sec-String)
+  UTF‐8 character sequence
+  - [Boolean](http://spec.graphql.org/June2018/#sec-Boolean)
+  true or false
+  - [ID](http://spec.graphql.org/June2018/#sec-ID)
+  Serialized in the same way as a String; however, it is not intended to be human‐readable.
+- [Enum Type](http://spec.graphql.org/June2018/#EnumTypeDefinition)
+GraphQL Enum types, like scalar types, also represent leaf values in a GraphQL type system. However Enum types describe the set of possible values.
+- [Object Type](http://spec.graphql.org/June2018/#sec-Objects)
+While Scalar types describe the leaf values of these hierarchical queries, Objects describe the intermediate levels.
+- [Input Object Type](http://spec.graphql.org/June2018/#InputObjectTypeDefinition)
+A GraphQL Input Object defines a set of input fields; the input fields are either scalars, enums, or other input objects. This allows arguments to accept arbitrarily complex structs.
+- [Interface Type](http://spec.graphql.org/June2018/#InterfaceTypeDefinition) *(abstract type)*
+GraphQL interfaces represent a list of named fields and their arguments. GraphQL objects can then implement these interfaces which requires that the object type will define all fields defined by those interfaces.
+- [Union Type](http://spec.graphql.org/June2018/#UnionTypeDefinition) *(abstract type)*
+GraphQL Unions represent an object that could be one of a list of GraphQL Object types, but provides for no guaranteed fields between those types. They also differ from interfaces in that Object types declare what interfaces they implement, but are not aware of what unions contain them.
+
+### Input and Output Types
+
+Types are used throughout GraphQL to describe both the values accepted as input to arguments and variables as well as the values output by fields. These two uses categorize types as input types and output types. Some kinds of types, like Scalar and Enum types, can be used as both input types and output types; other kinds types can only be used in one or the other. Input Object types can only be used as input types. Object, Interface, and Union types can only be used as output types. [Lists](http://spec.graphql.org/June2018/#sec-Type-System.List) and [Non‐Null](http://spec.graphql.org/June2018/#sec-Type-System.Non-Null) types may be used as input types or output types depending on how the wrapped type may be used.
+
+### Root Operation Types
+
+>A schema defines the initial root operation type for each kind of operation it supports: **query**, **mutation**, and **subscription**; this determines the place in the type system where those operations begin.
+>
+>The `query` root operation type must be provided and must be an Object type.
+>
+>The `mutation` root operation type is optional; if it is not provided, the service does not support mutations. If it is provided, it must be an Object type.
+>
+>Similarly, the subscription root operation type is also optional; if it is not provided, the service does not support subscriptions. If it is provided, it must be an Object type.
+>
+> [Source: GraphQL Spec (June 2018 )](http://spec.graphql.org/June2018/#sec-Root-Operation-Types)
+
+Despite the fact that they act as the entry points into the schema, they are just another Object Type, meaning their fields work the same way.
+
+#### [Query](http://spec.graphql.org/June2018/#sec-Query)
+
+The contract that defines how you can ask for the data and how it'll be returned. (a read‐only fetch)
+
+```graphql
+type Query {
+  me: Person!
+}
+```
+
+#### [Mutation](http://spec.graphql.org/June2018/#sec-Mutation)
+
+The contract that defines how you can change the data and how it'll be returned. (a write followed by a fetch)
+
+```graphql
+type Mutation {
+  newPerson(
+    name: String!,
+    surname: String!,
+    email: String!
+  ): Person!
+}
+```
+
+#### [Subscription](http://spec.graphql.org/June2018/#sec-Subscription)
+
+If the operation is a subscription, the result is an event stream called the “Response Stream” where each event in the event stream is the result of executing the operation for each new event on an underlying “Source Stream”.
+
+```graphql
+type Subscription {
+  personAdded: Person
+}
+```
+
+
