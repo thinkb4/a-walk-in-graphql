@@ -13,18 +13,17 @@ Hopefully your walk will be much easier than ours!
 
 - [Intro](introduction/introduction.md)
   - What's a graph?
-  - What's GraphQL
-  - GraphQL vs RESTfull
-  - Schema (Server side)
-    - SDL
-    - Type Definitions
-    - Resolvers
-    - Query definitions
-    - Mutation definitions
-  - Client Side
-    - Queries
-    - Mutations
-    - Fragments
+  - What's GraphQL and what's the `graph` part all about
+  - GraphQL vs RESTful
+  - Schema Basics
+    - SDL - Schema Definition Language
+    - Named Types
+    - Input and Output Types
+    - Root operation Types
+      - Query
+      - Mutation
+      - Subscription
+  - Resolvers
   - Learning resources
 - [Setup](setup/setup.md)
   - JS ecosystem
@@ -43,17 +42,21 @@ Hopefully your walk will be much easier than ours!
       - JavaScript
       - Python
       - Java
-- Day 2
   - Resolvers
     - Description
     - Learning resources
     - Exercise
+- Day 2
   - Arguments
     - Description
     - Learning resources
     - Exercise
-- Day 3
   - Input Type
+    - Description
+    - Learning resources
+    - Exercise
+- Day 3
+  - Lists
     - Description
     - Learning resources
     - Exercise

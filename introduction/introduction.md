@@ -6,16 +6,14 @@
 - What's GraphQL and what's the `graph` part all about
 - GraphQL vs RESTful
 - Schema Basics
-  - SDL
-  - Type Definitions
-  - Query definitions
-  - Mutation definitions
-  - Subscription definitions
-  - Resolvers
-- Client Side
-  - Queries
-  - Mutations
-  - Fragments
+  - SDL - Schema Definition Language
+  - Named Types
+  - Input and Output Types
+  - Root operation Types
+    - Query
+    - Mutation
+    - Subscription
+- Resolvers
 - Learning resources
 
 ## What's a graph?
@@ -180,13 +178,15 @@ And even tough it tends to be agnostic/silent regarding many aspects it's still 
 
 ## Schema Basics
 
+### SDL - Schema Definition Language
+
 Even though GraphQL was **internally used since 2012** and **publickly released in 2015** we had to wait until [2018](https://github.com/graphql/graphql-spec/pull/90#event-1465541388) for the **Schema Definition Language** (SDL) to became part of the specification. ( Source: [Wikipedia GraphQL](https://en.wikipedia.org/wiki/GraphQL))
 
 The Schema is a text document that follows the SDL syntax defined on the GraphQL specification, essentially a contract that **declares**, in the form of **Types**, the **shape of your data graph** and the **operations** you can perform with it.
 
 For the time being (March, 2020) type definitions belong to one of the following categories.
 
-### Named Type
+### Named Types
 
 - [Scalar Type](http://spec.graphql.org/June2018/#sec-Scalars)
 Scalar types represent primitive leaf values in a GraphQL type system. GraphQL responses take the form of a hierarchical tree; the leaves on these trees are GraphQL scalars.
@@ -263,4 +263,80 @@ type Subscription {
 }
 ```
 
+## Resolvers
 
+So far we've seen the **"what"** (type declarations on SDL form) but nothing about the **"how"**.
+
+GraphQL doesn't know **how to turn an operation** (query, mutation, subscription) **into data** unless you define those instructions by providing a set of functions or **"resolver map"** matching the same shape of the data specified in your schema. This functions cannot be included on the schema, they have to be added separately and it will depend on your server application, the language you'll use to define them, but they all MUST follow the same structure.
+
+The simplest version of a set of resolvers for the previous examples might look like this (in javascript):
+
+```javascript
+
+const resolvers = {
+  Query: {
+    // should return a Person Type shape as defined on the schema
+    me() {
+      return {
+        id: 'HERE_THE_ID',
+        name: 'A',
+        surname: 'Person',
+        email: 'a.person@domain.tld',
+        friend: null // make it simple for now, no friends
+      }
+    }
+  },
+  Mutation: {
+    // should return a Person Type shape as defined on the schema
+    newPerson(root, {name, surname, email}, context, info){
+      return {
+        id: 'HERE_THE_ID',
+        name,
+        surname,
+        email,
+        friend: null
+      }
+    }
+  }
+}
+
+```
+
+We'll get into details on the next chapter, but for now it's important to know that once you define your *top-level* resolvers (they have only the Root Operation above on the hierarchy), GraphQL will fall back to the default resolver and ultimately fail if the operation cannot be completed ... and yes, resolvers can be asynchronous.
+
+## Learning Resources
+
+- Wikipedia
+  - [GraphQL](https://en.wikipedia.org/wiki/GraphQL)
+  - [Graph theory](https://en.wikipedia.org/wiki/Graph_theory)
+  - [Vertex](https://en.wikipedia.org/wiki/Vertex_(graph_theory))
+  - [Edge](https://en.wikipedia.org/wiki/Edge_(graph_theory))
+  - [Graph (discrete mathematics)](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics))
+  - ["Turtles all the way down"](https://en.wikipedia.org/wiki/Turtles_all_the_way_down)
+- [GraphQL Concepts Visualized](https://blog.apollographql.com/the-concepts-of-graphql-bc68bd819be3)
+- [GraphQL: A data query language](https://engineering.fb.com/core-data/graphql-a-data-query-language/)
+- [graphql.org](https://graphql.org/)
+  - [Thinking in Graphs](https://graphql.org/learn/thinking-in-graphs/)
+  - [Serving over HTTP](https://graphql.org/learn/serving-over-http/)
+  - [Response data type](https://graphql.org/learn/best-practices/#json-with-gzip)
+  - [API versioning](https://graphql.org/learn/best-practices/#versioning)
+  - [Nullability](https://graphql.org/learn/best-practices/#nullability)
+  - [Pagination](https://graphql.org/learn/best-practices/#pagination)
+- [GraphQL spec (June 2018 Edition)](http://spec.graphql.org/June2018/#sec-Overview)
+  - [Scalar Type](http://spec.graphql.org/June2018/#sec-Scalars)
+  - [Int](http://spec.graphql.org/June2018/#sec-Int)
+  - [Float](http://spec.graphql.org/June2018/#sec-Float)
+  - [String](http://spec.graphql.org/June2018/#sec-String)
+  - [Boolean](http://spec.graphql.org/June2018/#sec-Boolean)
+  - [ID](http://spec.graphql.org/June2018/#sec-ID)
+  - [Enum Type](http://spec.graphql.org/June2018/#EnumTypeDefinition)
+  - [Object Type](http://spec.graphql.org/June2018/#sec-Objects)
+  - [Input Object Type](http://spec.graphql.org/June2018/#InputObjectTypeDefinition)
+  - [Interface Type](http://spec.graphql.org/June2018/#InterfaceTypeDefinition)
+  - [Union Type](http://spec.graphql.org/June2018/#UnionTypeDefinition)
+  - [Lists](http://spec.graphql.org/June2018/#sec-Type-System.List)
+  - [Non‐Null](http://spec.graphql.org/June2018/#sec-Type-System.Non-Null)
+  - [Source: GraphQL Spec (June 2018 )](http://spec.graphql.org/June2018/#sec-Root-Operation-Types)
+  - [Query](http://spec.graphql.org/June2018/#sec-Query)
+  - [Mutation](http://spec.graphql.org/June2018/#sec-Mutation)
+  - [Subscription](http://spec.graphql.org/June2018/#sec-Subscription)
