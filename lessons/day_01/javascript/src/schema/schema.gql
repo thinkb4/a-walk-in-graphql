@@ -1,0 +1,9 @@
+
+
+type Skill {
+  id: ID
+  name: String!
+}
+type Query {
+  randomSkill: Skill!
+}
