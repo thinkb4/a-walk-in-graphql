@@ -28,8 +28,5 @@
     "graphql-tag": "~2.10.3",
     "lowdb": "~1.0.0",
     "nanoid": "~2.1.11"
-  },
-  "devDependencies": {
-    "eslint-plugin-graphql": "~3.1.1"
   }
 }

@@ -1,13 +1,20 @@
+
+/**
+ * Setup LowDB
+ * @see https://openbase.io/js/lowdb
+ */
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 
-const adapter = new FileSync('./src/db/data.json');
+// using common data source for all examples
+const cwd = process.cwd();
+const adapter = new FileSync(`${cwd}/../datasource/data.json`);
 const db = low(adapter);
 
-const skillModel = require('./skill');
+const Skill = require('./skill')(db);
 
 module.exports = {
   models: {
-    Skill: skillModel(db),
+    Skill
   }
 }

@@ -1,9 +1,18 @@
 
-
+"""
+This is a  description
+"""
 type Skill {
+  # This is as comment
   id: ID
   name: String!
+  """
+  This field has a @deprecated directive
+  @see [Using schema directives](https://www.apollographql.com/docs/apollo-server/schema/directives/)
+  """
+  now: String! @deprecated(reason: "This is the reason.")
 }
+
 type Query {
   randomSkill: Skill!
 }
