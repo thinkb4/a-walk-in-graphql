@@ -18,7 +18,7 @@
 
 ## What's a graph?
 
-Without being to strict or too loose, we can say a **graph** is an **abstract model** to describe at least a **pair of objects and their relationship**.
+Without being too strict or too loose, we can say a **graph** is an **abstract model** to describe at least a **pair of objects and their relationship**.
 
 > In mathematics, and more specifically in [graph theory](https://en.wikipedia.org/wiki/Graph_theory), a **graph** is a structure amounting to a set of objects in which some pairs of the objects are in some sense "related". The objects correspond to mathematical abstractions called [vertices](https://en.wikipedia.org/wiki/Vertex_(graph_theory)) (also called nodes or points) and each of the related pairs of vertices is called an [edge](https://en.wikipedia.org/wiki/Edge_(graph_theory)) (also called link or line). Typically, a graph is depicted in diagrammatic form as a set of dots or circles for the vertices, joined by lines or curves for the edges. Graphs are one of the objects of study in discrete mathematics.
 >
@@ -138,11 +138,11 @@ There are a [lot of documents on the web](https://www.google.com/search?q=restfu
 
 It:
 
-- WON'T lower down you're database load, it doesn't care how/where you persist your data
+- WON'T lower down your database load, it doesn't care how/where you persist your data
 - WON'T lower down the network traffic between your graphQL server and your persistence infrastructure per-se, that's business logic and not graphql ... but
 - WILL tend to lower down the network traffic between the clients and the graphQL server
-- WON'T solve your messy/inconsistent data structure or your legacy mixed persistance infrastructure ... but
-- WILL help you provide a consistent, unified and scalable data structure from graphql to the clients.
+- WON'T solve your messy/inconsistent data structure or your legacy mixed persistence infrastructure ... but
+- WILL help you provide a consistent, unified and scalable contract for  your data structure from graphql to the clients.
 
 That said, we'd like to share with you some enlightening insights from a Facebook Engineering platform's post, see an extract below.
 
@@ -152,7 +152,7 @@ That said, we'd like to share with you some enlightening insights from a Faceboo
 >
 > Source: [GraphQL: A data query language](https://engineering.fb.com/core-data/graphql-a-data-query-language/)
 
-It's clear that the perspective shift from the persistance to the consumption point of view is at the GraphQL DNA, and that's VERY CLEAR in the spec!
+It's clear that the perspective shift from the persistence to the consumption point of view is at the GraphQL DNA, and that's VERY CLEAR in the spec!
 
 > **GraphQL has a number of design principles:**
 >
@@ -180,7 +180,7 @@ And even tough it tends to be agnostic/silent regarding many aspects it's still 
 
 ### SDL - Schema Definition Language
 
-Even though GraphQL was **internally used since 2012** and **publickly released in 2015** we had to wait until [2018](https://github.com/graphql/graphql-spec/pull/90#event-1465541388) for the **Schema Definition Language** (SDL) to became part of the specification. ( Source: [Wikipedia GraphQL](https://en.wikipedia.org/wiki/GraphQL))
+Even though GraphQL was **internally used since 2012** and **publicly released in 2015** we had to wait until [2018](https://github.com/graphql/graphql-spec/pull/90#event-1465541388) for the **Schema Definition Language** (SDL) to became part of the specification. ( Source: [Wikipedia GraphQL](https://en.wikipedia.org/wiki/GraphQL))
 
 The Schema is a text document that follows the SDL syntax defined on the GraphQL specification, essentially a contract that **declares**, in the form of **Types**, the **shape of your data graph** and the **operations** you can perform with it.
 
@@ -199,17 +199,128 @@ Scalar types represent primitive leaf values in a GraphQL type system. GraphQL r
   - [Boolean](http://spec.graphql.org/June2018/#sec-Boolean)
   true or false
   - [ID](http://spec.graphql.org/June2018/#sec-ID)
-  Serialized in the same way as a String; however, it is not intended to be human‐readable.
+  (serialized as a String): A unique identifier that's often used to refetch an object or as the key for a cache. Although it's serialized as a String, an ID is not intended to be human‐readable.
 - [Enum Type](http://spec.graphql.org/June2018/#EnumTypeDefinition)
-GraphQL Enum types, like scalar types, also represent leaf values in a GraphQL type system. However Enum types describe the set of possible values.
+GraphQL Enum types, like scalar types, also represent leaf values in a GraphQL type system. However, Enum types describe the set of possible values.
+
+```graphql
+enum AllowedName {
+  A
+  B
+  C
+}
+
+type Person {
+  id: ID!
+  name: AllowedName! # Yes, a person's name can be only A or B or C
+}
+```
+
 - [Object Type](http://spec.graphql.org/June2018/#sec-Objects)
 While Scalar types describe the leaf values of these hierarchical queries, Objects describe the intermediate levels.
+
+```graphql
+type Person {
+  id: ID!
+  name: String!
+  surname: String!
+}
+```
+
 - [Input Object Type](http://spec.graphql.org/June2018/#InputObjectTypeDefinition)
 A GraphQL Input Object defines a set of input fields; the input fields are either scalars, enums, or other input objects. This allows arguments to accept arbitrarily complex structs.
+
+```graphql
+
+input PersonInput {
+  name: AllowedName!
+  email: String
+}
+
+
+type Mutation {
+  ## Ordered inputs
+  updatePerson(name: String, email: String): Person!
+  ## Single input entry for all fields
+  updatePerson1(input: PersonInput): Person!
+}
+
+```
+
+
 - [Interface Type](http://spec.graphql.org/June2018/#InterfaceTypeDefinition) *(abstract type)*
 GraphQL interfaces represent a list of named fields and their arguments. GraphQL objects can then implement these interfaces which requires that the object type will define all fields defined by those interfaces.
+
+```graphql
+interface PersonResponse {
+  status: String
+  success: Boolean!
+  person: Person
+}
+
+type UpdatePersonResponse implements PersonResponse {
+  code: String!
+  success: Boolean!
+  person: Person
+}
+
+## a response would look like
+
+{
+  "data": {
+    "updatePerson": {
+      "code": "200",
+      "success": true,
+      "user": {
+        "id": "1",
+        "name": "A",
+      }
+    }
+  }
+}
+```
+
 - [Union Type](http://spec.graphql.org/June2018/#UnionTypeDefinition) *(abstract type)*
 GraphQL Unions represent an object that could be one of a list of GraphQL Object types, but provides for no guaranteed fields between those types. They also differ from interfaces in that Object types declare what interfaces they implement, but are not aware of what unions contain them.
+
+```graphql
+union Result = Person | Skill
+
+type Skill {
+  title: String
+  description: String
+}
+
+type Person {
+  name: String
+}
+
+type Query {
+  search: [Result]
+}
+
+## You'll have to handle the ambiguity on your resolver
+const resolvers = {
+  Result: {
+    __resolveType(obj, context, info){
+      if(obj.description){
+        return 'Skill';
+      }
+
+      if(obj.name){
+        return 'Person';
+      }
+
+      return null;
+    },
+  },
+  Query: {
+    search: () => { ... }
+  },
+};
+```
+
+
 
 ### Input and Output Types
 
@@ -267,7 +378,7 @@ type Subscription {
 
 So far we've seen the **"what"** (type declarations on SDL form) but nothing about the **"how"**.
 
-GraphQL doesn't know **how to turn an operation** (query, mutation, subscription) **into data** unless you define those instructions by providing a set of functions or **"resolver map"** matching the same shape of the data specified in your schema. This functions cannot be included on the schema, they have to be added separately and it will depend on your server application, the language you'll use to define them, but they all MUST follow the same structure.
+GraphQL doesn't know **how to turn an operation** (query, mutation, subscription) **into data** unless you define those instructions by providing a set of functions or **"resolver map"** matching the same shape of the data specified in your schema. Those functions cannot be included on the schema, they have to be added separately and it will depend on your server application, the language you'll use to define them, but they all MUST follow the same structure.
 
 The simplest version of a set of resolvers for the previous examples might look like this (in javascript):
 
