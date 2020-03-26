@@ -451,3 +451,6 @@ We'll get into details on the next chapter, but for now it's important to know t
     - [Query](http://spec.graphql.org/June2018/#sec-Query)
     - [Mutation](http://spec.graphql.org/June2018/#sec-Mutation)
     - [Subscription](http://spec.graphql.org/June2018/#sec-Subscription)
+- [How to GraphQL](https://www.howtographql.com)
+- [Explore GraphQL](https://www.graphql.com)
+- [GraphQL Radio](https://www.graphqlradio.com)
