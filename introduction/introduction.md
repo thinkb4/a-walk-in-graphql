@@ -413,7 +413,7 @@ const resolvers = {
 
 ```
 
-We'll get into details on the next chapter, but for now it's important to know that once you define your *top-level* resolvers (they have only the Root Operation above on the hierarchy), GraphQL will fall back to the default resolver and ultimately fail if the operation cannot be completed ... and yes, resolvers can be asynchronous.
+We'll get into details on the next chapter, but for now it's important to know that once you define your *top-level* resolvers (they have only the Root Operation above on the hierarchy), GraphQL will fall back to the default resolver (whenever no field-level resolver is defined ) and ultimately fail if the operation cannot be completed ... and yes, resolvers can be asynchronous.
 
 ## Learning Resources
 

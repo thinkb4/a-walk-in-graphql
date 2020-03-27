@@ -35,26 +35,18 @@ Hopefully your walk will be much easier than ours!
   - Java
     - ...
 - [Day 1](lessons/day_01/day_01.md)
-  - Query Type
-    - Description
+  - Queries and Resolvers
+    - Query
+    - Resolver
+    - Exercises
     - Learning resources
-    - Exercise
-      - JavaScript
-      - Python
-      - Java
-  - Resolvers
-    - Description
-    - Learning resources
-    - Exercise
 - Day 2
-  - Arguments
-    - Description
+  - Arguments, Variables and Input Types
+    - Argument
+    - Variable
+    - Input Type
+    - Exercises
     - Learning resources
-    - Exercise
-  - Input Type
-    - Description
-    - Learning resources
-    - Exercise
 - Day 3
   - Lists
     - Description
