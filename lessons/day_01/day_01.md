@@ -147,7 +147,128 @@ Here's a list of things on the DO-NOT-EVER-EVER-BY-ANY-MEANS-DO list:
 
 We talked briefly about resolvers on our [Introduction](../../introduction/introduction.md#Resolvers) chapter, so let start breaking it down.
 
-..... WIP
+We said *"resolvers are **functions** containing arbitrary body code responsible for **returning** the related **Value** for a given **Field** in the **Executable Definition** of the **Schema**"* .... really (ಠ_ಠ)? Thanks for nothing (◔_◔).
+
+Ok, that was kinda hermetic. Let's break it down starting with our **Type Definition** in our representative definition:
+
+```graphql
+## an Object Type definition
+type Person {
+  id: ID
+  name: String!
+  surname: String!
+  fullName: String!
+  age: Int
+  friend: Person
+}
+```
+
+Now we need our "entry point", the **Root Operation definition** with a field describing our API also in our representative definition:
+
+```graphql
+## A Root Operation definition
+type Query {
+  ## a Field describing a valid operation
+  getPerson: Person!
+}
+```
+
+And now, on the executable definition we make a request
+
+```graphql
+query { ## OperationType
+  getPerson { ## parent SelectionSet Field
+    name ## child SelectionSet Field
+    age ## child SelectionSet Field, sibling to name
+  }
+}
+```
+
+We won't go again through the "execution phase" we already saw on the Query section. Instead we'll go deeper on the "how" it's executed.
+
+**Let's make a stop on the "function containing arbitrary body code" thing.**  
+Why not just "containing arbitrary code"?
+What's that "body" word telling us?
+
+Depending on the language it might be explicit, or implicit, but **every resolver function in GraphQL will accept 4 positional arguments** (that's not on the body and it's not arbitrary)
+
+```javascript
+
+/**
+ * JavaScript example
+ *
+ * @param {Object} parent The result returned by the parent field resolver (also found as root, obj, ...)
+ * @param {Object} args The object containing the arguments passed into the field in the query.
+ * @param {Object} context An arbitrary object shared across the resolver chain in a particular query.
+ * @param {Object} info An object containing the execution state of the query. The generated AST!
+ *
+ * @returns {Null|Undefined|Array|Promise|Object|Scalar}
+ */
+function myResolver (obj, args, context, info){
+  // here your arbitrary code
+}
+
+```
+
+In case you didn't specify a resolver for a type, GraphQL will fallback to a **Default Resolver** which will:
+
+1. Returns a property from `parent` with the same field name, or
+2. Calls a function on `parent` with the same field name and passes the query arguments along to that function.
+
+For more detailed descriptions:
+
+- [Resolver function signature](https://www.apollographql.com/docs/graphql-tools/resolvers/#resolver-function-signature)
+- [Resolver result format](https://www.apollographql.com/docs/graphql-tools/resolvers/#resolver-result-format)
+
+Now another concept arises: **Resolver Chain**. To understand that let's go back to the **"It's Graphs All the Way Down"** and traverse our executable definition invoking resolvers (it's an intentional shallow example, for a deeply nested one take a loo [here](https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains))
+
+The hierarchical structure of the query will be replicated and the sibling resolvers will be invoked in parallel.
+
+```graph
+Query.getPerson()+---> Person.name()
+                  \
+                   +-> Person.age()
+```
+
+Here's how our code might look like:
+
+```javascript
+const resolverMap = {
+  Query: {
+    getPerson(parent, args, context, info) {
+      return {
+        id: '1',
+        name: 'Darth',
+        surname: 'Vader'
+      };
+    },
+  }
+};
+```
+
+Output:
+
+```json
+{
+  "data": {
+    "getPerson": {
+      "name": "Darth",
+      "age": null
+    }
+  }
+}
+```
+
+At this point you might have noticed some weir things.
+
+1. `getPerson` is returning a partial shape, meaning some information is missing
+2. Some information (`age`) I asked for is not present on the output
+3. All above happened without errors
+
+
+
+------------
+
 
 **IMPORTANT NOTE:**
 

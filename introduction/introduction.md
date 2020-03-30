@@ -247,7 +247,6 @@ type Mutation {
 
 ```
 
-
 - [Interface Type](http://spec.graphql.org/June2018/#InterfaceTypeDefinition) *(abstract type)*
 GraphQL interfaces represent a list of named fields and their arguments. GraphQL objects can then implement these interfaces which requires that the object type will define all fields defined by those interfaces.
 
@@ -320,8 +319,6 @@ const resolvers = {
 };
 ```
 
-
-
 ### Input and Output Types
 
 Types are used throughout GraphQL to describe both the values accepted as input to arguments and variables as well as the values output by fields. These two uses categorize types as input types and output types. Some kinds of types, like Scalar and Enum types, can be used as both input types and output types; other kinds types can only be used in one or the other. Input Object types can only be used as input types. Object, Interface, and Union types can only be used as output types. [Lists](http://spec.graphql.org/June2018/#sec-Type-System.List) and [Non‐Null](http://spec.graphql.org/June2018/#sec-Type-System.Non-Null) types may be used as input types or output types depending on how the wrapped type may be used.
@@ -371,6 +368,33 @@ If the operation is a subscription, the result is an event stream called the “
 ```graphql
 type Subscription {
   personAdded: Person
+}
+```
+
+### Extending Types
+
+At a certain point you might want to modularize your schema, and start separating the type definitions on a single document or dividing it into multiple documents.
+Since Type definitions are unique you have to extend them or use the schema compositions tools available on your runtime.
+
+```graphql
+## Person related definitions
+type Person {
+  name: String
+}
+
+type Query {
+  me: Person!
+}
+
+## Skills related definitions
+
+type Skill {
+  title: String
+  description: String
+}
+
+extend type Query {
+  skills: [Skill]!
 }
 ```
 
