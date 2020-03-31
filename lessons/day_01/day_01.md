@@ -117,6 +117,29 @@ Let's see how that might look like:
 - Once `getPerson`  is resolved it's the time to get 1 level down again, `name`and `id` cannot be executed until `getPerson`is done.
 - Once all leaf-nodes resolve to a Scalar Type (or null), the execution is completed and the output is generated.
 
+### A Query-driven schema approach
+
+Of course you can design your schema mirroring your data storage structure, nothing stops you from doing that ... but ... what's the advantage on that?
+
+The real power of your schema design relies on abstraction! You can create your Object Types based on the operations you need to execute, AND you can populate those object from any number of sources! You may have one field coming from a specific table of a MySQL database and another field coming from MongoDB and another coming from an XML-RPC or a third-party API!
+
+Since the query hierarchical structure is self-descriptive:
+
+1. Think about which data you're gonna need and which the relationships should look like.
+2. Write a query
+3. Define your Type system
+4. Define your resolvers
+
+See this [Example of a query-driven schema](https://www.apollographql.com/docs/apollo-server/schema/schema/#example-of-a-query-driven-schema).
+
+That's a game changer, we now have.
+
+1. An agnostic data storage layer that doesn't need to know or consider the client needs
+2. An abstraction layer able to easily define a data shape contract independently from how and where the data is stored, and adaptable to the client's needs
+3. A declarative client layer able to lead the way the data and operation's shapes should look like
+
+Note the scale now is tilted to the client's need and not the other way around.
+
 ### The client's BIG BENEFITS
 
 - **Self documented API:**
@@ -132,7 +155,8 @@ Your **schema** acts as an explicit contract which **determines**
 
 ### Breaking Changes
 
-The schema **"contract"** is one of the most important, correction, we'd dare to say **IS THE MOST IMPORTANT** part of your GraphQL API, and keeping it consistent over time is critical. 
+The schema **"contract"** is one of the most important, correction, we'd dare to say **IS THE MOST IMPORTANT** part of your GraphQL API, and keeping it consistent over time is critical.
+
 > You can change the way you solve a problem, or break down a solution into many pieces, or optimize things, granted you won't introduce a breaking change on your schema.
 
 If you do so, you're gonna be in big trouble (people's gonna hurt you) since everyone is expecting additive changes without mayor versioning changes of the API and ideally an ad-vitam backwards compatible API.
@@ -149,7 +173,7 @@ We talked briefly about resolvers on our [Introduction](../../introduction/intro
 
 We said *"resolvers are **functions** containing arbitrary body code responsible for **returning** the related **Value** for a given **Field** in the **Executable Definition** of the **Schema**"* .... really (ಠ_ಠ)? Thanks for nothing (◔_◔).
 
-Ok, that was kinda hermetic. Let's break it down starting with our **Type Definition** in our representative definition:
+Ok, that was kinda hermetic. Let's break it down starting with our **Type Definition** in our **representative definition**:
 
 ```graphql
 ## an Object Type definition
@@ -163,7 +187,7 @@ type Person {
 }
 ```
 
-Now we need our "entry point", the **Root Operation definition** with a field describing our API also in our representative definition:
+Now we need our "entry point", the **Root Operation definition** with a field describing our API also in our **representative definition**:
 
 ```graphql
 ## A Root Operation definition
@@ -173,7 +197,7 @@ type Query {
 }
 ```
 
-And now, on the executable definition we make a request
+And now, on the **executable definition** we make a request by sending a **GraphQL query operation**.
 
 ```graphql
 query { ## OperationType
@@ -185,6 +209,8 @@ query { ## OperationType
 ```
 
 We won't go again through the "execution phase" we already saw on the Query section. Instead we'll go deeper on the "how" it's executed.
+
+### Resolver function signature
 
 **Let's make a stop on the "function containing arbitrary body code" thing.**  
 Why not just "containing arbitrary code"?
@@ -220,6 +246,8 @@ For more detailed descriptions:
 - [Resolver function signature](https://www.apollographql.com/docs/graphql-tools/resolvers/#resolver-function-signature)
 - [Resolver result format](https://www.apollographql.com/docs/graphql-tools/resolvers/#resolver-result-format)
 
+### Resolver Chain
+
 Now another concept arises: **Resolver Chain**. To understand that let's go back to the **"It's Graphs All the Way Down"** and traverse our executable definition invoking resolvers (it's an intentional shallow example, for a deeply nested one take a loo [here](https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains))
 
 The hierarchical structure of the query will be replicated and the sibling resolvers will be invoked in parallel.
@@ -239,7 +267,7 @@ const resolverMap = {
       return {
         id: '1',
         name: 'Darth',
-        surname: 'Vader'
+        surname: 'Vader',
       };
     },
   }
@@ -259,16 +287,163 @@ Output:
 }
 ```
 
-At this point you might have noticed some weir things.
+At this point you might have noticed some weird things.
 
-1. `getPerson` is returning a partial shape, meaning some information is missing
-2. Some information (`age`) I asked for is not present on the output
-3. All above happened without errors
+1. `getPerson` is returning a partial shape
+2. There's no resolver for `Person` or for its fields.
+3. Some information (`age`) I asked for is not present on the resolver's returned data, but is present on the output
+4. All above just happened without errors
 
+What happened here?
 
+### Default Resolver
+
+Most of GraphQl server implementations will provide a **Default Resolver** to fallback whenever an explicit resolver hasn't been provided.
+
+Here's a sample code from [graphql-js](https://github.com/graphql/graphql-js/blob/master/src/execution/execute.js#L1181-L1199) repository
+
+```javascript
+/**
+ * If a resolve function is not given, then a default resolve behavior is used
+ * which takes the property of the source object of the same name as the field
+ * and returns it as the result, or if it's a function, returns the result
+ * of calling that function while passing along args and context value.
+ */
+export const defaultFieldResolver: GraphQLFieldResolver<
+  mixed,
+  mixed,
+> = function(source: any, args, contextValue, info) {
+  // ensure source is a value for which property access is acceptable.
+  if (isObjectLike(source) || typeof source === 'function') {
+    const property = source[info.fieldName];
+    if (typeof property === 'function') {
+      return source[info.fieldName](args, contextValue, info);
+    }
+    return property;
+  }
+};
+```
+
+and here a human readable explanation from [Apollo team's Default resolvers documentation](https://www.apollographql.com/docs/apollo-server/data/resolvers/#default-resolvers)
+
+If you were really attentive there's another interesting thing happening there:
+
+`age` is defined as a `nullable` property in our schema, so defaulting to `null` when the property is missing makes total sense, on the other hand, `fullName` is defined as `non-nullable`! why it didn't throw an error?
+
+Because a resolver will ONLY be invoked when the information is required for the output, since it's not directly or indirectly (relationship) involved on the requested query, it won't be executed, therefore it won't fail.
+
+Let's make it fail!
+
+Query
+
+```graphql
+query {
+  getPerson {
+    fullName
+    age
+  }
+}
+```
+
+Response
+
+```json
+{
+  "errors": [
+    {
+      "message": "Cannot return null for non-nullable field Person.fullName.",
+      "locations": [
+        {
+          "line": /* the line number */,
+          "column": /*the column number */
+        }
+      ],
+      "path": [
+        "getPerson",
+        "fullName"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+        "exception": {
+          "stacktrace": [/* bunch of staff here */]
+        }
+      }
+    }
+  ],
+  "data": null
+}
+```
+
+💥 BOOM! How can we solve that?
+
+### Field-level resolver
+
+We saw what a **top-level resolver** is, now let's add a **field-level resolver** to our resolver map.
+
+```javascript
+const resolverMap = {
+    Query: {
+      getPerson(parent, args, context, info) {
+        return {
+          id: '1',
+          name: 'Darth',
+          surname: 'Vader',
+        };
+      },
+    },
+    Person: {
+      fullName(parent, args, context, info) {
+        return `${parent.name} ${parent.surname}`;
+      }
+    }
+  };
+```
+
+```json
+{
+  "data": {
+    "getPerson": {
+      "fullName": "Darth Vader",
+      "age": null
+    }
+  }
+}
+```
+
+WOW! The top-level resolver `getPerson` passed along the `Person` object containing `name` and `surname` properties down to the next chain link and therefore is available on the first argument of the `fullName` **field-resolver** which returns a scalar value; and `age` field is still falling back to the **default resolver**. ヽ( •_)ᕗ
+
+### Asynchronous resolvers
+
+In a real world application you'll deal with one or more different sources for your data which will require asynchronous actions to return the data. One of the possible values a resolver can return is a `Promise`.
+
+Here a trivial example in JavaScript
+
+```javascript
+const resolverMap = {
+    Query: {
+      getPerson(parent, args, context, info) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve({
+              id: '1',
+              name: 'Darth',
+              surname: 'Vader',
+            });
+          }, 5000)
+        });
+      },
+    },
+    Person: {
+      fullName(parent, args, context, info) {
+        return `${parent.name} ${parent.surname}`;
+      }
+    }
+  };
+```
+
+The top-level resolver will return a `Promise`, after 5 seconds it'll resolve to the `Person` value as the first argument for the `fullName` field-level to be executed.
 
 ------------
-
 
 **IMPORTANT NOTE:**
 
@@ -277,4 +452,4 @@ The execution flow is [non-deterministic](https://en.wikipedia.org/wiki/Nondeter
 - Even though **BFS** is a well known algorithm, the **execution order** for each sibling node is **NOT GUARANTEED**, it' will depend on the runtime implementation.
 - Since resolvers can be asynchronous, the **resolution order** for each sibling node or an entire branch is **NOT GUARANTEED**
 
-So, **defining** your **resolvers** as **atomic** and **pure functions** is critical. 
+So, **defining** your **resolvers** as **atomic** and **pure functions** is critical. Meaning **DON'T mutate the context object** on your resolvers, ever, or you'll get badly hurt rather sooner than later.
