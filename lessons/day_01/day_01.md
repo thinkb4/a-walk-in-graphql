@@ -443,6 +443,98 @@ const resolverMap = {
 
 The top-level resolver will return a `Promise`, after 5 seconds it'll resolve to the `Person` value as the first argument for the `fullName` field-level to be executed.
 
+### Multiple Queries
+
+Let's put it this way: Is just like the **"Fight Club"** rules
+
+1. What's the first rule of GraphQL? **"It's Graphs All the Way Down"**
+2. What's the second rule of GraphQL? **"It's Graphs All the Way Down"**
+
+Imagine the following query
+
+```graphql
+query {
+  getPerson {
+    name
+    age
+  }
+  persons {
+    surname
+  }
+}
+```
+
+If we already said **all siblings are executed in parallel** like `name` and `age` of `getPerson`, what does it make the graph relationship different from `getPerson` and `persons` of `query`?
+
+Nothing.
+
+### Nested queries and the `n + 1` problem
+
+We won't dive deep into this topic but it is worthwhile to mention. Let's put all together here
+
+Schema
+
+```graphql
+type Person {
+  id: ID
+  name: String!
+  surname: String!
+  fullName: String!
+  age: Int
+  friends: [Person]!
+}
+
+type Query {
+  persons: [Person]!
+}
+```
+
+Query
+
+```graphql
+query {
+  persons {
+    name
+    friends {
+      name
+    }
+  }
+}
+```
+
+If we have Person `A`, `B`, `C`, `D` and all persons (but `A`) are friends of `A` we'll have the following response:
+
+```json
+{
+  "data": {
+    "persons": [
+      {
+        "name": "A",
+        "friends": []
+      },
+      {
+        "name": "B",
+        "friends": [{"name": "A"}]
+      },
+      {
+        "name": "C",
+        "friends": [{"name": "A"}]
+      },
+      {
+        "name": "D",
+        "friends": [{"name": "A"}]
+      }
+    ]
+  }
+}
+```
+
+I means that we didn't over fetch data from the client to GraphQL server, but we did from GraphQL to the persistence system because we had to ask for the `A` Person's data 4 times!! (`n` rountrips for the friends + `1` for the `A` Person)
+
+This problem is usually tackled with **batched requests** or **caching** and even though there's nothing out of the box that automatically do that for you there's no need to re-invent the wheel, there are several options already available for you to include in your application, you might do it client-side, server-side, in-memory, HTTP caching and it'll depend on the tools available for your architecture.
+
+See the [Learning Resources](#learning-resources) for more info
+
 ------------
 
 **IMPORTANT NOTE:**
@@ -453,3 +545,40 @@ The execution flow is [non-deterministic](https://en.wikipedia.org/wiki/Nondeter
 - Since resolvers can be asynchronous, the **resolution order** for each sibling node or an entire branch is **NOT GUARANTEED**
 
 So, **defining** your **resolvers** as **atomic** and **pure functions** is critical. Meaning **DON'T mutate the context object** on your resolvers, ever, or you'll get badly hurt rather sooner than later.
+
+## Exercises
+
+...
+
+## Learning Resources
+
+- GraphQL spec (June 2018 Edition)
+  - [GraphQL Documents](http://spec.graphql.org/June2018/#sec-Language.Document)
+  - [Root Operation definition](http://spec.graphql.org/June2018/#sec-Root-Operation-Types)
+  - [Scalar Types](http://spec.graphql.org/June2018/#sec-Scalars)
+  - [Object Type](http://spec.graphql.org/June2018/#sec-Objects)
+  - [Operation Definition](http://spec.graphql.org/June2018/#sec-Language.Operations)
+  - [SelectionSet](http://spec.graphql.org/June2018/#sec-Selection-Sets)
+  - [Fields](http://spec.graphql.org/June2018/#sec-Language.Fields)
+  - [Execution](http://spec.graphql.org/June2018/#sec-Execution)
+  - [Validation](http://spec.graphql.org/June2018/#sec-Validation)
+  - [CollectFields()](http://spec.graphql.org/June2018/#sec-Field-Collection)
+- Apollo GraphQL
+  - [The Anatomy of a GraphQL Query](https://blog.apollographql.com/the-anatomy-of-a-graphql-query-6dffa9e9e747)
+  - [GraphQL & Caching: The Elephant in the Room](https://blog.apollographql.com/graphql-caching-the-elephant-in-the-room-11a3df0c23ad)
+  - [Example of a query-driven schema](https://www.apollographql.com/docs/apollo-server/schema/schema/#example-of-a-query-driven-schema)
+  - [Resolver function signature](https://www.apollographql.com/docs/graphql-tools/resolvers/#resolver-function-signature)
+  - [Resolver result format](https://www.apollographql.com/docs/graphql-tools/resolvers/#resolver-result-format)
+  - [Resolver Chain](https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains)
+  - [Apollo team's Default resolvers documentation](https://www.apollographql.com/docs/apollo-server/data/resolvers/#default-resolvers)
+- Wikipedia
+  - [BFS (Breadth-first search)](https://en.wikipedia.org/wiki/Breadth-first_search)
+  - [DFS (Depth‐First‐Search)](https://en.wikipedia.org/wiki/Depth-first_search)
+  - [Non-deterministic Algorithm](https://en.wikipedia.org/wiki/Nondeterministic_algorithm)
+- [graphql-js](https://github.com/graphql/graphql-js/blob/master/src/execution/execute.js#L1181-L1199)
+- [Understanding the GraphQL AST](https://medium.com/@adamhannigan81/understanding-the-graphql-ast-f7f7b8e62aa4)
+- [AST Explorer](https://astexplorer.net/#/gist/bc30ff1ae53ac33743c9a2786624719c/e6b95369aed2f6d0c083cbfe66dab08bfca3b035)
+- [Catching](https://graphql.org/learn/caching/)
+- [DataLoader](https://github.com/graphql/dataloader)
+- [Apollo-Boost](https://www.npmjs.com/package/apollo-boost)
+- [Caching With GraphQL: What Are The Best Options?](https://blog.usejournal.com/caching-with-graphql-what-are-the-best-options-e161b0f20e59)
