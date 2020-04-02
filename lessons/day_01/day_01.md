@@ -5,10 +5,10 @@
 - Queries and Resolvers
   - Query
   - Resolver
-  - Exercises
+  - Exercise
     - JavaScript
-    - Python
     - Java
+    - Python
   - Learning resources
 
 ## Query
@@ -546,9 +546,59 @@ The execution flow is [non-deterministic](https://en.wikipedia.org/wiki/Nondeter
 
 So, **defining** your **resolvers** as **atomic** and **pure functions** is critical. Meaning **DON'T mutate the context object** on your resolvers, ever, or you'll get badly hurt rather sooner than later.
 
-## Exercises
+## Exercise
 
-...
+For a given datasource ([abstracted as json here](datasource/data.json)) containing `n` rows of `skills` and `n` rows of `persons` we provided a sample implementation of a GraphQL server for each technology containing:
+
+- a server app
+- a schema
+- a resolver map
+- an entity model
+- a db abstraction
+
+The example contains the necessary code to run a simple query for a random `skill`. This code defines the necessary types, the relationships for `skills`, the available query `randomSkill`, the resolver, the `skill` entity model and the db abstraction.
+
+Given the following `query` operation
+
+```graphql
+query {
+  randomPerson {
+    id
+    age
+    eyeColor
+    fullname
+    email
+    friends {
+      name
+    }
+    skills {
+      name
+    }
+    favSkill {
+      name
+      parent {
+        name
+      }
+    }
+  }
+}
+```
+
+- add a Person object type to the schema containing:
+  - the fields types
+  - the non-null modifier when required
+  - the list modifier when required
+  - the type relationships when required
+- add a top-level query entry on the root query operation definition
+- add an entity model for the person entity
+- add the tope level resolver for the new top-level query operation
+- add a field-level resolver for a virtual field if required
+
+Select the exercise on your preferred technology:
+
+- [JavaScript](javascript/README.md)
+- [Java](java/README.md)
+- [Python](python/README.md)
 
 ## Learning Resources
 

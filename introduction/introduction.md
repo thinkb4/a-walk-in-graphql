@@ -9,6 +9,7 @@
   - SDL - Schema Definition Language
   - Named Types
   - Input and Output Types
+  - Lists and Non-nullable
   - Root operation Types
     - Query
     - Mutation
@@ -322,6 +323,71 @@ const resolvers = {
 ### Input and Output Types
 
 Types are used throughout GraphQL to describe both the values accepted as input to arguments and variables as well as the values output by fields. These two uses categorize types as input types and output types. Some kinds of types, like Scalar and Enum types, can be used as both input types and output types; other kinds types can only be used in one or the other. Input Object types can only be used as input types. Object, Interface, and Union types can only be used as output types. [Lists](http://spec.graphql.org/June2018/#sec-Type-System.List) and [Non‐Null](http://spec.graphql.org/June2018/#sec-Type-System.Non-Null) types may be used as input types or output types depending on how the wrapped type may be used.
+
+### Lists
+
+> A GraphQL **list** is a special collection type which declares the type of each item in the **List** (referred to as the item type of the list). List values are serialized as ordered lists, where each item in the list is serialized as per the item type. To denote that a field uses a List type the item type is wrapped in square brackets like this: `pets: [Pet]`.
+>
+> Source: [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Type-System.List)
+
+```graphql
+type Person {
+  id: ID
+  name: String
+  surname: String
+  friends: [Person]
+}
+```
+
+### Non-nullable
+
+> By default, all types in GraphQL are nullable; the null value is a valid response for all of the above types. To declare a type that disallows null, the GraphQL Non‐Null type can be used. This type wraps an underlying type, and this type acts identically to that wrapped type, with the exception that null is not a valid response for the wrapping type. A trailing exclamation mark is used to denote a field that uses a Non‐Null type like this: name: String!.
+>
+> Source: [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Type-System.Non-Null)
+
+```graphql
+type Person {
+  id: ID! ## non-nullable
+  name: String! ## non-nullable
+  surname: String! ## non-nullable
+  friends: [Person] ## nullable list with nullable entries
+}
+```
+
+### Combining List and Non-Null
+
+> The List and Non‐Null wrapping types can compose, representing more complex types. The rules for result coercion and input coercion of Lists and Non‐Null types apply in a recursive fashion.
+>
+> Source: [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Combining-List-and-Non-Null)
+
+Some examples here:
+
+`friends` is non-nullable but may contain no `Person` entries (empty list)
+
+```graphql
+type Person {
+  id: ID!
+  friends: [Person]! ## non-nullable list with nullable entries
+}
+```
+
+`friends` is nullable but it must contain only `Person` entries when it's not empty
+
+```graphql
+type Person {
+  id: ID!
+  friends: [Person!] ## nullable list with non-nullable entries
+}
+```
+
+`friends` is non-nullable and all entries must be  a `Person` type
+
+```graphql
+type Person {
+  id: ID!
+  friends: [Person!]! ## non-nullable list with non-nullable entries
+}
+```
 
 ### Root Operation Types
 

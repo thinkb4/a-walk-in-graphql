@@ -1,16 +1,23 @@
 
 """
-This is a  description
+This is a description notation
+@see [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Descriptions)
 """
 type Skill {
-  # This is as comment
+  # This is only a comment
   id: ID
-  name: String!
+
+  "we're not resolving the parent for now"
+  parent: Skill
+
+  "this is a field level description"
+  name: String
+
   """
   This field has a @deprecated directive
   @see [Using schema directives](https://www.apollographql.com/docs/apollo-server/schema/directives/)
   """
-  now: String! @deprecated(reason: "This is the reason.")
+  now: String! @deprecated(reason: "This is just an example of a virtual field.")
 }
 
 type Query {

@@ -12,7 +12,15 @@ const skillModel = db => {
        */
       const skills = db.get('skills').value();
 
-      return skills[Math.floor(Math.random() * skills.length)];
+      const randSkill = skills[Math.floor(Math.random() * skills.length)];
+
+      /**
+       * resolver's param is for a DAY 2 exercise
+       * let's populate the parent by hand here
+       */
+      randSkill.parent = skills.find(({id}) => id === randSkill.parent);
+
+      return randSkill;
     },
   }
 }
