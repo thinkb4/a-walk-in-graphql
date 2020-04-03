@@ -29,10 +29,23 @@ module.exports = {
      * @param {Object} context
      * @param {Object} info 
      * 
-     * @returns {Object}
+     * @returns {Number}
      */
     now (obj, args, context, info) {
       return Date.now();
-    }
+    },
+    /**
+     * Field-level resolver
+     * 
+     * @param {Object} obj 
+     * @param {Object} args 
+     * @param {Object} context
+     * @param {Object} info 
+     * 
+     * @returns {Object|Undefined}
+     */
+    parent (obj, args, context, info) {
+      return context.models.Skill.find({id: obj.parent});
+    },
   }
 }

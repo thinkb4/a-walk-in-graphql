@@ -223,7 +223,7 @@ Depending on the language it might be explicit, or implicit, but **every resolve
 /**
  * JavaScript example
  *
- * @param {Object} parent The result returned by the parent field resolver (also found as root, obj, ...)
+ * @param {Object} obj The result returned by the parent field resolver (also found as root, parent, ...)
  * @param {Object} args The object containing the arguments passed into the field in the query.
  * @param {Object} context An arbitrary object shared across the resolver chain in a particular query.
  * @param {Object} info An object containing the execution state of the query. The generated AST!
@@ -238,8 +238,8 @@ function myResolver (obj, args, context, info){
 
 In case you didn't specify a resolver for a type, GraphQL will fallback to a **Default Resolver** which will:
 
-1. Returns a property from `parent` with the same field name, or
-2. Calls a function on `parent` with the same field name and passes the query arguments along to that function.
+1. Returns a property from `obj` with the same field name, or
+2. Calls a function on `obj` with the same field name and passes the query arguments along to that function.
 
 For more detailed descriptions:
 
@@ -263,7 +263,7 @@ Here's how our code might look like:
 ```javascript
 const resolverMap = {
   Query: {
-    getPerson(parent, args, context, info) {
+    getPerson(obj, args, context, info) {
       return {
         id: '1',
         name: 'Darth',
@@ -383,7 +383,7 @@ We saw what a **top-level resolver** is, now let's add a **field-level resolver*
 ```javascript
 const resolverMap = {
     Query: {
-      getPerson(parent, args, context, info) {
+      getPerson(obj, args, context, info) {
         return {
           id: '1',
           name: 'Darth',
@@ -392,8 +392,8 @@ const resolverMap = {
       },
     },
     Person: {
-      fullName(parent, args, context, info) {
-        return `${parent.name} ${parent.surname}`;
+      fullName(obj, args, context, info) {
+        return `${obj.name} ${obj.surname}`;
       }
     }
   };
@@ -421,7 +421,7 @@ Here a trivial example in JavaScript
 ```javascript
 const resolverMap = {
     Query: {
-      getPerson(parent, args, context, info) {
+      getPerson(obj, args, context, info) {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             resolve({
@@ -434,8 +434,8 @@ const resolverMap = {
       },
     },
     Person: {
-      fullName(parent, args, context, info) {
-        return `${parent.name} ${parent.surname}`;
+      fullName(obj, args, context, info) {
+        return `${obj.name} ${obj.surname}`;
       }
     }
   };
@@ -566,7 +566,7 @@ query {
     id
     age
     eyeColor
-    fullname
+    fullName
     email
     friends {
       name
@@ -584,15 +584,15 @@ query {
 }
 ```
 
-- add a Person object type to the schema containing:
+- add a `Person` object type to the **Schema** containing:
   - the fields types
   - the non-null modifier when required
   - the list modifier when required
   - the type relationships when required
-- add a top-level query entry on the root query operation definition
-- add an entity model for the person entity
-- add the tope level resolver for the new top-level query operation
-- add a field-level resolver for a virtual field if required
+- add a top-level query entry on the **Root Query Operation** definition
+- add an entity model for the `Person` entity
+- add the **top-level** resolver for the new top-level query operation
+- add a **field-level** resolver for a virtual field if required
 
 Select the exercise on your preferred technology:
 
