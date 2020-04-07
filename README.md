@@ -19,6 +19,7 @@ Hopefully your walk will be much easier than ours!
     - SDL - Schema Definition Language
     - Named Types
     - Input and Output Types
+    - Lists and Non-nullable
     - Root operation Types
       - Query
       - Mutation
@@ -35,35 +36,23 @@ Hopefully your walk will be much easier than ours!
   - Java
     - ...
 - [Day 1](lessons/day_01/day_01.md)
-  - Query Type
-    - Description
-    - Learning resources
+  - Queries and Resolvers
+    - Query
+    - Resolver
     - Exercise
-      - JavaScript
-      - Python
-      - Java
-  - Resolvers
-    - Description
     - Learning resources
-    - Exercise
 - Day 2
-  - Arguments
-    - Description
-    - Learning resources
+  - Arguments and Variables
+    - Argument
+    - Variable
     - Exercise
-  - Input Type
-    - Description
     - Learning resources
-    - Exercise
 - Day 3
-  - Lists
-    - Description
-    - Learning resources
+  - Input Types and Enums
+    - Input Type
+    - Enum
     - Exercise
-  - Enums
-    - Description
     - Learning resources
-    - Exercise
 - Day 4
   - Mutation
     - Description
@@ -72,15 +61,15 @@ Hopefully your walk will be much easier than ours!
 - Day 5
   - Interfaces
     - Description
-    - Learning resources
     - Exercise
+    - Learning resources
 - Day 6
   - Unions
     - Description
-    - Learning resources
     - Exercise
+    - Learning resources
 - Day 7
   - Errors
     - Description
-    - Learning resources
     - Exercise
+    - Learning resources

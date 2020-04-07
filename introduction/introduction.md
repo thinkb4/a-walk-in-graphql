@@ -9,6 +9,7 @@
   - SDL - Schema Definition Language
   - Named Types
   - Input and Output Types
+  - Lists and Non-nullable
   - Root operation Types
     - Query
     - Mutation
@@ -247,7 +248,6 @@ type Mutation {
 
 ```
 
-
 - [Interface Type](http://spec.graphql.org/June2018/#InterfaceTypeDefinition) *(abstract type)*
 GraphQL interfaces represent a list of named fields and their arguments. GraphQL objects can then implement these interfaces which requires that the object type will define all fields defined by those interfaces.
 
@@ -320,11 +320,74 @@ const resolvers = {
 };
 ```
 
-
-
 ### Input and Output Types
 
 Types are used throughout GraphQL to describe both the values accepted as input to arguments and variables as well as the values output by fields. These two uses categorize types as input types and output types. Some kinds of types, like Scalar and Enum types, can be used as both input types and output types; other kinds types can only be used in one or the other. Input Object types can only be used as input types. Object, Interface, and Union types can only be used as output types. [Lists](http://spec.graphql.org/June2018/#sec-Type-System.List) and [Non‐Null](http://spec.graphql.org/June2018/#sec-Type-System.Non-Null) types may be used as input types or output types depending on how the wrapped type may be used.
+
+### Lists
+
+> A GraphQL **list** is a special collection type which declares the type of each item in the **List** (referred to as the item type of the list). List values are serialized as ordered lists, where each item in the list is serialized as per the item type. To denote that a field uses a List type the item type is wrapped in square brackets like this: `pets: [Pet]`.
+>
+> Source: [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Type-System.List)
+
+```graphql
+type Person {
+  id: ID
+  name: String
+  surname: String
+  friends: [Person]
+}
+```
+
+### Non-nullable
+
+> By default, all types in GraphQL are nullable; the null value is a valid response for all of the above types. To declare a type that disallows null, the GraphQL Non‐Null type can be used. This type wraps an underlying type, and this type acts identically to that wrapped type, with the exception that null is not a valid response for the wrapping type. A trailing exclamation mark is used to denote a field that uses a Non‐Null type like this: name: String!.
+>
+> Source: [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Type-System.Non-Null)
+
+```graphql
+type Person {
+  id: ID! ## non-nullable
+  name: String! ## non-nullable
+  surname: String! ## non-nullable
+  friends: [Person] ## nullable list with nullable entries
+}
+```
+
+### Combining List and Non-Null
+
+> The List and Non‐Null wrapping types can compose, representing more complex types. The rules for result coercion and input coercion of Lists and Non‐Null types apply in a recursive fashion.
+>
+> Source: [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Combining-List-and-Non-Null)
+
+Some examples here:
+
+`friends` is non-nullable but may contain no `Person` entries (empty list)
+
+```graphql
+type Person {
+  id: ID!
+  friends: [Person]! ## non-nullable list with nullable entries
+}
+```
+
+`friends` is nullable but it must contain only `Person` entries when it's not empty
+
+```graphql
+type Person {
+  id: ID!
+  friends: [Person!] ## nullable list with non-nullable entries
+}
+```
+
+`friends` is non-nullable and all entries must be  a `Person` type
+
+```graphql
+type Person {
+  id: ID!
+  friends: [Person!]! ## non-nullable list with non-nullable entries
+}
+```
 
 ### Root Operation Types
 
@@ -374,6 +437,33 @@ type Subscription {
 }
 ```
 
+### Extending Types
+
+At a certain point you might want to modularize your schema, and start separating the type definitions on a single document or dividing it into multiple documents.
+Since Type definitions are unique you have to extend them or use the schema compositions tools available on your runtime.
+
+```graphql
+## Person related definitions
+type Person {
+  name: String
+}
+
+type Query {
+  me: Person!
+}
+
+## Skills related definitions
+
+type Skill {
+  title: String
+  description: String
+}
+
+extend type Query {
+  skills: [Skill]!
+}
+```
+
 ## Resolvers
 
 So far we've seen the **"what"** (type declarations on SDL form) but nothing about the **"how"**.
@@ -413,7 +503,7 @@ const resolvers = {
 
 ```
 
-We'll get into details on the next chapter, but for now it's important to know that once you define your *top-level* resolvers (they have only the Root Operation above on the hierarchy), GraphQL will fall back to the default resolver and ultimately fail if the operation cannot be completed ... and yes, resolvers can be asynchronous.
+We'll get into details on the next chapter, but for now it's important to know that once you define your *top-level* resolvers (they have only the Root Operation above on the hierarchy), GraphQL will fall back to the default resolver (whenever no field-level resolver is defined ) and ultimately fail if the operation cannot be completed ... and yes, resolvers can be asynchronous.
 
 ## Learning Resources
 
@@ -451,3 +541,6 @@ We'll get into details on the next chapter, but for now it's important to know t
     - [Query](http://spec.graphql.org/June2018/#sec-Query)
     - [Mutation](http://spec.graphql.org/June2018/#sec-Mutation)
     - [Subscription](http://spec.graphql.org/June2018/#sec-Subscription)
+- [How to GraphQL](https://www.howtographql.com)
+- [Explore GraphQL](https://www.graphql.com)
+- [GraphQL Radio](https://www.graphqlradio.com)

@@ -6,6 +6,9 @@
     "type": "git",
     "url": "git+https://github.com/Jaxolotl/a-walk-in-graphql.git"
   },
+  "scripts": {
+    "server": "node src/server.js"
+  },
   "keywords": [
     "javascript",
     "JS",
@@ -19,5 +22,11 @@
     "url": "https://github.com/Jaxolotl/a-walk-in-graphql/issues"
   },
   "homepage": "https://github.com/Jaxolotl/a-walk-in-graphql#readme",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "apollo-server": "~2.11.0",
+    "graphql-tag": "~2.10.3",
+    "lowdb": "~1.0.0",
+    "nanoid": "~2.1.11"
+  }
 }
