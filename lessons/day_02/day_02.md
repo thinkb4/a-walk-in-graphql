@@ -31,7 +31,6 @@ How does GraphQL provide that functionality?
 |:-:|
 |All `Object Type`.`fields` will eventually be mapped to `resolver functions` and therefore, will accept arguments. _(including default `Root Operation` object [Query](http://spec.graphql.org/June2018/#sec-Query), [Mutation](http://spec.graphql.org/June2018/#sec-Mutation) and [Subscription](http://spec.graphql.org/June2018/#sec-Subscription) since they are [Object Types](http://spec.graphql.org/June2018/#sec-Objects) as well)_ |
 
-
 ### Simple example
 
 For the given typeDef
@@ -60,7 +59,7 @@ query {
 }
 ```
 
-BOOM! 💥 `"Unknown argument "age" on field "users" of type "Query"."` 
+BOOM! 💥 `"Unknown argument "age" on field "users" of type "Query"."`
 
 That's GraphQL saying: **You can't pass no args if you ain't got no Type Def!**
 
@@ -86,7 +85,7 @@ const resolvers = {
 
 ### Arguments, deep dive
 
-So far we saw nothing 
+So far we saw nothing
 
 SUPER POWERS ON ─=≡Σ((( つ◕ل͜◕)つ
 
@@ -102,7 +101,7 @@ Before diving deeper it'd be great to have some starting point definitions and r
 8. `arguments` can be `non-nullable` (aka required)
 9. `arguments` can have a default value
 
-#### Query nested arguments
+#### Query nested and field level arguments
 
 So far we've seen nothing worthy of the "legendary mighty awesomeness of arguments usage" award. That's about to change, like, forever.
 
@@ -124,6 +123,11 @@ In a typical REST API we would do:
 // connect all results on the client side
 
 ```
+
+And this is a silly example of querying the users endpoint with 3 different filters!!! Can you imagine a really complex relationship of data being asked to the server with multiple requests and handling those relationships on the client with a ton of garbage data and handling the business logic to orchestrate which method should be called in which order passing which params and validating all inputs?
+
+Sure, you could define an ad-hoc endpoint for that but throw scalability and maintainability overboard.
+
 In GraphQL the query would go:
 
 ```graphql
@@ -140,9 +144,142 @@ query {
 }
 ```
 
-And this is a silly example of querying the users endpoint with 3 different filters!!! Can you imagine a really complex relationship of data being asked to the server with multiple requests and handling those relationships on the client with a ton of garbage data? Sure, you could define an ad-hoc endpoint for that but throw scalability and maintainability overboard.
+Now, let's see how the Type definition might go for the previous operation.
 
-Now, let's see how the Type definition goes for the previous operation.
+```graphql
+type User {
+  name: String
+  homeland: String
+  kind: String
+  friends (kind: String): [User!]
+  progenitor (skill: String): [User!]
+  skill: String
+}
+
+type Query {
+  users (homeland: String): [User]
+}
+```
+
+and the resolvers would go:
+
+```javascript
+
+// Note:
+// Filtering functions are made up names for explanatory purpose
+
+const resolvers = {
+  Query: {
+    /**
+     * interested only on
+     *  -> homeland property of the second arg (params)
+     */
+    users(obj, { homeland }) {
+      return context.db
+        .addFilter({ homeland })
+        .fetchUsers();
+    }
+  },
+  User: {
+    /**
+     * interested only on
+     *  -> friends property of the first arg (obj)
+     * and
+     *  -> kind property of the second arg (params)
+     */
+    friends({ friends }, { kind }) {
+      return context.db
+        .addFilter({ friends })
+        .addFilter({ kind })
+        .fetchUsers();
+    },
+    /**
+     * interested only on
+     *  -> progenitor property of the first arg (obj)
+     * and
+     *  -> skill property of the second arg (params)
+     */
+    progenitor({ progenitor }, { skill }) {
+      return context.db
+        .addFilter({ progenitor })
+        .addFilter({ skill })
+        .fetchUsers();
+    }
+  }
+}
+```
+
+and the response might look like:
+
+```json
+{
+  "data": {
+    "users": [
+      {
+        "name": "Frodo",
+        "friends": [
+          {
+            "name": "Arwen",
+            "progenitor": [
+              {
+                "name": "Elrond"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Sam",
+        "friends": []
+      },
+      {
+        "name": "Peregrin",
+        "friends": []
+      },
+      {
+        "name": "Meriadoc",
+        "friends": []
+      }
+    ]
+  }
+}
+```
+
+We defined:
+
+- 3 params
+  - 1 for the top-level query
+    - `users`
+      - `(homeland: String)`
+  - 2 for the field-level queries
+    - `friends`
+      - `(kind: String)`
+    - `progenitor`
+      - `(skill: String)`
+
+and mirroring that, we defined
+
+- 3 resolvers
+  - 1 for the top-level query
+    - `users`
+      - `(obj, { homeland })`
+  - 2 for the field-level queries
+    - `friends`
+      - `({ friends }, { kind })`
+    - `progenitor`
+      - `({ progenitor }, { skill })`
+
+At this point you might realize a big part of the architecture is provided out-of-the-box but still, the burden of the persistence layer is in our hands???!! We still have to let GraphQL know hot to retrieve the data? Potentially making the same 3 round trips to the DB??!!!
+
+The answer is YUP! The implementation of the resolver's code is entirely up to you, GraphQL is about almost everything else.
+
+That said, since a few cases are not tackled specifically by GraphQL but are really common ( e.g. [n+1](../day_01/day_01.md#nested-queries-and-the-n--1-problem) or [caching](https://graphql.org/learn/caching/)) you'll find several options and third-party libraries created to provide scalable solutions for that. We'll see some of them later on this course.
+
+#### Arguments default values
+
+Given the previous example, what if I want to define a default value for an argument?
+
+There you go!
 
 ```graphql
 type User {
@@ -151,11 +288,60 @@ type User {
   age: Int
   homeland: String
   kind: String
-  friends: [User!]
-  progenitor: [User!]
-}
-
-type Query {
-  ...
+  friends (kind: String): [User!]
+  progenitor (skill: String = "foresight"): [User!]
+  skill: String
 }
 ```
+
+#### Non-nullable arguments
+
+Here you have!
+
+```graphql
+type User {
+  name: String
+  surname: String
+  age: Int
+  homeland: String
+  kind: String
+  friends (kind: String!): [User!]
+  progenitor (skill: String = "foresight"): [User!]
+  skill: String
+}
+```
+
+also, if the argument is not provided it will yield 
+
+BOOM! 💥 `"Field "friends" argument "kind" of type "String!" is required, but it was not provided."`
+
+#### Arguments type validation
+
+Yup, if you go:
+
+```graphql
+query {
+  users (homeland: "The Shire") {
+    name
+    friends  (kind: 1){
+      name
+    }
+  }
+}
+```
+
+ you'll have
+
+ BOOM! 💥 `"Expected type String!, found 1."`
+
+ also many IDEs provide static code validation for some of this cases.
+
+#### Coercing Field Arguments
+
+In order to produce the right value for an argument it must go through a specific process. You can see how and when that happens here in the specification section dedicated to [Field arguments coercion](http://spec.graphql.org/June2018/#sec-Coercing-Field-Arguments)
+
+## Variables
+
+## Exercise
+
+## Learning resources
