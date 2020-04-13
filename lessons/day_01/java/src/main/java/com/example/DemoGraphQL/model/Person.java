@@ -27,7 +27,7 @@ public class Person {
     @Column(name = "AGE", nullable = false)
     private int age;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "PERSON_FRIEND",
             joinColumns = @JoinColumn(name = "PERSON_ID"),
@@ -37,7 +37,7 @@ public class Person {
     @ManyToMany(mappedBy = "friends")
     private Set<Person> friendOf = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "PERSON_SKILLS",
             joinColumns = {@JoinColumn(name = "PERSON_ID")},
