@@ -21,6 +21,10 @@ public class DemoGraphQlApplication {
         SpringApplication.run(DemoGraphQlApplication.class, args);
     }
 
+    /**
+     * A single source of truth is used for the course data structure. This bean's purpose is to feed the json datasource
+     * into an easy to use persistence layer for the Java exercise.
+     */
     @Bean
     public CommandLineRunner loadData4Demo(SkillRepository skillRepository, PersonRepository personRepository) {
         return (args) -> {
