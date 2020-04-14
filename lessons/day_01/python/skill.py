@@ -5,7 +5,7 @@ from data import db
 
 class Skill(graphene.ObjectType):
     id = graphene.ID() # this is a comment
-    parent = graphene.Field(lambda: Skill, description="we're not resolving the parent for now")
+    parent = graphene.Field(lambda: Skill, description="This refers to the Type Skill")
     name = graphene.NonNull(graphene.String, description="Just a simple description")
     # name = graphene.String(required=True) # Is the same as the NonNull syntax
     now = graphene.DateTime(deprecation_reason="This is just an example of a virtual field.") # this is a deprecatde field
