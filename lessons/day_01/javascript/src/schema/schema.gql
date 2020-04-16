@@ -7,7 +7,7 @@ type Skill {
   # This is only a comment
   id: ID
 
-  "we're not resolving the parent for now"
+  "This defines a relationship with a Skill Object Type value"
   parent: Skill
 
   "this is a field level description"

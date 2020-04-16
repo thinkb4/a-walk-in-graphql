@@ -128,7 +128,7 @@ And this is a silly example of querying the users endpoint with 3 different filt
 
 Sure, you could define an ad-hoc endpoint for that but throw scalability and maintainability overboard.
 
-In GraphQL the query would go:
+In GraphQL the <span id="nested-query-with-arguments">nested query with arguments</span> would go:
 
 ```graphql
 query {
@@ -342,6 +342,118 @@ In order to produce the right value for an argument it must go through a specifi
 
 ## Variables
 
+ok, now we have seen the tip of the iceberg, some important subjects will surface related to the real world software industry.
+
+- reusability
+- scalability
+- maintainability
+- security
+
+Using arguments the way we did on the [nested query with arguments](#nested-query-with-arguments) example is nice as simple but it doesn't capture any of the items listed above, particularly because it forces us to **hard-code the arguments values** every time and for other details we'll see [later today](#security-and-scalability).
+
+Sure thing, GraphQL won't stop you from creating string extrapolation functions to use a query template and replace some tokens with the params values, but despite the fact that it'll increase the maintenance surface and therefore the bug introduction surface, it'll lack of several benefits GraphQL provides out of the box and several benefits derived from the variables feature itself.
+
+So, what's this "variable" thing about?
+
+> A GraphQL query can be parameterized with variables, maximizing query reuse, and avoiding costly string building in clients at runtime.
+>
+> If not defined as constant (for example, in DefaultValue), a Variable can be supplied for an input value.
+>
+> Variables must be defined at the top of an operation and are in scope throughout the execution of that operation.
+>
+> Values for those variables are provided to a GraphQL service along with a request so they may be substituted during execution.
+>
+> Source: [GraphQL Spec (June 2018) - Variables](http://spec.graphql.org/June2018/#sec-Language.Variables)
+
+We could change our [nested query with arguments](#nested-query-with-arguments) example now to use **variables**. The syntax is simple, similar to query arguments but the variable names should be [valid names](http://spec.graphql.org/June2018/#sec-Names) (as any other name in GraphQL) preceded by a `$` sign
+
+```graphql
+# here's our document with a query operation using variables
+query ($homeland: String, $kind: String!, $skill: String!) {
+  users(homeland: $homeland) {
+    name
+    friends(kind: $kind) {
+      name
+      progenitor(skill: $skill) {
+        name
+      }
+    }
+  }
+}
+```
+
+and here how we factored out the variables dictionary (usually JSON) to be passed along separately
+
+```json
+{
+  "homeland": "The Shire",
+  "kind": "half-elven",
+  "skill": "foresight"
+}
+```
+
+Now we can use the same operation definition and only change the variables, GraphQL will perform all validations ([Type](http://spec.graphql.org/June2018/#sec-Variables-Are-Input-Types), [nullability](http://spec.graphql.org/June2018/#example-c5959), [uniqueness](http://spec.graphql.org/June2018/#sec-Variable-Uniqueness), ...), [variable value coercion](http://spec.graphql.org/June2018/#sec-Coercing-Variable-Values) and some more things. Before going forward we'll stop here to consider some important differences between `variables` and `arguments`.
+
+- All variables defined by an operation must be used in that operation or a fragment transitively included by that operation. Unused variables cause a validation error. / [All Variables Used](http://spec.graphql.org/June2018/#sec-All-Variables-Used)
+- Variable used within the context of an operation must be defined at the top level of that operation. / [All Variable Uses Defined](http://spec.graphql.org/June2018/#sec-All-Variable-Uses-Defined)
+- A notable exception to typical variable type compatibility is allowing a variable definition with a nullable type to be provided to a non‐null location as long as either that variable or that location provides a default value. / [Allow variables when default values exist](http://spec.graphql.org/June2018/#example-0877c)
+
+Until here we partially captured the **reusability** and **maintainability** items (we could go deeper into them but that's for another chapter ;)) but ... what about **security** and **scalability** and why are both related in this context?
+
+### Security and scalability
+
+Remember we mentioned about some extra benefits of defining your operations with variables instead of transpolating the strings yourself?
+
+Having your operations **statically defined** will dramatically impact on the following items:
+
+#### Runtime performance
+
+You won't have to perform interpolation to build your operations in runtime, saving precious time and resources (like memory)
+
+#### Static analysis tooling
+
+You can use several tools during development to validate your code against the schema saving a lot of time (and money), and reduce the number of defects capturable by this kind of tools before they harm the user.
+
+#### Declarative vs Imperative approach
+
+Can you imagine following a large application with hundreds/thousand operations defined as interpolation statements? That's not only hard to follow, understand and maintain, it's also impossible to scale and certainly an invitation for all bugs in the universe to come forward and rejoice. Having all your operations described up-front
+
+#### Security and transport overhead
+
+Last but not least, we're now reusing the same operation but we have to send it every single time, right? ... WRONG!
+Sending an operation is not only a communication overhead but is also a potential security issue!! At this point of the software engineering evolution stage we can't imagine sending an SQL query as-is on a request, is like you'd just explode if you see something like that! It turns out many applications are sending graphQL operations in a completely human readable way around the world (⊙＿⊙'). Ok, we might be over reacting but the truth is, if you don't take extra precautions, **an attacker could send down an expensive or malicious operation** (query or mutation) to degrade your performance of perform harmful actions, or being naive, an unexpected operation you don't really want anyone performs.
+
+How to solve that?
+
+The names is **Persisted queries** and they're way beyond the scope of this training but they're absolutely worthy to mention.
+**TL;DR**
+Imagine a mechanism to define at development time a map to connect your operations to an identifier, this map is a contract between the client and the server so that you can perform a query defining the identifier and the variables, if the identifier is invalid so the operation will be; this way you perform only the allowed ops and also save a lot of traffic. There are several implementations of this concept, a simple [Google search](https://www.google.com/search?q=graphql+persisted+queries) will give you more info.
+
 ## Exercise
 
 ## Learning resources
+
+- GraphQL spec (June 2018 Edition)
+  - [Field Arguments](http://spec.graphql.org/June2018/#sec-Field-Arguments)
+  - [Input and Output Types](http://spec.graphql.org/June2018/#sec-Input-and-Output-Types)
+  - [Coercing Field Arguments](http://spec.graphql.org/June2018/#sec-Coercing-Field-Arguments)
+  - [Language.Arguments](http://spec.graphql.org/June2018/#sec-Language.Arguments)
+  - [Validation.Arguments](http://spec.graphql.org/June2018/#sec-Validation.Arguments)
+  - [Variables](http://spec.graphql.org/June2018/#sec-Language.Variables)
+  - [Names](http://spec.graphql.org/June2018/#sec-Names)
+  - [Variable Uniqueness](http://spec.graphql.org/June2018/#sec-Variable-Uniqueness)
+  - [Variables Are Input Types](http://spec.graphql.org/June2018/#sec-Variables-Are-Input-Types)
+  - [All Variable Uses Defined](http://spec.graphql.org/June2018/#sec-All-Variable-Uses-Defined)
+  - [All Variables Used](http://spec.graphql.org/June2018/#sec-All-Variables-Used)
+  - [All Variable Usages are Allowed](http://spec.graphql.org/June2018/#sec-All-Variable-Usages-are-Allowed)
+  - [Coercing Variable Values](http://spec.graphql.org/June2018/#sec-Coercing-Variable-Values)
+- GraphQL org
+  - [Caching](https://graphql.org/learn/caching/)
+  - [Query/Arguments](https://graphql.org/learn/queries/#arguments)
+  - [Schema/Arguments](https://graphql.org/learn/schema/#arguments)
+  - [graphql-js/Passing Arguments](https://graphql.org/graphql-js/passing-arguments/)
+- GitHub
+  - [Automatic Persisted Queries](https://github.com/apollographql/apollo-link-persisted-queries#automatic-persisted-queries)
+  - [PersistGraphQL](https://github.com/apollographql/persistgraphql#persistgraphql)
+- Apollo Docs
+  - [Automatic Persisted Queries](https://www.apollographql.com/docs/apollo-server/performance/apq/)
