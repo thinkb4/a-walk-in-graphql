@@ -17,7 +17,6 @@ class Query(graphene.ObjectType):
         db.table('skills')
         tb = db.get('skills')
         random_id = randint(1, len(tb))
-        response = tb.search(FQuery().id == id)[0]
-        return response
+        return tb.get(id=random_id)
 
 schema_query = graphene.Schema(query=Query)
