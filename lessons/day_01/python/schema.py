@@ -3,6 +3,7 @@ from random import randint
 from flata import Query as FQuery
 from skill import Skill, db
 
+
 class Query(graphene.ObjectType):
     random_skill = graphene.Field(Skill)
 
