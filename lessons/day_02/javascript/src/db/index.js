@@ -12,9 +12,11 @@ const adapter = new FileSync(`${cwd}/../datasource/data.json`);
 const db = low(adapter);
 
 const Skill = require('./skill')(db);
+const Person = require('./person')(db);
 
 module.exports = {
   models: {
-    Skill
+    Skill,
+    Person
   }
 }

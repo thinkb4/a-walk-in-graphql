@@ -1,18 +1,18 @@
 const nanoid = require('nanoid');
 
-const skillModel = db => {
+const personModel = db => {
   return {
     /**
      * 
      * @returns {Object}
      */
-    randomSkill() {
+    randomPerson() {
       /**
        * @see https://openbase.io/js/lowdb
        */
-      const skills = db.get('skills').value();
+      const persons = db.get('persons').value();
 
-      return Reflect.get(skills, Math.floor(Math.random() * skills.length));
+      return Reflect.get(persons, Math.floor(Math.random() * persons.length));
     },
     /**
      * 
@@ -21,7 +21,7 @@ const skillModel = db => {
      * @returns {Object|Undefined}
      */
     find(filter) {
-      return db.get('skills')
+      return db.get('persons')
         .find(filter)
         .value()
     },
@@ -32,11 +32,11 @@ const skillModel = db => {
      * @returns {Array<Object>}
      */
     filter(filter) {
-      return db.get('skills')
+      return db.get('persons')
         .filter(filter)
         .value()
     },
   }
 }
 
-module.exports = skillModel;
+module.exports = personModel;

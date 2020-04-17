@@ -4,6 +4,9 @@
  */
 
 module.exports = {
+  /**
+   * 
+   */
   Query: {
     /**
      * Top-Level resolver
@@ -18,34 +21,58 @@ module.exports = {
      */
     randomSkill(obj, args, context, info) {
       return context.models.Skill.randomSkill();
-    }
+    },
+    /**
+     * 
+     */
+    randomPerson(obj, args, context, info) {
+      return context.models.Person.randomPerson();
+    },
   },
+  /**
+   * 
+   */
   Skill: {
     /**
-     * Field-level resolver
      * 
-     * @param {Object} obj 
-     * @param {Object} args 
-     * @param {Object} context
-     * @param {Object} info 
-     * 
-     * @returns {Number}
      */
-    now (obj, args, context, info) {
+    now() {
       return Date.now();
     },
     /**
-     * Field-level resolver
      * 
-     * @param {Object} obj 
-     * @param {Object} args 
-     * @param {Object} context
-     * @param {Object} info 
-     * 
-     * @returns {Object|Undefined}
      */
-    parent (obj, args, context, info) {
-      return context.models.Skill.find({id: obj.parent});
+    parent({ parent }, args, context) {
+      return context.models.Skill.find({ id: parent });
+    },
+  },
+  /**
+   * 
+   */
+  Person: {
+    /**
+     * 
+     */
+    fullName({ name, surname }) {
+      return `${name} ${surname}`;
+    },
+    /**
+     * 
+     */
+    friends({ friends }, args, context) {
+      return context.models.Person.filter((friend) => friends.includes(friend.id));
+    },
+    /**
+     * 
+     */
+    skills({ skills }, args, context) {
+      return context.models.Skill.filter((skill) => skills.includes(skill.id));
+    },
+    /**
+     * 
+     */
+    favSkill({ favSkill }, args, context) {
+      return context.models.Skill.find({ id: favSkill });
     },
   }
 }
