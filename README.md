@@ -41,7 +41,7 @@ Hopefully your walk will be much easier than ours!
     - Resolver
     - Exercise
     - Learning resources
-- Day 2
+- [Day 2](lessons/day_02/day_02.md)
   - Arguments and Variables
     - Argument
     - Variable
