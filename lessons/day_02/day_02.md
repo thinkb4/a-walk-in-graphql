@@ -311,7 +311,7 @@ type User {
 }
 ```
 
-also, if the argument is not provided it will yield 
+also, if the argument is not provided it will yield
 
 BOOM! 💥 `"Field "friends" argument "kind" of type "String!" is required, but it was not provided."`
 
@@ -431,6 +431,143 @@ Imagine a mechanism to define at development time a map to connect your operatio
 
 ## Exercise
 
+For a given datasource ([abstracted as json here](datasource/data.json)) containing `n` rows of `skills` and `n` rows of `persons` we provided a sample implementation of a GraphQL server for each technology containing:
+
+- a server app
+- a schema
+- a resolver map
+- an entity model
+- a db abstraction
+
+The example contains the solution for previous exercises and necessary code to run the following query operation so you can have a starting point example:
+
+```graphql
+query {
+  persons(id: 4) { ## id argument is optional
+    id
+    age
+    eyeColor
+    fullName
+    email
+    friends {
+      id
+      name
+    }
+    skills {
+      id
+      name
+    }
+    favSkill {
+      id
+      name
+      parent {
+        id
+        name
+      }
+    }
+  }
+}
+```
+
+### Exercise requirements
+
+- Update the type definition and the resolvers to be be able to perform the query operations listed below (can you provide other sample queries when your code is completed?).
+- Discuss with someone else which would be the best way to use variables and try some. (there's always a tricky question)
+
+#### Operations list
+
+Provide the necessary code so that a user can perform the following `query`operations (the arguments values are arbitrary, your code should be able to respond for any valid value consistently):
+
+The typedef should declare the following behavior and the resolvers should behave consistently for the arguments logic:
+
+- All arguments for all queries are optional
+- if a `selectionSet` name is plural, a list should be returned, otherwise a `scalar` or `Object type` ( e.g `person` -> `Person` / `persons` -> `[Person!]`)
+- if an argument is not provided
+  - if a single value is expected as output, return null
+  - if a list is expected as output, return all records
+- if and argument is provided
+  - if a single value is expected as output, return match or null
+  - if a list is expected as output, return matches or empty list
+
+```graphql
+
+## Part 01
+query singlePerson{
+  person(id: 4) {
+    id
+    age
+    eyeColor
+    fullName
+    email
+  }
+}
+
+## Part 02
+query multiplePersons{
+  persons(id: 4) {
+    id
+    age
+    eyeColor
+    fullName
+    email
+    friends(id: 1) {
+      id
+      name
+    }
+    skills(id: 47) {
+      id
+      name
+    }
+    favSkill {
+      id
+      name
+      parent {
+        id
+        name
+      }
+    }
+  }
+}
+
+## Part 03
+query singleSkill{
+  skill(id: 47) {
+    id
+    name
+    parent {
+      id
+      name
+    }
+  }
+}
+
+## Part 04
+query multipleSkills{
+  skills (id: 4){
+    id
+    name
+    parent{
+      id
+      name
+    }
+  }
+}
+
+```
+
+Select the exercise on your preferred technology:
+
+- [JavaScript](javascript/README.md)
+- [Java](java/README.md)
+- [Python](python/README.md)
+
+This exercise, hopefully, will generate more questions than answers depending on how deep you want to dig into reusability, scalability, performance and other topics. Here you have some extra considerations to investigate; they're beyond the scope of the exercise, but really worthy to be mentioned, of course they're NOT the absolute truth but the'll provide you some starting point to investigate further if you want.
+
+- [GraphQL Resolvers: Best Practices
+](https://medium.com/paypal-engineering/graphql-resolvers-best-practices-cd36fdbcef55) by [Mark Stuart](https://medium.com/@mark_stuart)
+- [Secure your external APIs and reduce the attack surface by utilizing GraphQL](https://levelup.gitconnected.com/graphql-is-the-new-api-gateway-383edeed4bcd) by [Tj Blogumas](https://levelup.gitconnected.com/@tjblogumas)
+- [Versioning fields in GraphQL](https://blog.logrocket.com/versioning-fields-graphql/) by [Leonardo Losoviz](https://blog.logrocket.com/author/leonardolosoviz/)
+
 ## Learning resources
 
 - GraphQL spec (June 2018 Edition)
@@ -455,5 +592,6 @@ Imagine a mechanism to define at development time a map to connect your operatio
 - GitHub
   - [Automatic Persisted Queries](https://github.com/apollographql/apollo-link-persisted-queries#automatic-persisted-queries)
   - [PersistGraphQL](https://github.com/apollographql/persistgraphql#persistgraphql)
+  - [DataLoader](https://github.com/graphql/dataloader#dataloader)
 - Apollo Docs
   - [Automatic Persisted Queries](https://www.apollographql.com/docs/apollo-server/performance/apq/)
