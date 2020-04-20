@@ -19,14 +19,20 @@ module.exports = {
      * 
      * @returns {Object}
      */
-    randomSkill(obj, args, context, info) {
-      return context.models.Skill.randomSkill();
+    randomSkill(obj, args, { models: { Skill } }) {
+      return Skill.randomSkill();
     },
     /**
      * 
      */
-    randomPerson(obj, args, context, info) {
-      return context.models.Person.randomPerson();
+    randomPerson(obj, args, { models: { Person } }) {
+      return Person.randomPerson();
+    },
+    /**
+     * 
+     */
+    persons(obj, { id }, { models: { Person } }) {
+      return Person.filter(person => id ? person.id == id : true);
     },
   },
   /**
@@ -42,8 +48,8 @@ module.exports = {
     /**
      * 
      */
-    parent({ parent }, args, context) {
-      return context.models.Skill.find({ id: parent });
+    parent({ parent }, args, { models: { Skill } }) {
+      return Skill.find({ id: parent });
     },
   },
   /**
@@ -59,20 +65,20 @@ module.exports = {
     /**
      * 
      */
-    friends({ friends }, args, context) {
-      return context.models.Person.filter((friend) => friends.includes(friend.id));
+    friends({ friends }, args, { models: { Person } }) {
+      return Person.filter((friend) => friends.includes(friend.id));
     },
     /**
      * 
      */
-    skills({ skills }, args, context) {
-      return context.models.Skill.filter((skill) => skills.includes(skill.id));
+    skills({ skills }, args, { models: { Skill } }) {
+      return Skill.filter((skill) => skills.includes(skill.id));
     },
     /**
      * 
      */
-    favSkill({ favSkill }, args, context) {
-      return context.models.Skill.find({ id: favSkill });
+    favSkill({ favSkill }, args, { models: { Skill } }) {
+      return Skill.find({ id: favSkill });
     },
   }
 }
