@@ -7,7 +7,7 @@
     "url": "git+https://github.com/Jaxolotl/a-walk-in-graphql.git"
   },
   "scripts": {
-    "server": "node src/server.js"
+    "server": "nodemon src/server.js"
   },
   "keywords": [
     "javascript",
@@ -28,5 +28,8 @@
     "graphql-tag": "~2.10.3",
     "lowdb": "~1.0.0",
     "nanoid": "~2.1.11"
+  },
+  "devDependencies": {
+    "nodemon": "~2.0.3"
   }
 }
