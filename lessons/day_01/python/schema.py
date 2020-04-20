@@ -1,6 +1,6 @@
 import graphene
 from random import randint
-from flata import Query as FQuery
+# from flata import Query as FQuery
 from skill import Skill, db
 
 
@@ -18,6 +18,9 @@ class Query(graphene.ObjectType):
         db.table('skills')
         tb = db.get('skills')
         random_id = randint(1, len(tb))
-        return tb.get(id=random_id)
+        return tb.get(id=random_id) #this way is more directly and cannot use two conditions. 
+        # these ca be used in flata for search in queries
+        # return tb.search(FQuery().id == parent['parent'])[0] if isinstance(parent['parent'], int) else None 
+
 
 schema_query = graphene.Schema(query=Query)
