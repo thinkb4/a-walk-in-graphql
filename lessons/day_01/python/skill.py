@@ -12,7 +12,6 @@ class Skill(graphene.ObjectType):
     now = graphene.DateTime(deprecation_reason="This is just an example of a virtual field.") # this is a deprecatde field
 
     # Field-level resolver
-    @staticmethod
     def resolve_now(self, info):
         """
         Resolves now as a virtual field
@@ -33,4 +32,4 @@ class Skill(graphene.ObjectType):
         """
         db.table('skills') # Method table will create or retrieve if it exists
         tb = db.get('skills') #Methos to get the content of the table
-        return tb.search(FQuery().id == parent['parent'])[0] if isinstance(parent['parent'], int) else None
+        return tb.get(id=parent['parent']) if isinstance(parent['parent'], int) else None
