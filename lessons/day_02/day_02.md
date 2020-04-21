@@ -9,9 +9,9 @@
 
 ## Arguments
 
-On [Day 01](../day_01/day_01.md) we learned [queries](../day_01/day_01.md#query) and [resolvers](../day_01/day_01.md#resolver)., and we also learned how to ask for a subset of scalars from a given object (or each one of a list of objects). But what if we want to request a specific subset of records based on it's values (filtering) or tell the server to perform a specific data transformation on a specific field? Here's where `arguments`  comes into play.
+On [Day 01](../day_01/day_01.md) we learned [queries](../day_01/day_01.md#query) and [resolvers](../day_01/day_01.md#resolver)., and we also learned how to ask for a subset of scalars from a given object (or each one of a list of objects). But what if we want to request a specific subset of records based on its values (filtering) or tell the server to perform a specific data transformation on a specific field? Here's where `arguments` comes into play.
 
-Imagine a scenario where the underlying persistance system returns a collection of rows we usually filter with a url querystring param on a REST request.
+Imagine a scenario where the underlying persistence system returns a collection of rows, we usually filter with a URL query string param on a REST request.
 
 Given the following request:
 
@@ -19,7 +19,7 @@ Given the following request:
 <scheme>://<authority>/users/?age=40
 ```
 
-We'd assume the users' endpoint will respond with a list of users including only `n` `User`s who's `age` property is `40`, filtering every other out.
+We expect a response with users being `40`, filtering out every other out.
 
 How does GraphQL provide that functionality?
 
@@ -71,7 +71,7 @@ type Query {
 }
 ```
 
-Of course passing the param along without handling it at resolver level won't do the job.
+Of course, passing the param along without handling it at resolver level won't do the job.
 
 ```javascript
 const resolvers = {
@@ -85,8 +85,6 @@ const resolvers = {
 
 ### Arguments, deep dive
 
-So far we saw nothing
-
 SUPER POWERS ON ─=≡Σ((( つ◕ل͜◕)つ
 
 Before diving deeper it'd be great to have some starting point definitions and reminders so that we don't get lost and confused.
@@ -94,7 +92,7 @@ Before diving deeper it'd be great to have some starting point definitions and r
 1. Any field of a `query`, `mutation` or `subscription` operation can pass `arguments` along
 2. Any field of an `Object Type` can pass `arguments` along
 3. Every `argument` of an operation MUST be declared on the Type Definition
-4. `argument` names MUST NOT begin with "__" (double underscore), that naming convention is reserver for GraphQL's introspection system
+4. `argument` names MUST NOT begin with "__" (double underscore), that naming convention is reserved for GraphQL's introspection system
 5. `argument` names in an argument set for a field MUST be **unique**
 6. `arguments` are **unordered**
 7. `argument` values are **typed** and they MUST belong to a known type on the Type Definition as long as they're valid [input types](http://spec.graphql.org/June2018/#sec-Input-and-Output-Types), they being one of the default set of types or a custom type.
@@ -103,7 +101,7 @@ Before diving deeper it'd be great to have some starting point definitions and r
 
 #### Query nested and field level arguments
 
-So far we've seen nothing worthy of the "legendary mighty awesomeness of arguments usage" award. That's about to change, like, forever.
+So far, we've seen nothing worthy of the "legendary mighty awesomeness of arguments usage" award. That's about to change, like, forever.
 
 What if we need to get a specific subset of records with a specific subset of related records like the following:
 
@@ -269,7 +267,7 @@ and mirroring that, we defined
     - `progenitor`
       - `({ progenitor }, { skill })`
 
-At this point you might realize a big part of the architecture is provided out-of-the-box but still, the burden of the persistence layer is in our hands???!! We still have to let GraphQL know hot to retrieve the data? Potentially making the same 3 round trips to the DB??!!!
+At this point you might realize a big part of the architecture is provided out-of-the-box but still, the burden of the persistence layer is in our hands???!! We still have to let GraphQL know how to retrieve the data? Potentially making the same 3 round trips to the DB??!!!
 
 The answer is YUP! The implementation of the resolver's code is entirely up to you, GraphQL is about almost everything else.
 
@@ -334,7 +332,7 @@ query {
 
  BOOM! 💥 `"Expected type String!, found 1."`
 
- also many IDEs provide static code validation for some of this cases.
+ also, many IDEs provide static code validation for some of these cases.
 
 #### Coercing Field Arguments
 
@@ -392,7 +390,9 @@ and here how we factored out the variables dictionary (usually JSON) to be passe
 }
 ```
 
-Now we can use the same operation definition and only change the variables, GraphQL will perform all validations ([Type](http://spec.graphql.org/June2018/#sec-Variables-Are-Input-Types), [nullability](http://spec.graphql.org/June2018/#example-c5959), [uniqueness](http://spec.graphql.org/June2018/#sec-Variable-Uniqueness), ...), [variable value coercion](http://spec.graphql.org/June2018/#sec-Coercing-Variable-Values) and some more things. Before going forward we'll stop here to consider some important differences between `variables` and `arguments`.
+Now we can use the same operation definition and only change the variables, GraphQL will perform all validations ([Type](http://spec.graphql.org/June2018/#sec-Variables-Are-Input-Types), [nullability](http://spec.graphql.org/June2018/#example-c5959), [uniqueness](http://spec.graphql.org/June2018/#sec-Variable-Uniqueness), ...), [variable value coercion](http://spec.graphql.org/June2018/#sec-Coercing-Variable-Values) and some more things. 
+
+Before going forward we'll stop here to consider some important differences between `variables` and `arguments`.
 
 - All variables defined by an operation must be used in that operation or a fragment transitively included by that operation. Unused variables cause a validation error. / [All Variables Used](http://spec.graphql.org/June2018/#sec-All-Variables-Used)
 - Variable used within the context of an operation must be defined at the top level of that operation. / [All Variable Uses Defined](http://spec.graphql.org/June2018/#sec-All-Variable-Uses-Defined)
@@ -402,7 +402,7 @@ Until here we partially captured the **reusability** and **maintainability** ite
 
 ### Security and scalability
 
-Remember we mentioned about some extra benefits of defining your operations with variables instead of transpolating the strings yourself?
+Remember we mentioned about some extra benefits of defining your operations with variables instead of interpolate the strings yourself?
 
 Having your operations **statically defined** will dramatically impact on the following items:
 
@@ -425,7 +425,7 @@ Sending an operation is not only a communication overhead but is also a potentia
 
 How to solve that?
 
-The names is **Persisted queries** and they're way beyond the scope of this training but they're absolutely worthy to mention.
+The name is **Persisted queries** and they're way beyond the scope of this training but they're absolutely worthy to mention.
 **TL;DR**
 Imagine a mechanism to define at development time a map to connect your operations to an identifier, this map is a contract between the client and the server so that you can perform a query defining the identifier and the variables, if the identifier is invalid so the operation will be; this way you perform only the allowed ops and also save a lot of traffic. There are several implementations of this concept, a simple [Google search](https://www.google.com/search?q=graphql+persisted+queries) will give you more info.
 
@@ -476,7 +476,7 @@ query {
 
 #### Operations list
 
-Provide the necessary code so that a user can perform the following `query`operations (the arguments values are arbitrary, your code should be able to respond for any valid value consistently):
+Provide the necessary code so that a user can perform the following `query` operations (the argument's values are arbitrary, your code should be able to respond for any valid value consistently):
 
 The typedef should declare the following behavior and the resolvers should behave consistently for the arguments logic:
 
@@ -561,7 +561,7 @@ Select the exercise on your preferred technology:
 - [Java](java/README.md)
 - [Python](python/README.md)
 
-This exercise, hopefully, will generate more questions than answers depending on how deep you want to dig into reusability, scalability, performance and other topics. Here you have some extra considerations to investigate; they're beyond the scope of the exercise, but really worthy to be mentioned, of course they're NOT the absolute truth but the'll provide you some starting point to investigate further if you want.
+This exercise, hopefully, will generate more questions than answers depending on how deep you want to dig into reusability, scalability, performance and other topics. Here you have some extra considerations to investigate; they're beyond the scope of the exercise, but really worthy to be mentioned, of course they're NOT the absolute truth but they'll provide you some starting point to investigate further if you want.
 
 - [GraphQL Resolvers: Best Practices
 ](https://medium.com/paypal-engineering/graphql-resolvers-best-practices-cd36fdbcef55) by [Mark Stuart](https://medium.com/@mark_stuart)
