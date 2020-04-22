@@ -390,7 +390,7 @@ and here how we factored out the variables dictionary (usually JSON) to be passe
 }
 ```
 
-Now we can use the same operation definition and only change the variables, GraphQL will perform all validations ([Type](http://spec.graphql.org/June2018/#sec-Variables-Are-Input-Types), [nullability](http://spec.graphql.org/June2018/#example-c5959), [uniqueness](http://spec.graphql.org/June2018/#sec-Variable-Uniqueness), ...), [variable value coercion](http://spec.graphql.org/June2018/#sec-Coercing-Variable-Values) and some more things. 
+Now we can use the same operation definition and only change the variables, GraphQL will perform all validations ([Type](http://spec.graphql.org/June2018/#sec-Variables-Are-Input-Types), [nullability](http://spec.graphql.org/June2018/#example-c5959), [uniqueness](http://spec.graphql.org/June2018/#sec-Variable-Uniqueness), ...), [variable value coercion](http://spec.graphql.org/June2018/#sec-Coercing-Variable-Values) and some more things.
 
 Before going forward we'll stop here to consider some important differences between `variables` and `arguments`.
 

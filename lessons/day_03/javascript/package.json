@@ -1,7 +1,7 @@
 {
-  "name": "lesson-02-exercises-javascript",
+  "name": "lesson-03-exercises-javascript",
   "version": "1.0.0",
-  "description": "Lesson 02 exercises - JavaScript",
+  "description": "Lesson 03 exercises - JavaScript",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Jaxolotl/a-walk-in-graphql.git"
@@ -19,7 +19,10 @@
     "query",
     "resolver",
     "argument",
-    "variable"
+    "variable",
+    "input type",
+    "inputType",
+    "enum"
   ],
   "license": "MIT",
   "bugs": {

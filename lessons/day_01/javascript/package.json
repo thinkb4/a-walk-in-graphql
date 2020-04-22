@@ -15,7 +15,9 @@
     "ES6",
     "ECMAScript",
     "graphql",
-    "apollo"
+    "apollo",
+    "query",
+    "resolver"
   ],
   "license": "MIT",
   "bugs": {
