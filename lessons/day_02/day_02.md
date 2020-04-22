@@ -478,7 +478,7 @@ query {
 
 Provide the necessary code so that a user can perform the following `query` operations (the argument's values are arbitrary, your code should be able to respond for any valid value consistently):
 
-The typedef should declare the following behavior and the resolvers should behave consistently for the arguments logic:
+The typedef should declare the following behavior and the resolvers should behave consistently for the arguments' logic:
 
 - All arguments for all queries are optional
 - if a `selectionSet` name is plural, a list should be returned, otherwise a `scalar` or `Object type` ( e.g `person` -> `Person` / `persons` -> `[Person!]`)
