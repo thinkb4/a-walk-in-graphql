@@ -1,3 +1,8 @@
 node_modules
-coverage 
+coverage
 live_demo.js
+lessons/day_01/python/venv
+.vscode
+*.pyc
+*.log
+lessons/day_01/python/app copy.py
