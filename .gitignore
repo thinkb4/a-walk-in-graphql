@@ -1,6 +1,11 @@
 node_modules
-coverage 
-temp_server.js
+coverage
+live_demo.js
+lessons/day_01/python/venv
+.vscode
+*.pyc
+*.log
+lessons/day_01/python/app copy.py
 
 ### Java ###
 target/

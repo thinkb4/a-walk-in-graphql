@@ -584,6 +584,8 @@ query {
 }
 ```
 
+### Exercise requirements
+
 - add a `Person` object type to the **Schema** containing:
   - the fields types
   - the non-null modifier when required
