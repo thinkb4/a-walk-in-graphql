@@ -1,42 +1,53 @@
-const nanoid = require('nanoid');
+const DATASET_KEY = 'skills';
 
-const skillModel = db => {
+/**
+ * @param {Object} Ø
+ * @param {Object} Ø.db 
+ * @param {Function} Ø.prepareFilter 
+ * @param {String} Ø.datasetKey
+ */
+const model = ({ db, prepareFilter, datasetKey = DATASET_KEY } = {}) => {
   return {
     /**
      * 
      * @returns {Object}
      */
-    randomSkill() {
+    randomRecord() {
       /**
        * @see https://openbase.io/js/lowdb
        */
-      const skills = db.get('skills').value();
+      const records = db.get(datasetKey).value();
 
-      return Reflect.get(skills, Math.floor(Math.random() * skills.length));
-    },
-    /**
-     * 
-     * @param {Object} filter { key: value [, key: value] }
-     * 
-     * @returns {Object|Undefined}
-     */
-    find(filter) {
-      return db.get('skills')
-        .find(filter)
-        .value()
+      return Reflect.get(records, Math.floor(Math.random() * records.length));
     },
     /**
      * 
      * @param {Object|Function} filter { key: value [, key: value] } | predicate
      * 
+     * @returns {Object|Undefined}
+     */
+    find: prepareFilter((filter) => {
+      return filter && db.get(datasetKey)
+        .find(filter)
+        .value()
+    }),
+    /**
+     * 
+     * @param {Object|Function} filter { key: value [, key: value] } | predicate
+     * @param {Array<String>} subset an array of records id
+     * 
      * @returns {Array<Object>}
      */
-    filter(filter) {
-      return db.get('skills')
+    filter: prepareFilter((filter, subset) => {
+      return db.get(datasetKey)
+        .filter(record => !subset || subset.includes(record.id))
         .filter(filter)
         .value()
-    },
+    }),
   }
 }
 
-module.exports = skillModel;
+module.exports = {
+  model,
+  DATASET_KEY
+};

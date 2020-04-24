@@ -20,19 +20,37 @@ module.exports = {
      * @returns {Object}
      */
     randomSkill(obj, args, { models: { Skill } }) {
-      return Skill.randomSkill();
+      return Skill.randomRecord();
     },
     /**
      * 
      */
     randomPerson(obj, args, { models: { Person } }) {
-      return Person.randomPerson();
+      return Person.randomRecord();
+    },
+    /**
+     * 
+     */
+    skill(obj, { id }, { models: { Skill } }) {
+      return Skill.find({ id });
+    },
+    /**
+     * 
+     */
+    skills(obj, { id }, { models: { Skill } }) {
+      return Skill.filter({ id });
+    },
+    /**
+     * 
+     */
+    person(obj, { id }, { models: { Person } }) {
+      return Person.find({ id });
     },
     /**
      * 
      */
     persons(obj, { id }, { models: { Person } }) {
-      return Person.filter(person => id ? person.id == id : true);
+      return Person.filter({ id });
     },
   },
   /**
@@ -48,8 +66,8 @@ module.exports = {
     /**
      * 
      */
-    parent({ parent }, args, { models: { Skill } }) {
-      return Skill.find({ id: parent });
+    parent({ parent: id }, args, { models: { Skill } }) {
+      return Skill.find({ id });
     },
   },
   /**
@@ -65,20 +83,20 @@ module.exports = {
     /**
      * 
      */
-    friends({ friends }, args, { models: { Person } }) {
-      return Person.filter((friend) => friends.includes(friend.id));
+    friends({ friends }, { id }, { models: { Person } }) {
+      return Person.filter({ id }, friends);
     },
     /**
      * 
      */
-    skills({ skills }, args, { models: { Skill } }) {
-      return Skill.filter((skill) => skills.includes(skill.id));
+    skills({ skills }, { id }, { models: { Skill } }) {
+      return Skill.filter({ id }, skills);
     },
     /**
      * 
      */
-    favSkill({ favSkill }, args, { models: { Skill } }) {
-      return Skill.find({ id: favSkill });
+    favSkill({ favSkill: id }, args, { models: { Skill } }) {
+      return Skill.find({ id });
     },
   }
 }
