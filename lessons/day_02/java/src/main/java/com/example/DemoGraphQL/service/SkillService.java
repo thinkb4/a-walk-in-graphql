@@ -13,7 +13,7 @@ public class SkillService {
 
     private final SkillRepository skillRepository;
 
-    public SkillService(SkillRepository skillRepository) {
+    public SkillService(final SkillRepository skillRepository) {
         this.skillRepository = skillRepository;
     }
 
