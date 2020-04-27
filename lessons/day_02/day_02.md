@@ -99,7 +99,7 @@ Before diving deeper it'd be great to have some starting point definitions and r
 8. `arguments` can be `non-nullable` (aka required)
 9. `arguments` can have a default value
 
-#### Query nested and field level arguments
+#### Nested query and field level arguments
 
 So far, we've seen nothing worthy of the "legendary mighty awesomeness of arguments usage" award. That's about to change, like, forever.
 
