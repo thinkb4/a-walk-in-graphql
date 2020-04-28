@@ -75,7 +75,6 @@ Note that using the name `input` for the argument and using the name  `InputUser
 
 Here a <span id="sample-query-with-input-object">sample query</span> you could request against the server for the type definition above.
 
-
 ```graphql
 query {
   users(
@@ -243,7 +242,7 @@ enum Kind {
 
 ```
 
-On the [sample query defined here](#sample-query-with-input-object) we could pass any arbitrary value to the `kind` field (e.g `input: { kind: "whatever", homeland: "The Shire", skill: "the ringy thing" }`) without problems, the query can be performed and no errors will be thrown, probably returning no record. But, in the following example, we'll add an enum definition forcing the value to be one of the set (or null in this case) and thrown an error if it's not.
+On the [sample query defined here](#sample-query-with-input-object) we could pass any arbitrary value to the `kind` field (e.g `input: { kind: "whatever", homeland: "The Shire", skill: "the ringy thing" }`) without problems, the query can be performed and no errors will be thrown, probably returning no record. But, in the following example, we'll add an enum definition forcing the value to be one of the set (or null in this case) and throw an error if it's not.
 
 ```graphql
 input InputUser {
@@ -253,8 +252,8 @@ input InputUser {
 }
 
 enum Kind {
-  HOBBIT 
-  ELVEN 
+  HOBBIT
+  ELVEN
   HALF_ELVEN
 }
 
@@ -330,8 +329,129 @@ For a given datasource ([abstracted as json here](datasource/data.json)) contain
 - an entity model
 - a db abstraction
 
+The code contains the solution for previous exercises so you can have a starting point example.
 
 ### Exercise requirements
+
+- Update the type definition and the resolvers to be be able to perform the query operations listed below (can you provide other sample queries when your code is completed?).
+- Discuss with someone else which would be the best way to use Input Objects and Enums and try some. (there's always a tricky question)
+
+#### Operations list
+
+Provide the necessary code so that a user can perform the following `query` operations (the argument's values are arbitrary, your code should be able to respond for any valid value consistently):
+
+The typedef should declare the following behavior and the resolvers should behave consistently for the arguments' logic:
+
+- All arguments for all queries are optional
+- All arguments MUST be passed along as Input Objects
+- All Input Object values MUST be either Scalar or Enum values
+- All filtering rules must follow what specified on [Day 02 exercise](../day_02/day_02.md#exercise)
+
+```graphql
+
+## Part 01
+query singlePerson{
+  person(
+    input: {
+      id: 5,
+      age: 36,
+      eyeColor: BLUE,
+      favSkill: { id: 45 }
+    }
+  ) {
+    id
+    age
+    eyeColor
+    fullName
+    email
+  }
+}
+
+## Part 02
+query multiplePersons{
+  persons(
+    input: {
+      id: 4,
+      eyeColor: BROWN
+    }
+  ) {
+    id
+    age
+    eyeColor
+    fullName
+    email
+    friends(
+      input: {
+        favSkill: { id: 15 }
+      }
+    ) {
+      id
+      name
+      favSkill {
+        name
+      }
+    }
+    skills(
+      input: {
+        id: 47,
+        name: "Doctype"
+      }
+    ) {
+      id
+      name
+    }
+    favSkill {
+      id
+      name
+      parent {
+        id
+        name
+      }
+    }
+  }
+}
+
+## Part 03
+query singleSkill{
+  skill(
+    input: {
+      id: 47,
+      name: "Doctype"
+    }
+  ) {
+    id
+    name
+    parent {
+      id
+      name
+    }
+  }
+}
+
+## Part 04
+query multipleSkills{
+  skills (
+    input: {
+      id: 4,
+      name: "Design Principles"
+    }
+  ){
+    id
+    name
+    parent{
+      id
+      name
+    }
+  }
+}
+
+```
+
+Select the exercise on your preferred technology:
+
+- [JavaScript](javascript/README.md)
+- [Java](java/README.md)
+- [Python](python/README.md)
 
 
 ## Learning resources
@@ -348,4 +468,3 @@ For a given datasource ([abstracted as json here](datasource/data.json)) contain
 - GraphQL Org
   - [Input Types](https://graphql.org/learn/schema/#input-types)
   - [Enumeration Types](https://graphql.org/learn/schema/#enumeration-types)
-  - 
