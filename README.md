@@ -53,7 +53,7 @@ Hopefully your walk will be much easier than ours!
     - Enum
     - Exercise
     - Learning resources
-- Day 4
+- [Day 4](lessons/day_04/day_04.md)
   - Mutation
     - Description
     - Learning resources
