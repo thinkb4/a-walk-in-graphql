@@ -356,7 +356,7 @@ query singlePerson{
       id: 5,
       age: 36,
       eyeColor: BLUE,
-      favSkill: { id: 45 }
+      favSkill: 102
     }
   ) {
     id
@@ -382,7 +382,7 @@ query multiplePersons{
     email
     friends(
       input: {
-        favSkill: { id: 15 }
+        favSkill: 15
       }
     ) {
       id
@@ -452,7 +452,6 @@ Select the exercise on your preferred technology:
 - [JavaScript](javascript/README.md)
 - [Java](java/README.md)
 - [Python](python/README.md)
-
 
 ## Learning resources
 
