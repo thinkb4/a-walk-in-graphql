@@ -54,7 +54,8 @@ Hopefully your walk will be much easier than ours!
     - Exercise
     - Learning resources
 - [Day 4](lessons/day_04/day_04.md)
-  - Mutation
+  - Mutations
+    - Mutation
     - Description
     - Learning resources
     - Exercise

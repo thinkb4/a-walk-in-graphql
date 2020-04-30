@@ -1,48 +1,226 @@
 # [A walk in GraphQL](/README.md)
 
-## Day 4: Mutation
+## Day 4: Mutations
 
 - Mutation
 - Exercise
 - Learning resources
 
-## Exercise
+## Mutation
 
-For a given datasource ([abstracted as json here](datasource/data.json)) containing `n` rows of `skills` and `n` rows of `persons` we provided a sample implementation of a GraphQL server for each technology containing:
+What is `CRUD` without `CUD` huh?!!
+In a REST-full API you have specific HTTP Verbs (like `PUT`) to create and/or update a resource, in GraphQL, strictly talking, you don't. Queries and Mutations are more similar to `POST` and `GET` in the aspect that nothing stops you from producing data side-effects through a `query` or a `mutations` even though they are, respectively, designed to have significant differences on their behavior.
 
-- a server app
-- a schema
-- a resolver map
-- an entity model
-- a db abstraction
+Let's compare them.
 
-The code contains the solution for previous exercises so you can have a starting point example.
+| Query | Mutation |
+|:----------------------------------------------------------------------:|:----------------------------------------------------------------------:|
+| **Mandatory** Root Operation Type | **Optional** Root Operation Type |
+| Object Type | Object Type |
+| Accept arguments | Accept arguments |
+| **Arguments** values be valid **input types** | **Arguments** values be valid **input types** |
+| **Output** values be **valid output types** | **Output** values be **valid output types** |
+| resolver's signature arity of 4 | resolver's signature arity of 4 |
+| sample resolver signature <br> ```<resolverName>(root, args, context, info)``` | sample resolver signature <br> `<resolverName>(root, args, context, info)` |
+| expected to be **side-effect free and idempoten** | well ... •͡˘㇁•͡˘ ... it's expected to **mutate** something  |
+| `query` operation **root fields** executed and resolved in <br> **PARALLEL**  | `mutation` operation **root fields** executed and resolved in <br> **SERIAL ORDER** |
 
-### Exercise requirements
+**( 0 _ 0 ) SAY AGAIN!**
 
-#### Operations list
+> If the operation is a **mutation**, the result of the operation is the result of executing the mutation’s top level selection set on the mutation root object type. **This selection set should be executed serially.**
+>
+> It is expected that the top level fields in a mutation operation perform side‐effects on the underlying data system. **Serial execution** of the provided mutations **ensures against race conditions** during these side‐effects.
+>
+> Source: [GraphQL Spec (June 2018) - Mutation](http://spec.graphql.org/June2018/#sec-Mutation)
+
+That make sense.
+
+> Normally the executor can execute the entries in a grouped field set in whatever order it chooses (normally in parallel). Because the resolution of fields other than top‐level mutation fields must always be side effect‐free and idempotent, the execution order must not affect the result, and hence the server has the freedom to execute the field entries in whatever order it deems optimal.
+>
+> When executing a mutation, the selections in the top most selection set will be executed in serial order, starting with the first appearing field textually.
+>
+> When executing a grouped field set serially, the executor must consider each entry from the grouped field set in the order provided in the grouped field set. It must determine the corresponding entry in the result map for each item to completion before it continues on to the next item in the grouped field set.
+>
+> Source: [GraphQL spec (June 2018) - Normal and Serial Execution](http://spec.graphql.org/June2018/#sec-Normal-and-Serial-Execution)
+
+For example:
 
 ```graphql
-
+query {
+  buckLanders: users(input: { kind: HOBBIT, homeland: "Buckland" }) {
+    id
+    name
+  }
+  shireLanders: users(input: { kind: HOBBIT, homeland: "The Shire" }) {
+    id
+    name
+  }
+}
 ```
 
-Select the exercise on your preferred technology:
+A valid GraphQL executor can resolve the query in whatever order it considers optimal:
 
-- [JavaScript](javascript/README.md)
-- [Java](java/README.md)
-- [Python](python/README.md)
+- Run ExecuteField() for `buckLanders` or `shireLanders` normally, which during CompleteValue() will execute the `{ id name }` sub‐selection set normally.
+- Run ExecuteField() for the remaining field (`buckLanders` or `shireLanders`), which during CompleteValue() will execute the `{ id name }` sub‐selection set normally.
+
+Even though the execution order cannot be determined a priori, the response does, and will reflect the lexical order of the query (as show below), this response will be returned once all operations are completed.
+
+```json
+{
+  "data": {
+    "buckLanders": [
+      {
+        "id": "3",
+        "name": "Meriadoc"
+      },
+      {
+        "id": "9",
+        "name": "Saradoc"
+      },
+      {
+        "id": "10",
+        "name": "Esmeralda"
+      }
+    ],
+    "shireLanders": [
+      {
+        "id": "1",
+        "name": "Frodo"
+      },
+      {
+        "id": "2",
+        "name": "Sam"
+      },
+      {
+        "id": "4",
+        "name": "Peregrin"
+      },
+      {
+        "id": "8",
+        "name": "Drogo"
+      }
+    ]
+  }
+}
+```
+
+As opposite, in the following example:
+
+```graphql
+mutation {
+  makeEmBuckLanders: moveKindToHomeland(input: { kind: HOBBIT, homeland: "Buckland" }) {
+    id
+    name
+  }
+  makeEmShireLanders: moveKindToHomeland(input: { kind: HOBBIT, homeland: "The Shire" }) {
+    id
+    name
+  }
+}
+```
+
+A valid GraphQL executor MUST resolve the mutation selection set SERIALLY:
+
+- Resolve the `moveKindToHomeland(input: { kind: HOBBIT, homeland: "Buckland" })` field
+- Execute the { id name } sub‐selection set of `makeEmBuckLanders` normally
+- Resolve the `moveKindToHomeland(input: { kind: HOBBIT, homeland: "The Shire" })` field
+- Execute the { id name } sub‐selection set of `makeEmShireLanders` normally
+
+A correct executor must generate the following result for that selection set:
+
+```json
+{
+  "data": {
+    "makeEmBuckLanders": [
+      {
+        "id": "1",
+        "name": "Frodo"
+      },
+      {
+        "id": "2",
+        "name": "Sam"
+      },
+      {
+        "id": "4",
+        "name": "Peregrin"
+      },
+      {
+        "id": "8",
+        "name": "Drogo"
+      }
+    ],
+    "makeEmShireLanders": [
+      {
+        "id": "1",
+        "name": "Frodo"
+      },
+      {
+        "id": "2",
+        "name": "Sam"
+      },
+      {
+        "id": "3",
+        "name": "Meriadoc"
+      },
+      {
+        "id": "4",
+        "name": "Peregrin"
+      },
+      {
+        "id": "8",
+        "name": "Drogo"
+      },
+      {
+        "id": "9",
+        "name": "Saradoc"
+      },
+      {
+        "id": "10",
+        "name": "Esmeralda"
+      }
+    ]
+  }
+}
+```
+
+Obviously the execution order is critical even in such a silly example.
+
+So far so good? Now, if you were attentive you  might have noticed the following:
+
+GraphQL spec determines **only top‐level mutation fields to be executer serially**; *every nested field level will be executer normally!!!!*
+
+What if we have all operations to use a single entity?
+(not saying this is correct, it's just a possibility)
+
+```graphql
+mutation {
+  Character {
+    create(kind: HOBBIT, name: "Bilbo"){
+      name
+    }
+    update(birthday: "September 22"){
+      birthday
+    }
+  }
+}
+```
+
+( ´◔ ω◔`) Can you spot the problem here?
+
+There's absolutely no guarantee `create` field is executed before `update`, GraphQL won't do it for you. There are plenty of solutions and it'll depend on the language, architecture, underlying data system, etc. The important thing is that you're aware of this and design your solutions accordingly.
 
 ## Learning resources
 
 - GraphQL Spec (June 2018)
-  - [Input Objects](http://spec.graphql.org/June2018/#sec-Input-Objects)
-    - [Values](http://spec.graphql.org/June2018/#sec-Input-Object-Values)
-    - [Field Names](http://spec.graphql.org/June2018/#sec-Input-Object-Field-Names)
-    - [Field Uniqueness](http://spec.graphql.org/June2018/#sec-Input-Object-Field-Uniqueness)
-    - [Required Fields](http://spec.graphql.org/June2018/#sec-Input-Object-Required-Fields)
-  - [Enums](http://spec.graphql.org/June2018/#sec-Enums)
-    - [Values](http://spec.graphql.org/June2018/#sec-Enum-Value)
-    - [Type Kind](http://spec.graphql.org/June2018/#sec-Enum)
+  - [Root Operation Types](http://spec.graphql.org/June2018/#sec-Root-Operation-Types)
+  - [Mutation](http://spec.graphql.org/June2018/#sec-Mutation)
+  - [Normal and Serial Execution](http://spec.graphql.org/June2018/#sec-Normal-and-Serial-Execution)
 - GraphQL Org
-  - [Input Types](https://graphql.org/learn/schema/#input-types)
-  - [Enumeration Types](https://graphql.org/learn/schema/#enumeration-types)
+  - [Mutations](https://graphql.org/learn/queries/#mutations)
+  - [Mutations and Input Types JS tutorials](https://graphql.org/graphql-js/mutations-and-input-types/)
+- How to GraphQL
+  - [A simple mutation](https://www.howtographql.com/graphql-js/3-a-simple-mutation/)
+- Other articles
+  - [Nested GraphQL Resolvers & Separating Concerns](https://khalilstemmler.com/blogs/graphql/nested-graphql-resolvers/) by Khalil Stemmler
+  - [Modeling GraphQL Mutations](https://techblog.commercetools.com/modeling-graphql-mutations-52d4369f73b1) by Oleg Ilyenko
+  - [GraphQL Mutation Design: Anemic Mutations](https://medium.com/@__xuorig__/graphql-mutation-design-anemic-mutations-dd107ba70496) by Marc-André Giroux
