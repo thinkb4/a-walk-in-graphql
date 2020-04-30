@@ -4,6 +4,9 @@
  */
 
 module.exports = {
+  /**
+   * 
+   */
   Query: {
     /**
      * Top-Level resolver
@@ -16,9 +19,9 @@ module.exports = {
      * 
      * @returns {Object}
      */
-    randomSkill(obj, args, context, info) {
-      return context.models.Skill.randomSkill();
-    }
+    randomSkill(obj, args, { models: { Skill } }) {
+      return Skill.randomRecord();
+    },
   },
   Skill: {
     /**
@@ -44,8 +47,8 @@ module.exports = {
      * 
      * @returns {Object|Undefined}
      */
-    parent (obj, args, context, info) {
-      return context.models.Skill.find({id: obj.parent});
+    parent({ parent: id }, args, { models: { Skill } }) {
+      return Skill.find({ id });
     },
   }
 }
