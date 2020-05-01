@@ -7,6 +7,9 @@ import com.example.DemoGraphQL.service.PersonService;
 import com.example.DemoGraphQL.service.SkillService;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * Top-Level resolver for Query
  */
@@ -28,4 +31,9 @@ public class Query implements GraphQLQueryResolver {
     public Person randomPerson() {
         return this.personService.getRandomPerson();
     }
+
+    public List<Person> persons(final Optional<Long> id) {
+        return this.personService.getPersons(id);
+    }
+
 }

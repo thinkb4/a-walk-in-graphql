@@ -35,4 +35,5 @@ type Person {
 type Query {
     randomSkill: Skill!
     randomPerson: Person!
+    persons(id: ID): [Person!]
 }
