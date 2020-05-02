@@ -5,6 +5,9 @@ from data import db
 
 
 class Skill(graphene.ObjectType):
+    """
+    This is the Skill description shown in the palyground
+    """
     id = graphene.ID() # this is a comment
     parent = graphene.Field(lambda: Skill, description="This defines a relationship with a Skill Object Type value")
     name = graphene.NonNull(graphene.String, description="Just a simple description")
@@ -12,7 +15,8 @@ class Skill(graphene.ObjectType):
     now = graphene.DateTime(deprecation_reason="This is just an example of a virtual field.") # this is a deprecatde field
 
     # Field-level resolver
-    def resolve_now(self, info):
+    @staticmethod
+    def resolve_now(info):
         """
         Resolves now as a virtual field
         https://docs.graphene-python.org/en/latest/types/objecttypes/#resolverparaminfo

@@ -16,3 +16,4 @@ target/
 *.iws
 *.iml
 *.ipr
+lessons/day_02/javascript/package-lock.json

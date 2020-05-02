@@ -1,11 +1,15 @@
 import graphene
 from random import randint
 # from flata import Query as FQuery
-from skill import Skill, db
+from models import Skill, db
 
 
 class Query(graphene.ObjectType):
-    random_skill = graphene.Field(Skill)
+    """
+    This is a description notation
+    @see [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Descriptions)
+    """
+    random_skill = graphene.Field(Skill, required=True, description="This is the random_skill description shown in the palyground")
 
     # Top-Level resolver
     def resolve_random_skill(self, info):
