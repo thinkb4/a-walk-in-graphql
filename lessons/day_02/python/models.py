@@ -35,7 +35,7 @@ class Skill(graphene.ObjectType):
         """
         db.table('skills') # Method table will create or retrieve if it exists
         tb = db.get('skills') #Methos to get the content of the table
-        return tb.get(id=parent['parent']) if isinstance(parent['parent'], int) else None
+        return tb.get(id=parent['parent']) if parent['parent'] else None
 
 
 class Person(graphene.ObjectType):
