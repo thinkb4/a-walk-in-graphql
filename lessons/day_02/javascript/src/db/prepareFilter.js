@@ -10,20 +10,10 @@ const sanitize = (filter) => {
     return filter;
   }
 
-  const conf = Object.keys(filter).reduce((acc, key) => {
-
-    let val = filter[key];
-
-    switch (val) {
-      case undefined:
-        return acc; // avoid including keys with undefined values
-      default:
-        return {
-          ...acc,
-          [key]: val
-        }
-        break;
-    }
+  const conf = Object.entries(filter).reduce((acc, entry) => {
+    let [key, val] = entry;
+    // avoid including keys with undefined values
+    return val === undefined ? acc : { ...acc, [key]: val };
 
   }, {});
 
