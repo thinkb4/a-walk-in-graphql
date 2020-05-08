@@ -11,8 +11,10 @@ const cwd = process.cwd();
 const adapter = new FileSync(`${cwd}/../datasource/data.json`);
 const db = low(adapter);
 
-const Skill = require('./skill')(db);
-const Person = require('./person')(db);
+const { prepareFilter } = require('./prepareFilter');
+
+const Skill = require('./skill').model({ db, prepareFilter });
+const Person = require('./person').model({ db, prepareFilter });
 
 module.exports = {
   models: {
