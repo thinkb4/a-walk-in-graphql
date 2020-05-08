@@ -221,10 +221,19 @@ For a given datasource ([abstracted as json here](datasource/data.json)) contain
 
 The code contains the solution for previous exercises  so you can have a starting point example.
 
-HINT
+### Exercise requirements
+
+- Update the type definition and the resolvers to be be able to perform the mutation operations listed below (can you provide other sample mutations when your code is completed?).
+- Discuss with someone else which would be the best way to use Input Objects here.
+- You'll notice something about the new IDs, it's a good opportunity to ask, discuss and investigate the reasons behind the change.
+- May the variable definitions be with you .... hummmm sorry, let the variable definitions in both operations help you with the Schema definition.
+
+#### Operations list
 
 ```graphql
-mutation($name: String!, $parent: ID) {
+
+## Part 1
+mutation createSkill($name: String!, $parent: ID) {
   createSkill(input: { name: $name, parent: $parent }) {
     id
     name
@@ -234,15 +243,8 @@ mutation($name: String!, $parent: ID) {
   }
 }
 
-
-```
-
-### Exercise requirements
-
-#### Operations list
-
-```graphql
-mutation(
+## Part 2
+mutation createPerson(
   $name: String!
   $surname: String
   $email: String
