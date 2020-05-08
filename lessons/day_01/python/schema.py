@@ -1,15 +1,16 @@
-import graphene
+from graphene import ObjectType, Field, Schema
 from random import randint
 # from flata import Query as FQuery
 from models import Skill, db
 
 
-class Query(graphene.ObjectType):
+class Query(ObjectType):
     """
     This is a description notation
     @see [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Descriptions)
     """
-    random_skill = graphene.Field(Skill, required=True, description="This is the random_skill description shown in the palyground")
+    random_skill = Field(Skill, required=True,
+                         description="This is the random_skill description shown in the palyground")
 
     # Top-Level resolver
     def resolve_random_skill(self, info):
@@ -22,9 +23,9 @@ class Query(graphene.ObjectType):
         db.table('skills')
         tb = db.get('skills')
         random_id = str(randint(1, len(tb)))
-        return tb.get(id=random_id) #this way is more directly and cannot use two conditions. 
+        return tb.get(id=random_id)  # this way is more directly and cannot use two conditions.
         # these ca be used in flata for search in queries
-        # return tb.search(FQuery().id == random_id)[0] 
+        # return tb.search(FQuery().id == random_id)[0]
 
 
-schema_query = graphene.Schema(query=Query)
+schema_query = Schema(query=Query)

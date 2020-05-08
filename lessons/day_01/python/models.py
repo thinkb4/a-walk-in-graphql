@@ -1,18 +1,18 @@
-import graphene
+from graphene import ObjectType, NonNull, String, Field, ID, DateTime
 from datetime import datetime
 from flata import Query as FQuery
 from data import db
 
 
-class Skill(graphene.ObjectType):
+class Skill(ObjectType):
     """
     This is the Skill description shown in the palyground
     """
-    id = graphene.ID() # this is a comment
-    parent = graphene.Field(lambda: Skill, description="This defines a relationship with a Skill Object Type value")
-    name = graphene.NonNull(graphene.String, description="Just a simple description")
-    # name = graphene.String(required=True) # Is the same as the NonNull syntax
-    now = graphene.DateTime(deprecation_reason="This is just an example of a virtual field.") # this is a deprecatde field
+    id = ID()  # this is a comment
+    parent = Field(lambda: Skill, description="This defines a relationship with a Skill Object Type value")
+    name = NonNull(String, description="Just a simple description")
+    # name = String(required=True)  # Is the same as the NonNull syntax
+    now = DateTime(deprecation_reason="This is just an example of a virtual field.")
 
     # Field-level resolver
     @staticmethod
@@ -34,6 +34,6 @@ class Skill(graphene.ObjectType):
         :param parent: information of the parent instance
         :param info: refernce to eta information and access to per request context
         """
-        db.table('skills') # Method table will create or retrieve if it exists
-        tb = db.get('skills') #Methos to get the content of the table
+        db.table('skills')  # Method table will create or retrieve if it exists
+        tb = db.get('skills')  # Methos to get the content of the table
         return tb.get(id=parent['parent']) if parent['parent'] else None

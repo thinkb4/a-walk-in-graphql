@@ -51,7 +51,7 @@ class Query(ObjectType):
         https://docs.graphene-python.org/en/latest/types/objecttypes/#resolvers
         :param parent: information of the parent instance
         :param info: refernce to eta information and access to per request context
-        :param id_person: is the id passed as an argument, with default value in case id_person gets empty
+        :param id: is the id passed as an argument, with default value in case id gets empty
         """
         db.table('persons')
         tb = db.get('persons')
