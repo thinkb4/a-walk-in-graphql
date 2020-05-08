@@ -9,7 +9,7 @@
 ## Mutation
 
 What is `CRUD` without `CUD` huh?!!
-In a REST-full API you have specific HTTP Verbs (like `PUT`) to create and/or update a resource, in GraphQL, strictly talking, you don't. Queries and Mutations are more similar to `POST` and `GET` in the aspect that nothing stops you from producing data side-effects through a `query` or a `mutations` even though they are, respectively, designed to have significant differences on their behavior.
+In a REST-full API you have specific HTTP Verbs (like `PUT`) to create and/or update a resource, in GraphQL, strictly talking, you don't. Queries and Mutations are more similar to `POST` and `GET` in the aspect that nothing stops you from producing data side-effects through a `query` or a `mutation` even though they are, respectively, designed to have significant differences on their behavior.
 
 Let's compare them.
 
@@ -25,7 +25,7 @@ Let's compare them.
 | expected to be **side-effect free and idempoten** | well ... •͡˘㇁•͡˘ ... it's expected to **mutate** something  |
 | `query` operation **root fields** executed and resolved in <br> **PARALLEL**  | `mutation` operation **root fields** executed and resolved in <br> **SERIAL ORDER** |
 
-**( 0 _ 0 ) SAY AGAIN!**
+**( 0 _ 0 ) SAY AGAIN?!**
 
 > If the operation is a **mutation**, the result of the operation is the result of executing the mutation’s top level selection set on the mutation root object type. **This selection set should be executed serially.**
 >
@@ -33,11 +33,11 @@ Let's compare them.
 >
 > Source: [GraphQL Spec (June 2018) - Mutation](http://spec.graphql.org/June2018/#sec-Mutation)
 
-That make sense.
+That makes total sense.
 
 > Normally the executor can execute the entries in a grouped field set in whatever order it chooses (normally in parallel). Because the resolution of fields other than top‐level mutation fields must always be side effect‐free and idempotent, the execution order must not affect the result, and hence the server has the freedom to execute the field entries in whatever order it deems optimal.
 >
-> When executing a mutation, the selections in the top most selection set will be executed in serial order, starting with the first appearing field textually.
+> When executing a mutation, the selections in the top most selection set will be executed in **serial order**, **starting with the first appearing field textually**.
 >
 > When executing a grouped field set serially, the executor must consider each entry from the grouped field set in the order provided in the grouped field set. It must determine the corresponding entry in the result map for each item to completion before it continues on to the next item in the grouped field set.
 >
@@ -63,7 +63,7 @@ A valid GraphQL executor can resolve the query in whatever order it considers op
 - Run ExecuteField() for `buckLanders` or `shireLanders` normally, which during CompleteValue() will execute the `{ id name }` sub‐selection set normally.
 - Run ExecuteField() for the remaining field (`buckLanders` or `shireLanders`), which during CompleteValue() will execute the `{ id name }` sub‐selection set normally.
 
-Even though the execution order cannot be determined a priori, the response does, and will reflect the lexical order of the query (as show below), this response will be returned once all operations are completed.
+Even though the execution order cannot be determined a priori, the response can, and it'll reflect the lexical order of the query (as shown below). This response will be returned once all operations are completed.
 
 ```json
 {
@@ -104,7 +104,7 @@ Even though the execution order cannot be determined a priori, the response does
 }
 ```
 
-As opposite, in the following example:
+As opposite to queries, in the following example of a mutation we'll see a completely different behavior:
 
 ```graphql
 mutation {
@@ -183,14 +183,14 @@ A correct executor must generate the following result for that selection set:
 }
 ```
 
-Obviously the execution order is critical even in such a silly example.
+Obviously the execution order is critical even in such a silly example. All **ShireLanders** where moved to **Buckland** first, then all **BuckLanders** were moved to **The Shire** and they had one of beer each at the Green Dragon back and forth. If the execution order wasn't predictable and respected, the owner wouldn't know before hand if the minimum available stock should be 11 or 10 for this operation but that's another story ... is it? ... nope, that's exactly the point.
 
 So far so good? Now, if you were attentive you  might have noticed the following:
 
-GraphQL spec determines **only top‐level mutation fields to be executer serially**; *every nested field level will be executer normally!!!!*
+GraphQL spec determines **only top‐level mutation fields to be executed serially**; that means *every nested field level will be executed normally!!!!*
 
-What if we have all operations to use a single entity?
-(not saying this is correct, it's just a possibility)
+**... what if we define all operations to use a single entity?**
+(not saying this is a right or wrong approach, it's just a possibility)
 
 ```graphql
 mutation {
@@ -207,7 +207,95 @@ mutation {
 
 ( ´◔ ω◔`) Can you spot the problem here?
 
-There's absolutely no guarantee `create` field is executed before `update`, GraphQL won't do it for you. There are plenty of solutions and it'll depend on the language, architecture, underlying data system, etc. The important thing is that you're aware of this and design your solutions accordingly.
+OOPS! There's absolutely no guarantee the `create` field is executed before `update`, GraphQL won't do it for you. There are plenty of solutions and it'll depend on the language, architecture, underlying data system, etc. The important thing is that you're aware of this and design your solutions accordingly.
+
+## Exercise
+
+For a given datasource ([abstracted as json here](datasource/data.json)) containing `n` rows of `skills` and `n` rows of `persons` we provided a sample implementation of a GraphQL server for each technology containing:
+
+- a server app
+- a schema
+- a resolver map
+- an entity model
+- a db abstraction
+
+The code contains the solution for previous exercises  so you can have a starting point example.
+
+HINT
+
+```graphql
+mutation($name: String!, $parent: ID) {
+  createSkill(input: { name: $name, parent: $parent }) {
+    id
+    name
+    parent {
+      name
+    }
+  }
+}
+
+
+```
+
+### Exercise requirements
+
+#### Operations list
+
+```graphql
+mutation(
+  $name: String!
+  $surname: String
+  $email: String
+  $age: Int
+  $eyeColor: EyeColor
+  $friends: [ID!]
+  $skills: [ID!]
+  $favSkill: ID
+) {
+  createPerson(
+    input: {
+      name: $name
+      surname: $surname
+      email: $email
+      age: $age
+      eyeColor: $eyeColor
+      friends: $friends
+      skills: $skills
+      favSkill: $favSkill
+    }
+  ) {
+    id
+    fullName
+    email
+    age
+    eyeColor
+    friends {
+      id
+      name
+    }
+    skills {
+      name
+      parent {
+        name
+      }
+    }
+    favSkill {
+      id
+      name
+      parent {
+        name
+      }
+    }
+  }
+}
+
+```
+
+Select the exercise on your preferred technology:
+
+- [JavaScript](javascript/README.md)
+- [Java](java/README.md)
+- [Python](python/README.md)
 
 ## Learning resources
 

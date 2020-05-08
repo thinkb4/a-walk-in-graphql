@@ -60,17 +60,18 @@ Hopefully your walk will be much easier than ours!
     - Learning resources
     - Exercise
 - Day 5
-  - Interfaces
-    - Description
+  - Interfaces and Unions
+    - Interface
+    - Union
     - Exercise
     - Learning resources
 - Day 6
-  - Unions
+  - Errors
     - Description
     - Exercise
     - Learning resources
 - Day 7
-  - Errors
+  - Extending Types
     - Description
     - Exercise
     - Learning resources

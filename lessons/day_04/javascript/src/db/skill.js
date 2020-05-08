@@ -1,3 +1,4 @@
+const nanoid = require('nanoid');
 const DATASET_KEY = 'skills';
 
 /**
@@ -44,6 +45,20 @@ const model = ({ db, prepareFilter, datasetKey = DATASET_KEY } = {}) => {
         .filter(filter)
         .value()
     }),
+    /**
+     * 
+     * @param {Object} input
+     * @returns {Object}
+     */
+    create(input) {
+      const record = { id: nanoid(), ...input };
+
+      db.get(DATASET_KEY)
+        .push(record)
+        .write()
+
+      return record;
+    }
   }
 }
 
