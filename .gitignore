@@ -1,11 +1,8 @@
 node_modules
 coverage
 live_demo.js
-lessons/day_01/python/venv
-.vscode
 *.pyc
 *.log
-lessons/day_01/python/app copy.py
 
 ### Java ###
 target/
@@ -16,4 +13,6 @@ target/
 *.iws
 *.iml
 *.ipr
-lessons/day_02/javascript/package-lock.json
+**/package-lock.json
+venv/
+.vscode/
