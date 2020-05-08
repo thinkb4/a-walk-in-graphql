@@ -15,7 +15,7 @@ class Skill(ObjectType):
     now = DateTime(deprecation_reason="This is just an example of a virtual field.")
 
     # Field-level resolver
-    def resolve_now(info):
+    def resolve_now(parent, info):
         """
         Resolves now as a virtual field
         https://docs.graphene-python.org/en/latest/types/objecttypes/#resolverparaminfo
@@ -70,4 +70,4 @@ class Person(ObjectType):
     def resolve_fav_skill(parent, info):
         db.table('skills')  # Method table will create or retrieve if it exists
         tb = db.get('skills')  # Methos to get the content of the table
-        return tb.get(id=parent['favSkill']) if isinstance(parent['favSkill'], int) else None
+        return tb.get(id=parent['favSkill']) if parent['favSkill'] else None

@@ -45,7 +45,7 @@ class Query(ObjectType):
         # These ca be used in flata for search in queries
         # return tb.search(FQuery().id == random_id)[0]
 
-    def resolve_persons(self, info, id_person=None):
+    def resolve_persons(self, info, id=None):
         """
         Resolves a list of persons
         https://docs.graphene-python.org/en/latest/types/objecttypes/#resolvers
@@ -57,7 +57,7 @@ class Query(ObjectType):
         tb = db.get('persons')
         # in the below we use the seach statement because we targeting for a list
         # of all persons or a list of one person
-        return tb.search(FQuery().id == id_person) if id_person else tb.all()
+        return tb.search(FQuery().id == id) if id else tb.all()
 
 
 schema_query = Schema(query=Query)
