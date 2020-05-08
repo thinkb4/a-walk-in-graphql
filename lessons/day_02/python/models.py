@@ -65,8 +65,7 @@ class Person(ObjectType):
         db.table('skills')  # Method table will create or retrieve if it exists
         tb = db.get('skills')  # Methos to get the content of the table
         # loop through list of skills from parent using list comprehension
-        skills = [tb.get(id=skill) for skill in parent['skills']]
-        return skills
+        return [tb.get(id=skill) for skill in parent['skills']]
 
     def resolve_fav_skill(parent, info):
         db.table('skills')  # Method table will create or retrieve if it exists
