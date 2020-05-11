@@ -71,7 +71,7 @@ type Query {
 }
 ```
 
-Note that using the name `input` for the argument and using the name  `InputUser` for the type definition is completely arbitrary, you can use whatever the team agrees to use.
+Note that using the name `input` for the argument and using the name `InputUser` for the type definition is completely arbitrary, you can use whatever the team agrees to use.
 
 Here a <span id="sample-query-with-input-object">sample query</span> you could request against the server for the type definition above.
 
@@ -200,7 +200,7 @@ type User {
 ## This is VALID
 input InputUser {
   homeland: String
-  bla: Bla
+  whatever: InputWhatever
 }
 
 ## THIS IS NOT!!!
@@ -289,11 +289,11 @@ A secondary, but not less important advantage of enums is that now the value is 
 
 The language specific implementation of enums will affect how you will have to handle the discrepancies on your side and sometimes a backend forces a different value for an enum internally than in the public API.
 
-In our example we have that discrepancy because the backend representation (internal representation) of the `kind`field is `half-elven` which doesn't correspond to a valid name, so we used `HALF_ELVEN`.
+In our example we have that discrepancy because the backend representation (internal representation) of the `kind` field is `half-elven` which doesn't correspond to a valid name, so we used `HALF_ELVEN`.
 
-The strategy to solve this cases will depend on the language and the server app you're using.
+The strategy to solve these cases will depend on the language and the server app you're using.
 
-E.g [Apollo Server allows the addition of custom values to enums](https://www.apollographql.com/docs/apollo-server/schema/scalars-enums/#internal-values) as shown below.
+E.g. [Apollo Server allows the addition of custom values to enums](https://www.apollographql.com/docs/apollo-server/schema/scalars-enums/#internal-values) as shown below.
 
 ```javascript
 const resolvers = {

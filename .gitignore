@@ -6,3 +6,13 @@ lessons/day_01/python/venv
 *.pyc
 *.log
 lessons/day_01/python/app copy.py
+
+### Java ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr

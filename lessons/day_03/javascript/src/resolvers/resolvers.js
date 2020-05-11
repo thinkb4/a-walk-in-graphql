@@ -83,13 +83,13 @@ module.exports = {
     /**
      * 
      */
-    friends({ friends }, { id }, { models: { Person } }) {
+    friends({ friends = [] }, { id }, { models: { Person } }) {
       return Person.filter({ id }, friends);
     },
     /**
      * 
      */
-    skills({ skills }, { id }, { models: { Skill } }) {
+    skills({ skills = [] }, { id }, { models: { Skill } }) {
       return Skill.filter({ id }, skills);
     },
     /**
