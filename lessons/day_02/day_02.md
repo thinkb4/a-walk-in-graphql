@@ -99,7 +99,7 @@ Before diving deeper it'd be great to have some starting point definitions and r
 8. `arguments` can be `non-nullable` (aka required)
 9. `arguments` can have a default value
 
-#### Query nested and field level arguments
+#### Nested query and field level arguments
 
 So far, we've seen nothing worthy of the "legendary mighty awesomeness of arguments usage" award. That's about to change, like, forever.
 
@@ -340,14 +340,14 @@ In order to produce the right value for an argument it must go through a specifi
 
 ## Variables
 
-ok, now we have seen the tip of the iceberg, some important subjects will surface related to the real world software industry.
+Ok, now we have seen the tip of the iceberg, some important subjects will surface related to the real world software industry.
 
 - reusability
 - scalability
 - maintainability
 - security
 
-Using arguments the way we did on the [nested query with arguments](#nested-query-with-arguments) example is nice as simple but it doesn't capture any of the items listed above, particularly because it forces us to **hard-code the arguments values** every time and for other details we'll see [later today](#security-and-scalability).
+Using arguments the way we did on the [nested query with arguments](#nested-query-with-arguments) example is nice and simple but it doesn't capture any of the items listed above, particularly because it forces us to **hard-code the arguments values** every time and for other details we'll see [later today](#security-and-scalability).
 
 Sure thing, GraphQL won't stop you from creating string extrapolation functions to use a query template and replace some tokens with the params values, but despite the fact that it'll increase the maintenance surface and therefore the bug introduction surface, it'll lack of several benefits GraphQL provides out of the box and several benefits derived from the variables feature itself.
 
@@ -390,7 +390,7 @@ and here how we factored out the variables dictionary (usually JSON) to be passe
 }
 ```
 
-Now we can use the same operation definition and only change the variables, GraphQL will perform all validations ([Type](http://spec.graphql.org/June2018/#sec-Variables-Are-Input-Types), [nullability](http://spec.graphql.org/June2018/#example-c5959), [uniqueness](http://spec.graphql.org/June2018/#sec-Variable-Uniqueness), ...), [variable value coercion](http://spec.graphql.org/June2018/#sec-Coercing-Variable-Values) and some more things. 
+Now we can use the same operation definition and only change the variables, GraphQL will perform all validations ([Type](http://spec.graphql.org/June2018/#sec-Variables-Are-Input-Types), [nullability](http://spec.graphql.org/June2018/#example-c5959), [uniqueness](http://spec.graphql.org/June2018/#sec-Variable-Uniqueness), ...), [variable value coercion](http://spec.graphql.org/June2018/#sec-Coercing-Variable-Values) and some more things.
 
 Before going forward we'll stop here to consider some important differences between `variables` and `arguments`.
 
@@ -416,7 +416,7 @@ You can use several tools during development to validate your code against the s
 
 #### Declarative vs Imperative approach
 
-Can you imagine following a large application with hundreds/thousand operations defined as interpolation statements? That's not only hard to follow, understand and maintain, it's also impossible to scale and certainly an invitation for all bugs in the universe to come forward and rejoice. Having all your operations described up-front
+Can you imagine following a large application with hundreds/thousands operations defined as interpolation statements? That's not only hard to follow, understand and maintain, it's also impossible to scale and certainly an invitation for all bugs in the universe to come forward and rejoice. Having all your operations described up-front
 
 #### Security and transport overhead
 
@@ -565,6 +565,7 @@ This exercise, hopefully, will generate more questions than answers depending on
 
 - [GraphQL Resolvers: Best Practices
 ](https://medium.com/paypal-engineering/graphql-resolvers-best-practices-cd36fdbcef55) by [Mark Stuart](https://medium.com/@mark_stuart)
+- [Apollo Server - Data-sources](https://www.apollographql.com/docs/apollo-server/data/data-sources/)
 - [Secure your external APIs and reduce the attack surface by utilizing GraphQL](https://levelup.gitconnected.com/graphql-is-the-new-api-gateway-383edeed4bcd) by [Tj Blogumas](https://levelup.gitconnected.com/@tjblogumas)
 - [Versioning fields in GraphQL](https://blog.logrocket.com/versioning-fields-graphql/) by [Leonardo Losoviz](https://blog.logrocket.com/author/leonardolosoviz/)
 

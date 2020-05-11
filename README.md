@@ -47,9 +47,9 @@ Hopefully your walk will be much easier than ours!
     - Variable
     - Exercise
     - Learning resources
-- Day 3
-  - Input Types and Enums
-    - Input Type
+- [Day 3](lessons/day_03/day_03.md)
+  - Input Objects and Enums
+    - Input Object
     - Enum
     - Exercise
     - Learning resources

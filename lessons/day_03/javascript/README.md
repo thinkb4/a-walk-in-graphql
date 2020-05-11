@@ -1,8 +1,8 @@
 # [A walk in GraphQL](/README.md)
 
-## Day 2 exercise - Javascript
+## Day 3 exercise - Javascript
 
-Read the instructions on the [Day 2 exercise](../day_02.md#exercise) definition
+Read the instructions on the [Day 3 exercise](../day_03.md#exercise) definition
 
 ### Run the server
 

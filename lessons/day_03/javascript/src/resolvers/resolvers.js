@@ -31,6 +31,24 @@ module.exports = {
     /**
      * 
      */
+    skill(obj, { id }, { models: { Skill } }) {
+      return Skill.find({ id });
+    },
+    /**
+     * 
+     */
+    skills(obj, { id }, { models: { Skill } }) {
+      return Skill.filter({ id });
+    },
+    /**
+     * 
+     */
+    person(obj, { id }, { models: { Person } }) {
+      return Person.find({ id });
+    },
+    /**
+     * 
+     */
     persons(obj, { id }, { models: { Person } }) {
       return Person.filter({ id });
     },
@@ -65,14 +83,14 @@ module.exports = {
     /**
      * 
      */
-    friends({ friends = [] }, args, { models: { Person } }) {
-      return Person.filter(args, friends);
+    friends({ friends = [] }, { id }, { models: { Person } }) {
+      return Person.filter({ id }, friends);
     },
     /**
      * 
      */
-    skills({ skills = [] }, args, { models: { Skill } }) {
-      return Skill.filter(args, skills);
+    skills({ skills = [] }, { id }, { models: { Skill } }) {
+      return Skill.filter({ id }, skills);
     },
     /**
      * 
