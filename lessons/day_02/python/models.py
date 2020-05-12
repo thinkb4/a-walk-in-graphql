@@ -1,6 +1,5 @@
 from graphene import ObjectType, NonNull, String, Field, ID, DateTime, Int, List
 from datetime import datetime
-from flata import Query as FQuery
 from data import db
 
 
