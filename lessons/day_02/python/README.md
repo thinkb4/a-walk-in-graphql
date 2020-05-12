@@ -1,8 +1,8 @@
 # [A walk in GraphQL](/README.md)
 
-## Day 1 exercise - Python
+## Day 2 exercise - Python
 
-Read the instructions on the [Day 1 exercise](../day_01.md#exercise) definition
+Read the instructions on the [Day 2 exercise](../day_02.md#exercise) definition
 
 ### Run the server
 **This exercise is prepared to work with Python 3**
