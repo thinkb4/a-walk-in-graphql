@@ -22,7 +22,7 @@ Let's compare them.
 | **Output** values be **valid output types** | **Output** values be **valid output types** |
 | resolver's signature arity of 4 | resolver's signature arity of 4 |
 | sample resolver signature <br> ```<resolverName>(root, args, context, info)``` | sample resolver signature <br> `<resolverName>(root, args, context, info)` |
-| expected to be **side-effect free and idempoten** | well ... •͡˘㇁•͡˘ ... it's expected to **mutate** something  |
+| expected to be **side-effect free and idempotent** | well ... •͡˘㇁•͡˘ ... it's expected to **mutate** something  |
 | `query` operation **root fields** executed and resolved in <br> **PARALLEL**  | `mutation` operation **root fields** executed and resolved in <br> **SERIAL ORDER** |
 
 **( 0 _ 0 ) SAY AGAIN?!**
@@ -58,7 +58,7 @@ query {
 }
 ```
 
-A valid GraphQL executor can resolve the query in whatever order it considers optimal:
+A valid GraphQL executor can resolve the query in whatever order it considers optimal including parallel (normal execution):
 
 - Run ExecuteField() for `buckLanders` or `shireLanders` normally, which during CompleteValue() will execute the `{ id name }` sub‐selection set normally.
 - Run ExecuteField() for the remaining field (`buckLanders` or `shireLanders`), which during CompleteValue() will execute the `{ id name }` sub‐selection set normally.
@@ -183,9 +183,9 @@ A correct executor must generate the following result for that selection set:
 }
 ```
 
-Obviously the execution order is critical even in such a silly example. All **ShireLanders** where moved to **Buckland** first, then all **BuckLanders** were moved to **The Shire** and they had one of beer each at the Green Dragon back and forth. If the execution order wasn't predictable and respected, the owner wouldn't know before hand if the minimum available stock should be 11 or 10 for this operation but that's another story ... is it? ... nope, that's exactly the point.
+Obviously the execution order is critical even in such a silly example. All **ShireLanders** where moved to **Buckland** first, then all **BuckLanders** were moved to **The Shire** and they had one of beer each at the Green Dragon back and forth. If the execution order wasn't predictable and respected, the owner wouldn't know beforehand if the minimum available stock should be 11 or 10 for this operation but that's another story ... is it? ... nope, that's exactly the point.
 
-So far so good? Now, if you were attentive you  might have noticed the following:
+So far so good? Now, if you were attentive you might have noticed the following:
 
 GraphQL spec determines **only top‐level mutation fields to be executed serially**; that means *every nested field level will be executed normally!!!!*
 
