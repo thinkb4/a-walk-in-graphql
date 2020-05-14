@@ -53,23 +53,25 @@ Hopefully your walk will be much easier than ours!
     - Enum
     - Exercise
     - Learning resources
-- Day 4
-  - Mutation
+- [Day 4](lessons/day_04/day_04.md)
+  - Mutations
+    - Mutation
     - Description
     - Learning resources
     - Exercise
 - Day 5
-  - Interfaces
-    - Description
+  - Interfaces and Unions
+    - Interface
+    - Union
     - Exercise
     - Learning resources
 - Day 6
-  - Unions
+  - Errors
     - Description
     - Exercise
     - Learning resources
 - Day 7
-  - Errors
+  - Extending Types
     - Description
     - Exercise
     - Learning resources
