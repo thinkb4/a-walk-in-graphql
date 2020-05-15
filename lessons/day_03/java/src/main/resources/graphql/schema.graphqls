@@ -27,13 +27,16 @@ type Person {
     email: String
     age: Int
     eyeColor: String
-    friends: [Person!]
-    skills: [Skill!]
+    friends (id: ID): [Person!]
+    skills (id: ID): [Skill!]
     favSkill: Skill
 }
 
 type Query {
     randomSkill: Skill!
     randomPerson: Person!
-    persons(id: ID): [Person!]
+    skill (id: ID): Skill
+    person (id: ID): Person
+    skills (id: ID): [Skill!]
+    persons (id: ID): [Person!]
 }
