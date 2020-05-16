@@ -16,3 +16,4 @@ target/
 **/package-lock.json
 venv/
 .vscode/
+__pycache__/
