@@ -1,18 +1,18 @@
-import graphene
+from graphene import ObjectType, ID, Field, NonNull, String, DateTime, Int, List, Argument
 from datetime import datetime
 from flata import Query as FQuery
 from data import db
 
 
-class Skill(graphene.ObjectType):
+class Skill(ObjectType):
     """
     This is the Skill description shown in the palyground
     """
-    id = graphene.ID()  # this is a comment
-    parent = graphene.Field(lambda: Skill, description="This defines a relationship with a Skill Object Type value")
-    name = graphene.NonNull(graphene.String, description="Just a simple description")
-    # name = graphene.String(required=True) # Is the same as the NonNull syntax
-    now = graphene.DateTime(deprecation_reason="This is just an example of a virtual field.")
+    id = ID()  # this is a comment
+    parent = Field(lambda: Skill, description="This defines a relationship with a Skill Object Type value")
+    name = NonNull(String, description="Just a simple description")
+    # name = String(required=True) # Is the same as the NonNull syntax
+    now = DateTime(deprecation_reason="This is just an example of a virtual field.")
 
     # Field-level resolver
     def resolve_now(parent, info):
@@ -36,19 +36,19 @@ class Skill(graphene.ObjectType):
         return tb.get(id=parent['parent']) if parent['parent'] else None
 
 
-class Person(graphene.ObjectType):
-    id = graphene.ID()  # this is a comment
-    age = graphene.Int()
-    eyeColor = graphene.String(name='eyeColor')
-    name = graphene.String()
-    surname = graphene.String()
-    full_name = graphene.String(description="Name and surname concatenation")
-    email = graphene.String()
-    friends = graphene.List(lambda: Person, id=graphene.Argument(graphene.ID, required=False),
-                            description="This is a list of Persons")
-    skills = graphene.List(lambda: Skill, id=graphene.Argument(graphene.ID, required=False),
-                           description="This is a list of Skills")
-    fav_skill = graphene.Field(Skill)
+class Person(ObjectType):
+    id = ID()  # this is a comment
+    age = Int()
+    eyeColor = String(name='eyeColor')
+    name = String()
+    surname = String()
+    full_name = String(description="Name and surname concatenation")
+    email = String()
+    friends = List(lambda: Person, id=Argument(ID, required=False),
+                   description="This is a list of Persons")
+    skills = List(lambda: Skill, id=Argument(ID, required=False),
+                  description="This is a list of Skills")
+    fav_skill = Field(Skill)
 
     # Field-level resolver
     def resolve_full_name(parent, info):

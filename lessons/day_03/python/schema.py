@@ -1,21 +1,21 @@
-import graphene
+from graphene import ObjectType, NonNull, String, Field, ID, DateTime, Int, List, Argument, Schema
 from random import randint
 from flata import Query as FQuery
 from models import Skill, Person, db
 
 
-class Query(graphene.ObjectType):
+class Query(ObjectType):
     """
     This is a description notation
     @see [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Descriptions)
     """
-    random_skill = graphene.Field(Skill, required=True,
-                                  description="This is the random_skill description shown in the palyground")
-    random_person = graphene.Field(Person, required=True)
-    persons = graphene.List(Person, id=graphene.Argument(graphene.ID, required=False))
-    person = graphene.Field(Person, id=graphene.Argument(graphene.ID, required=True))
-    skills = graphene.List(Skill, id=graphene.Argument(graphene.ID, required=False))
-    skill = graphene.Field(Skill, id=graphene.Argument(graphene.ID, required=True))
+    random_skill = Field(Skill, required=True,
+                         description="This is the random_skill description shown in the palyground")
+    random_person = Field(Person, required=True)
+    persons = List(Person, id=Argument(ID, required=False))
+    person = Field(Person, id=Argument(ID, required=True))
+    skills = List(Skill, id=Argument(ID, required=False))
+    skill = Field(Skill, id=Argument(ID, required=True))
 
     # Top-Level resolver
     def resolve_random_skill(parent, info):
@@ -97,4 +97,4 @@ class Query(graphene.ObjectType):
         # of all persons or a list of one person
         return tb.search(FQuery().id == id) if id else tb.all()
 
-schema_query = graphene.Schema(query=Query)
+schema_query = Schema(query=Query)
