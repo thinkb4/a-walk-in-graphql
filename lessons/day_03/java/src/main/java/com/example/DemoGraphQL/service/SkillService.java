@@ -19,7 +19,7 @@ public class SkillService {
     }
 
     public Optional<Skill> getSkill(Optional<Long> id) {
-        return id.isPresent() ? this.skillRepository.findById(id.get()) : null;
+        return id.map(v -> this.skillRepository.findById(v)).orElse(null);
     }
 
     public Skill getRandomSkill() {
@@ -30,12 +30,9 @@ public class SkillService {
 
     public List<Skill> getSkills(Optional<Long> id) {
         List<Skill> skills = new ArrayList<>();
-        if (id.isPresent()) {
-            Optional<Skill> skill = this.skillRepository.findById(id.get());
-            if (skill.isPresent()) skills.add(skill.get());
-        } else {
-            skills.addAll(this.skillRepository.findAll());
-        }
-        return skills;
+        return id.map(v -> {
+            this.skillRepository.findById(v).ifPresent(skills::add);
+            return skills;
+        }).orElse(this.skillRepository.findAll());
     }
 }
