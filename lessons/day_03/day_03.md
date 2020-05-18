@@ -25,7 +25,7 @@ The SDL specifies a type for this case and states the following:
 >
 > Source: [GraphQL spec (June 2018) - Input and Output Types](http://spec.graphql.org/June2018/#sec-Input-and-Output-Types)
 
-Now imagine you want to always be able to be able to filter a certain Object Type by more than 1 field ... let's say 3
+Now imagine you want to always be able to filter a certain Object Type by more than 1 field ... let's say 3
 
 ```graphql
 type User {
