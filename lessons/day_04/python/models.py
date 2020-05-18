@@ -49,6 +49,9 @@ class InputPerson(InputObjectType):
     eyeColor = Field(EyeColor)
     favSkill = ID()
 
+    def set_condition(self, query):
+        return query[0] & query[1] & query[2] & query[3]
+
 
 class InputSkill(InputObjectType):
     id = ID()

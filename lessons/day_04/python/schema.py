@@ -5,10 +5,16 @@ from models import Skill, Person, db, InputPerson, InputSkill
 
 q = FQuery()
 
-def validate_input(obj, value):
-    if getattr(obj, value):
-        print(obj)
-        return getattr(q, value) == getattr(obj, value)
+def validate_input(obj):
+    attr_list = obj.__dict__
+    new_list = []
+    for input_attr in attr_list:
+        if obj.get(input_attr):
+            new_list.append(getattr(q, input_attr) == obj.get(input_attr))
+        else:
+            new_list.append(getattr(q, input_attr) != None)
+    return obj.set_condition(new_list)
+
 
 class Query(ObjectType):
     """
@@ -72,18 +78,8 @@ class Query(ObjectType):
         db.table('persons')
         tb = db.get('persons')
         all_persons = tb.all()
-        # for person in all_persons:
-        #     print(input, type(input))
-        #     print(person, type(person))
-        # return tb.search(q.id == input.id)
-        my_query = validate_input(input, 'id')
-        my_query1 = validate_input(input, 'age')
-        print(my_query & my_query1)
-        print(my_query1)
-        # my_query += (q.age == input.age) if input.age else ''
-        # my_query += '&', (q.eyeColor == input.eyeColor) if input.eyeColor else ''
-        # my_query += '&', (q.favSkill == input.favSkill) if input.favSkill else ''
-        return tb.search(my_query)
+        query = validate_input(input)
+        return tb.get(query)
 
     def resolve_skill(parent, info, id=None):
         """
