@@ -1,6 +1,8 @@
 package com.example.DemoGraphQL.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLResolver;
+import com.example.DemoGraphQL.input.InputPerson;
+import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.model.Person;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.PersonService;
@@ -25,11 +27,11 @@ public class PersonResolver implements GraphQLResolver<Person> {
         return person.getName() + " " + person.getSurname();
     }
 
-    public List<Person> friends(final Person person, final Optional<Long> friendId) {
-        return this.personService.getFriends(person, friendId);
+    public List<Person> friends(final Person person, final Optional<InputPerson> input) {
+        return this.personService.getFriends(person, input);
     }
 
-    public List<Skill> skills(final Person person, final Optional<Long> skillId) {
-        return this.personService.getSkills(person, skillId);
+    public List<Skill> skills(final Person person, final Optional<InputSkill> input) {
+        return this.personService.getSkills(person, input);
     }
 }

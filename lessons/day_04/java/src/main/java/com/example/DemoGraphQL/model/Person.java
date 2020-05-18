@@ -22,10 +22,11 @@ public class Person {
     private String email;
 
     @Column(name = "EYECOLOR", nullable = false)
-    private String eyeColor;
+    @Enumerated(EnumType.STRING)
+    private EyeColor eyeColor;
 
     @Column(name = "AGE", nullable = false)
-    private int age;
+    private Integer age;
 
     @ManyToMany
     @JoinTable(
@@ -52,7 +53,7 @@ public class Person {
     public Person() {
     }
 
-    public Person(String name, String surname, String email, String eyeColor, int age) {
+    public Person(String name, String surname, String email, EyeColor eyeColor, Integer age) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -92,19 +93,19 @@ public class Person {
         this.email = email;
     }
 
-    public String getEyeColor() {
+    public EyeColor getEyeColor() {
         return eyeColor;
     }
 
-    public void setEyeColor(String eyeColor) {
+    public void setEyeColor(EyeColor eyeColor) {
         this.eyeColor = eyeColor;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

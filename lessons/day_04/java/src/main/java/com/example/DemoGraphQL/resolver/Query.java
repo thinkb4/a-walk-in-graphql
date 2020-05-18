@@ -1,6 +1,8 @@
 package com.example.DemoGraphQL.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import com.example.DemoGraphQL.input.InputPerson;
+import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.model.Person;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.PersonService;
@@ -32,19 +34,19 @@ public class Query implements GraphQLQueryResolver {
         return this.personService.getRandomPerson();
     }
 
-    public Optional<Person> person(final Optional<Long> id) {
-        return this.personService.getPerson(id);
+    public Optional<Person> person(final Optional<InputPerson> input) {
+        return this.personService.getPerson(input);
     }
 
-    public List<Person> persons(final Optional<Long> id) {
-        return this.personService.getPersons(id);
+    public List<Person> persons(final Optional<InputPerson> input) {
+        return this.personService.getPersons(input);
     }
 
-    public Optional<Skill> skill(final Optional<Long> id) {
-        return this.skillService.getSkill(id);
+    public Optional<Skill> skill(final Optional<InputSkill> input) {
+        return this.skillService.getSkill(input);
     }
 
-    public List<Skill> skills(final Optional<Long> id) {
-        return this.skillService.getSkills(id);
+    public List<Skill> skills(final Optional<InputSkill> input) {
+        return this.skillService.getSkills(input);
     }
 }

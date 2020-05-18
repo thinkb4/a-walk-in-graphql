@@ -1,3 +1,4 @@
+
 """
 This is a description notation
 @see [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Descriptions)
@@ -19,6 +20,25 @@ type Skill {
     now: String! @deprecated(reason: "This is just an example of a virtual field.")
 }
 
+enum EyeColor {
+    BLUE
+    GREEN
+    BROWN
+    BLACK
+}
+
+input InputPerson {
+    id: ID
+    age: Int
+    eyeColor: EyeColor
+    favSkill: ID
+}
+
+input InputSkill {
+    id: ID
+    name: String
+}
+
 type Person {
     id: ID
     name: String
@@ -26,17 +46,17 @@ type Person {
     fullName: String
     email: String
     age: Int
-    eyeColor: String
-    friends (id: ID): [Person!]
-    skills (id: ID): [Skill!]
+    eyeColor: EyeColor
+    friends (input: InputPerson): [Person!]
+    skills (input: InputSkill): [Skill!]
     favSkill: Skill
 }
 
 type Query {
     randomSkill: Skill!
     randomPerson: Person!
-    skill (id: ID): Skill
-    person (id: ID): Person
-    skills (id: ID): [Skill!]
-    persons (id: ID): [Person!]
+    skill (input: InputSkill): Skill
+    person (input: InputPerson): Person
+    skills (input: InputSkill): [Skill!]
+    persons (input: InputPerson): [Person!]
 }
