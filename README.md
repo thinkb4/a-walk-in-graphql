@@ -66,12 +66,12 @@ Hopefully your walk will be much easier than ours!
     - Exercise
     - Learning resources
 - Day 6
-  - Errors
+  - Extending Types
     - Description
     - Exercise
     - Learning resources
 - Day 7
-  - Extending Types
+  - Errors
     - Description
     - Exercise
     - Learning resources
