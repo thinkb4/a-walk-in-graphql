@@ -33,31 +33,22 @@ public class PersonService {
     }
 
     public List<Person> getPersons(Optional<InputPerson> input) {
-        List<Person> persons = new ArrayList<>();
-        if (input.isPresent()) {
-            persons = filterByInput(input.get());
-        } else {
-            persons.addAll(this.personRepository.findAll());
-        }
-        return persons;
+        return input.map(v -> filterByInput(v)).orElse(this.personRepository.findAll());
     }
 
     public Optional<Person> getPerson(Optional<InputPerson> input) {
-        Optional<Person> person = null;
-        if (input.isPresent()) {
-            person = findByInput(input.get());
-        }
-        return person;
+        return input.map((InputPerson v) -> findByInput(v)).orElse(null);
     }
 
     public List<Person> getFriends(Person person, Optional<InputPerson> input) {
         List<Person> friends;
         if (input.isPresent()) {
+            InputPerson inputPerson = input.get();
             List<Predicate<Person>> allPredicates = new ArrayList<>();
-            if (input.get().getId() != null) allPredicates.add(p -> p.getId().equals(input.get().getId()));
-            if (input.get().getAge() != null) allPredicates.add(p -> p.getAge().equals(input.get().getAge()));
-            if (input.get().getEyeColor() != null) allPredicates.add(p -> p.getEyeColor().equals(input.get().getEyeColor()));
-            if (input.get().getFavSkill() != null) allPredicates.add(p -> p.getFavSkill().getId().equals(input.get().getFavSkill()));
+            if (inputPerson.getId() != null) allPredicates.add(p -> p.getId().equals(inputPerson.getId()));
+            if (inputPerson.getAge() != null) allPredicates.add(p -> p.getAge().equals(inputPerson.getAge()));
+            if (inputPerson.getEyeColor() != null) allPredicates.add(p -> p.getEyeColor().equals(inputPerson.getEyeColor()));
+            if (inputPerson.getFavSkill() != null) allPredicates.add(p -> p.getFavSkill().getId().equals(inputPerson.getFavSkill()));
 
             //Composes several predicates into a single predicate, and then applies the composite predicate to a stream.
             Predicate<Person> compositePredicate = allPredicates.stream().reduce(w -> true, Predicate::and);
@@ -73,9 +64,10 @@ public class PersonService {
     public List<Skill> getSkills(Person person, Optional<InputSkill> input) {
         List<Skill> skills;
         if (input.isPresent()) {
+            InputSkill inputSkill = input.get();
             List<Predicate<Skill>> allPredicates = new ArrayList<>();
-            if (input.get().getId() != null) allPredicates.add(p -> p.getId().equals(input.get().getId()));
-            if (input.get().getName() != null) allPredicates.add(p -> p.getName().equals(input.get().getName()));
+            if (inputSkill.getId() != null) allPredicates.add(p -> p.getId().equals(inputSkill.getId()));
+            if (inputSkill.getName() != null) allPredicates.add(p -> p.getName().equals(inputSkill.getName()));
 
             // Composes several predicates into a single predicate, and then applies the composite predicate to a stream.
             Predicate<Skill> compositePredicate = allPredicates.stream().reduce(w -> true, Predicate::and);
@@ -100,9 +92,9 @@ public class PersonService {
     private Example<Person> prepareQueryByExample(InputPerson input) {
         Person filterBy = new Person();
         ExampleMatcher matcher = ExampleMatcher.matching();
-        if (input.getId() != null) filterBy.setId(input.getId());
-        if (input.getAge() != null) filterBy.setAge(input.getAge());
-        if (input.getEyeColor() != null) filterBy.setEyeColor(input.getEyeColor());
+        filterBy.setId(input.getId());
+        filterBy.setAge(input.getAge());
+        filterBy.setEyeColor(input.getEyeColor());
         if (input.getFavSkill() != null) matcher.withMatcher("favSkill.id", match -> match.equals(input.getFavSkill()));
         return Example.of(filterBy, matcher);
     }

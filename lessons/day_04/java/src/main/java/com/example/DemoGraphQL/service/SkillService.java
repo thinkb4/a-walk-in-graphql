@@ -44,8 +44,8 @@ public class SkillService {
 
     private Optional<Skill> filterByInput(InputSkill input) {
         Skill filterBy = new Skill();
-        if (input.getId() != null) filterBy.setId(input.getId());
-        if (input.getName() != null) filterBy.setName(input.getName());
+        filterBy.setId(input.getId());
+        filterBy.setName(input.getName());
         return this.skillRepository.findOne(Example.of(filterBy));
     }
 
