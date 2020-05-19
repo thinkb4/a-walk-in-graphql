@@ -16,3 +16,5 @@ target/
 **/package-lock.json
 venv/
 .vscode/
+###net
+.vs
