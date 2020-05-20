@@ -1,19 +1,9 @@
 from graphene import ObjectType, NonNull, String, Field, ID, DateTime, Int, List, Argument, Schema
 from random import randint
 from flata import Query as FQuery, where
-from models import Skill, Person, db, InputPerson, InputSkill
+from models import Skill, Person, db, InputPerson, InputSkill, validate_input
 
 q = FQuery()
-
-def validate_input(obj):
-    attr_list = obj.__dict__
-    new_list = []
-    for input_attr in attr_list:
-        if obj.get(input_attr):
-            new_list.append(getattr(q, input_attr) == obj.get(input_attr))
-        else:
-            new_list.append(getattr(q, input_attr) != None)
-    return obj.set_condition(new_list)
 
 
 class Query(ObjectType):
@@ -24,10 +14,10 @@ class Query(ObjectType):
     random_skill = Field(Skill, required=True,
                          description="This is the random_skill description shown in the palyground")
     random_person = Field(Person, required=True)
-    persons = List(Person, input=Argument(InputPerson, required=True))
+    persons = List(Person, input=Argument(InputPerson, required=False))
     person = Field(Person, input=Argument(InputPerson, required=True))
-    skills = List(Skill, id=Argument(ID, required=False))
-    skill = Field(Skill, id=Argument(ID, required=True))
+    skills = List(Skill, input=Argument(InputSkill, required=False))
+    skill = Field(Skill, input=Argument(InputSkill, required=True))
 
     # Top-Level resolver
     def resolve_random_skill(parent, info):
@@ -64,8 +54,7 @@ class Query(ObjectType):
         """
         db.table('persons')
         tb = db.get('persons')
-        all_persons = tb.all()
-        return tb.search(q.id == input.id)
+        return tb.search(validate_input(input)) if input else tb.all()
 
     def resolve_person(parent, info, input):
         """
@@ -77,11 +66,9 @@ class Query(ObjectType):
         """
         db.table('persons')
         tb = db.get('persons')
-        all_persons = tb.all()
-        query = validate_input(input)
-        return tb.get(query)
+        return tb.get(validate_input(input))
 
-    def resolve_skill(parent, info, id=None):
+    def resolve_skill(parent, info, input):
         """
         Resolves a random skill
         https://docs.graphene-python.org/en/latest/types/objecttypes/#resolvers
@@ -90,9 +77,9 @@ class Query(ObjectType):
         """
         db.table('skills')
         tb = db.get('skills')
-        return tb.get(id=id) if id else tb.all()
+        return tb.get(validate_input(input))
 
-    def resolve_skills(parent, info, id=None):
+    def resolve_skills(parent, info, input=None):
         """
         Resolves a list of skills
         https://docs.graphene-python.org/en/latest/types/objecttypes/#resolvers
@@ -102,6 +89,6 @@ class Query(ObjectType):
         """
         db.table('skills')
         tb = db.get('skills')
-        return tb.search(FQuery().id == id) if id else tb.all()
+        return tb.search(validate_input(input)) if input else tb.all()
 
 schema_query = Schema(query=Query)
