@@ -27,10 +27,11 @@ Let's start with the spec and gradually break it down and understand how the "In
 >
 > Source: [GraphQL spec - June 2018 - Interface](http://spec.graphql.org/June2018/#sec-Interface)
 
-So far is pretty much the same concept you'll see in OOP, you'll might be tempted to mentally replace the `Type` word with `Class` for a mental map but I'd discourage that, it might mislead you:
+So far is pretty much the same concept you'll see in OOP:
+> you'll might be tempted to replace the `Type` word with `Class` for a mental map but I'd discourage that, it might mislead you
 
 - A common shape abstracted in an `Interface` without the concrete implementation
-- Many different `Types`, having a **shape intersection** (common fields) and individual **specific characteristics** (specific fields) which **can be identified as individuals AND as part of a wider group**, can `implement` the common `Interface` (this is a design decision, having common fields doesn't mean they're necessarily part of a group and sharing and interface)
+- Many different `Types`, having a **shape intersection** (common fields) and individual **specific characteristics** (distinctive fields) which **can be identified as individuals AND as part of a wider group**, can `implement` the common `Interface` (this is a design decision, having common fields doesn't mean they're necessarily part of a group and sharing and interface)
 - The `Interface` **cannot be used directly** but only through `Types` implementing it
 - The `Types` **must implement all fields** defined in the `Interface`
 
@@ -131,15 +132,16 @@ At this point you might start making questions like:
    - Yes, (◔_◔) so annoying, I know, but remember, you're **implementing** an interface, you'll see in the next 2 questions how that's relevant.
 2. I'm still seeing `Character` directly referenced as `Output type` on the `characters` query operation. Is that correct?
    - Yup, that's great though! whoever is using the API won't have a breaking change, it'll be transparent!
-3. Oh, so where the heck the "cannot be directly used" thing here?
+3. Oh, so where the heck the "cannot be directly used" thing fits here?
    - (⌐■_■) Exactly !!!!! remember every field in a type will eventually execute a resolver function either explicit or implicit (default)? There you go, the disambiguation happens at resolver level and there's where you end up not-using the Interface directly.
 
-I know, the documentation is not really enlighten on this topic, furthermore, there's not a definition on how to resolve concretely an abstract type on the spec, concretely because is a concern of the server implementation to deal with that.
+I know, the documentation is not really enlighten on this topic, furthermore, there's not a definition on how to resolve an abstract type on the spec, concretely because is a concern of the server implementation to deal with that.
 
 On chapter [6.4.3 Value Completion](http://spec.graphql.org/June2018/#sec-Value-Completion) of the June2018 spec we can read:
 
-After resolving the value for a field, it is completed by ensuring it adheres to the expected return type. If the return type is another Object type, then the field execution process continues recursively.
-
+> After resolving the value for a field, it is completed by ensuring it adheres to the expected return type. If the return type is another Object type, then the field execution process continues recursively.
+> ...
+>
 > - CompleteValue(`fieldType`, `fields`, `result`, `variableValues`)
 >   ....
 >   - Let objectType be ResolveAbstractType(`fieldType`, `result`)
@@ -198,7 +200,7 @@ const resolvers = {
     }
   },
   Character: {
-    __resolveType(obj, context, info) {
+    __resolveType(obj, context, info, resolveType) {
 
       const {
         maiarName,
@@ -217,8 +219,6 @@ const resolvers = {
       if (maiarName) {
         return 'Istari';
       }
-
-      return null;
 
     },
   },
@@ -436,6 +436,10 @@ type Istari implements Character & MagicalCreature{
   magicPowers: [String!]
 }
 
+type Query {
+  ... ## all previous query operations
+  magical: [MagicalCreature]
+}
 ```
 
 Now the resolvers
@@ -447,17 +451,18 @@ const resolvers = {
   },
   Query: {
     characters(obj, args, context, info) {
-      // our characters operation body
+      // our operation body
+    },
+    magical(obj, args, context, info) {
+      // our operation body
     }
   },
   Character: {
-    __resolveType(obj, context, info) {
-
-      const {
-        maiarName,
-        mathoms,
-        ageLess
-      } = obj;
+    __resolveType({
+      maiarName,
+      mathoms,
+      ageLess
+    }, context, info, returnType) {
 
       if (mathoms) {
         return 'Hobbit';
@@ -471,12 +476,13 @@ const resolvers = {
         return 'Istari';
       }
 
-      return null;
-
     },
   },
   MagicalCreature: {
-    __resolveType(obj, context, info) {
+    __resolveType({
+      maiarName,
+      ageLess
+    }, context, info, returnType) {
 
       if (ageLess) {
         return 'Elvish';
@@ -486,7 +492,6 @@ const resolvers = {
         return 'Istari';
       }
 
-      return null;
     },
   },
   Hobbit: {
@@ -511,6 +516,120 @@ As you can see, we start having a LOT of repeated code, and because of the `__re
 
 ## Unions
 
+> Unions are an abstract type where no common fields are declared. The possible types of a union are explicitly listed out in possibleTypes. Types can be made parts of unions without modification of that type.
+>
+> Source: [GraphQL spec - June 2018 - Union](http://spec.graphql.org/June2018/#sec-Union)
+
+> GraphQL Unions represent an object that could be one of a list of GraphQL Object types, but provides for no guaranteed fields between those types. They also differ from interfaces in that Object types declare what interfaces they implement, but are not aware of what unions contain them.
+>
+> With interfaces and objects, only those fields defined on the type can be queried directly; to query other fields on an interface, typed fragments must be used. This is the same as for unions, but unions do not define any fields, so no fields may be queried on this type without the use of type refining fragments or inline fragments.
+>
+> Source: [GraphQL spec - June 2018 - Unions](http://spec.graphql.org/June2018/#sec-Unions)
+
+### Let's summarize Unions so we can concentrate on the hot stuff :)
+
+- Abstract types
+- Represent a list of arbitrary Object types
+- No common fields are declared
+- Provides for no guaranteed fields between Object Types listed in a Union type
+- Object types not aware of unions containing them.
+- Being an abstract type implies disambiguation happening at runtime on your resolvers (depending on the technology but usually achieved as Interfaces do, e.g `__resolveType(...)`).
+
+### Declaring a Union:
+
+```graphql
+union MyUnion = ObjectA | ObjectB | ObjectC
+```
+
+Also Union members may be defined with an optional leading `|` character to aid formatting when representing a longer list of possible types:
+
+```graphql
+union MyUnion =
+  | ObjectA
+  | ObjectB
+  | ObjectC
+  | ObjectD
+  | ObjectE
+```
+
+### Some insights before moving forward:
+
+**What's the point of having a type for potentially unrelated Objects?**
+
+Let's say, in our <abbr title="Lord Of The Rings">LOTR</abbr> example, you want to create a global search query operation for your blog.
+
+You'll have:
+
+- Objects **sharing** a common **interface** like `Character`
+- Objects with **shared fields** (e.g. `name`) but not sharing a logical hierarchy like `Sword`, `Realm`, `City`, `Author`, `Reviewer`, `User`
+- Objects with completely different shapes like `Review`, `Comment`
+
+Doing something like this is completely valid!
+
+```graphql
+union GlobalSearchResult =
+  | Character
+  | Sword
+  | Realm
+  | City
+  | Author
+  | Reviewer
+  | User
+  | Review
+  | Comment
+
+type Query {
+    globalSearch: [GlobalSearchResult]
+}
+
+```
+
+and
+
+```javascript
+const resolvers = {
+  GlobalSearchResult: {
+    __resolveType(obj, context, info, returnType){
+
+      if (obj.bladeLength){
+        return 'Sword';
+      }
+      /// and so on
+    },
+  },
+  Query: {
+    globalSearch: () => { ... }
+  },
+};
+```
+
+**Can I combine a Union and an Interface to guarantee an intersection?**
+
+Technically yes.
+
+```graphql
+interface Searchable {
+  name: String
+}
+
+union GlobalSearchResult =
+  | Character ## implements Searchable
+  | Sword ## idem
+  | Realm ## idem
+  | City ## idem
+  | Author ## idem
+  | Reviewer ## idem
+  | User ## idem
+  | Review ## OOPS, what here?
+  | Comment ## OOPS, what here?
+
+type Query {
+    globalSearch: [GlobalSearchResult]
+}
+
+```
+
+You stated every `Searchable` Object should implement the `name` property, ... that's fine, it's declarative, but **what's the point of having a Union** here? You could make it completely restrictive and get rid of the union entirely ... but ... you'll miss the `Review` and `Comment` because it doesn't make any sense to have a `name` property there at all.
 ...
 
 ## Exercise
