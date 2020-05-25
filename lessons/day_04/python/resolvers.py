@@ -6,6 +6,7 @@ from datetime import datetime
 
 query = QueryType()
 
+# Top level resolvers
 @query.field("randomSkill")
 def resolve_random_skill(_, info):
     records = session.query(Skill).count()
@@ -50,18 +51,9 @@ def resolve_skills(_, info, input=None):
             q = q.filter(getattr(Skill, attr) == value)
     return q.all()
 
+# Type definitions
 skill = ObjectType("Skill")
-
-@skill.field("now")
-def resolve_now(_, info):
-    return datetime.now()
-
-@skill.field("parent")
-def resolve_parent(obj, info):
-    return session.query(Skill).get(obj.parent)
-
 person = ObjectType("Person")
-
 eye_color = EnumType(
     "EyeColor",
     {
@@ -71,6 +63,15 @@ eye_color = EnumType(
         'BLACK': 'black',
     },
 )
+
+#Field level resolvers
+@skill.field("now")
+def resolve_now(_, info):
+    return datetime.now()
+
+@skill.field("parent")
+def resolve_parent(obj, info):
+    return session.query(Skill).get(obj.parent)
 
 @person.field("fullName")
 def resolve_full_name(obj, info):
