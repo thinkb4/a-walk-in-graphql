@@ -6,6 +6,7 @@ from datetime import datetime
 
 query = QueryType()
 
+# Top level resolvers
 @query.field("randomSkill")
 def resolve_random_skill(_, info):
     records = session.query(Skill).count()
@@ -22,8 +23,11 @@ def resolve_random_person(_, info):
 def resolve_persons(_, info, id=None):
     return session.query(Person).filter(Person.id == id).all() if id else session.query(Person).all()
 
+# Type definition
 skill = ObjectType("Skill")
+person = ObjectType("Person")
 
+# Field level resolvers
 @skill.field("now")
 def resolve_now(_, info):
     return datetime.now()
@@ -31,8 +35,6 @@ def resolve_now(_, info):
 @skill.field("parent")
 def resolve_parent(obj, info):
     return session.query(Skill).get(obj.parent)
-
-person = ObjectType("Person")
 
 @person.field("fullName")
 def resolve_full_name(obj, info):
