@@ -1,5 +1,6 @@
-import os
-from flata import Flata
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-filename = os.path.abspath("../datasource/data.json")
-db = Flata(filename)
+engine = create_engine('sqlite:///../datasource/data.db')
+Session = sessionmaker(bind=engine)
+session = Session()

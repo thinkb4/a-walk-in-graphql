@@ -1,7 +1,6 @@
 node_modules
 coverage
 live_demo.js
-*.pyc
 *.log
 
 ### Java ###
@@ -14,6 +13,8 @@ target/
 *.iml
 *.ipr
 **/package-lock.json
+
+### Python ###
 venv/
 .vscode/
 __pycache__/
