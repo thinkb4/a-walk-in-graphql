@@ -1,4 +1,4 @@
-from ariadne import gql, make_executable_schema, load_schema_from_path
+from ariadne import make_executable_schema, load_schema_from_path
 from ariadne.asgi import GraphQL
 from resolvers import query, skill, person
 
