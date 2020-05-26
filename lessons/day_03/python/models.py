@@ -35,4 +35,4 @@ class Person_skills(Base):
     __tablename__ = 'person_skills'
 
     person_id = Column(String, ForeignKey('persons.id'), primary_key=True)
-    skill_id = Column(String, primary_key=True)
+    skill_id = Column(String, ForeignKey('skills.id'), primary_key=True)
