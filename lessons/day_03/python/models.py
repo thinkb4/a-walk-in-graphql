@@ -29,7 +29,7 @@ class Person_friends(Base):
     __tablename__ = 'person_friends'
 
     person_id = Column(String, ForeignKey('persons.id'), primary_key=True)
-    friend_id = Column(String, primary_key=True)
+    friend_id = Column(String, ForeignKey('persons.id'), primary_key=True)
 
 class Person_skills(Base):
     __tablename__ = 'person_skills'
