@@ -25,14 +25,14 @@ class Person(Base):
     skills = relationship("Person_skills", uselist=True)
     favSkill = Column(String)
 
-class Person_friends(Base):
+class PersonFriends(Base):
     __tablename__ = 'person_friends'
 
     person_id = Column(String, ForeignKey('persons.id'), primary_key=True)
-    friend_id = Column(String, primary_key=True)
+    friend_id = Column(String, ForeignKey('persons.id'), primary_key=True)
 
-class Person_skills(Base):
+class PersonSkills(Base):
     __tablename__ = 'person_skills'
 
     person_id = Column(String, ForeignKey('persons.id'), primary_key=True)
-    skill_id = Column(String, primary_key=True)
+    skill_id = Column(String, ForeignKey('skills.id'), primary_key=True)
