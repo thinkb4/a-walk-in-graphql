@@ -23,7 +23,7 @@ class Person(Base):
     email = Column(String)
     friends = relationship("Person_friends", uselist=True)
     skills = relationship("Person_skills", uselist=True)
-    favSkill = Column(String)
+    favSkill = Column(String, ForeignKey('skills.id'))
 
 class Person_friends(Base):
     __tablename__ = 'person_friends'
