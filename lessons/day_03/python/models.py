@@ -21,17 +21,17 @@ class Person(Base):
     name = Column(String)
     surname = Column(String)
     email = Column(String)
-    friends = relationship("Person_friends", uselist=True)
-    skills = relationship("Person_skills", uselist=True)
+    friends = relationship("PersonFriends", uselist=True)
+    skills = relationship("PersonSkills", uselist=True)
     favSkill = Column(String)
 
-class Person_friends(Base):
+class PersonFriends(Base):
     __tablename__ = 'person_friends'
 
     person_id = Column(String, ForeignKey('persons.id'), primary_key=True)
     friend_id = Column(String, primary_key=True)
 
-class Person_skills(Base):
+class PersonSkills(Base):
     __tablename__ = 'person_skills'
 
     person_id = Column(String, ForeignKey('persons.id'), primary_key=True)
