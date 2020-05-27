@@ -1,4 +1,4 @@
-from ariadne import QueryType, ObjectType, gql
+from ariadne import QueryType, ObjectType
 from random import randint
 from models import Skill
 from data import session
@@ -16,7 +16,7 @@ def resolve_random_skill(_, info):
 # Type definition
 skill = ObjectType("Skill")
 
-#Field level resolvers
+# Field level resolvers
 @skill.field("now")
 def resolve_now(_, info):
     return datetime.now()

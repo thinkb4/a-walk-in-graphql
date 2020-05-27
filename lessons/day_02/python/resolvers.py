@@ -1,4 +1,4 @@
-from ariadne import QueryType, ObjectType, gql
+from ariadne import QueryType, ObjectType
 from random import randint
 from models import Skill, Person
 from data import session
