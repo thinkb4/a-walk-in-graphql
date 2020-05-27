@@ -1,4 +1,4 @@
-from ariadne import QueryType, ObjectType, gql, EnumType
+from ariadne import QueryType, ObjectType, EnumType
 from random import randint
 from models import Skill, Person
 from data import session
@@ -64,7 +64,7 @@ eye_color = EnumType(
     },
 )
 
-#Field level resolvers
+# Field level resolvers
 @skill.field("now")
 def resolve_now(_, info):
     return datetime.now()
