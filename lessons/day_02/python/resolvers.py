@@ -34,7 +34,7 @@ def resolve_now(_, info):
 
 @skill.field("parent")
 def resolve_parent(obj, info):
-    return session.query(Skill).get(obj.parent)
+    return obj.parent
 
 @person.field("fullName")
 def resolve_full_name(obj, info):
@@ -42,14 +42,12 @@ def resolve_full_name(obj, info):
 
 @person.field("friends")
 def resolve_friends(obj, info):
-    ids = [x.friend_id for x in obj.friends]
-    return session.query(Person).filter(Person.id.in_(ids)).all()
+    return obj.friends
 
 @person.field("skills")
 def resolve_skills(obj, info):
-    ids = [x.skill_id for x in obj.skills]
-    return session.query(Skill).filter(Skill.id.in_(ids)).all()
+    return obj.skills
 
 @person.field("favSkill")
 def resolve_fav_skill(obj, info):
-    return session.query(Skill).get(obj.favSkill) if obj.favSkill else None
+    return obj.favSkill if obj.favSkill else None
