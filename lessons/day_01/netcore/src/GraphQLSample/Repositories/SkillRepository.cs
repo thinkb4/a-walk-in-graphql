@@ -2,34 +2,47 @@
 using System.Linq;
 using GraphQLNetCore.Data;
 using GraphQLNetCore.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GraphQLNetCore.Repositories
 {
     public class SkillRepository: ISkillRepository
     {
-
-        private readonly GraphQLContext _graphContext;
-        public SkillRepository(GraphQLContext context)
+        private readonly IServiceScopeFactory _scopeFactory;
+        public SkillRepository(IServiceScopeFactory scopeFactory)
         {
-            _graphContext = context;
+            _scopeFactory = scopeFactory;
         }
         public List<Skill> GetAll()
         {
-            return _graphContext.Skill.ToList();
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>();
+                return db.Skill.ToList();
+            }
         }
 
         public Skill AddSkill(Skill skill)
         {
-            _graphContext.Skill.Add(skill);
-            _graphContext.SaveChanges();
-            return skill;
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>();
+                db.Skill.Add(skill);
+                db.SaveChanges();
+                return skill;
+            }
         }
 
         public Skill GetRandom()
         {
             var rng = new System.Random();
-            var indexRandom = rng.Next(_graphContext.Skill.Count());
-            return _graphContext.Skill.ToList()[indexRandom];
+            using (var scope = _scopeFactory.CreateScope())
+            { 
+                var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>();
+                var indexRandom = rng.Next(db.Skill.Count());
+                return  db.Skill.ToList()[indexRandom];
+            }
         }
+
     }
 }

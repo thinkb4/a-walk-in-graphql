@@ -6,8 +6,10 @@ namespace GraphQLNetCore.GraphQLTypes
 {
     public class RootQuery:ObjectGraphType
     {
-        public RootQuery(ISkillRepository _skillRepository)
+        private readonly ISkillRepository _skillRepository;
+        public RootQuery(ISkillRepository skillRepository)
         {
+            _skillRepository = skillRepository;
             Field<ListGraphType<SkillType>>("skills", resolve: context =>
             {
 
@@ -23,12 +25,13 @@ namespace GraphQLNetCore.GraphQLTypes
             Field<ListGraphType<SkillType>>("filteredSkills",
                 arguments: new QueryArguments
                 {
-                   new  QueryArgument<StringGraphType> {  Name = "name"}
+                   new  QueryArgument<StringGraphType> {  Name = "id"}
                 },
                 resolve: context =>
                 {
-                    string name = context.GetArgument<string>("name");
-                    return _skillRepository.GetAll().Where(_ => _.name == name).ToList();
+                    //string name = context.GetArgument<string>("name");
+                    string id = context.GetArgument<string>("id");
+                    return _skillRepository.GetAll().Where(_ => _.id == id).ToList();
                 });
         }
     }

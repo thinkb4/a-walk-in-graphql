@@ -1,13 +1,16 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+using System;
 
 namespace GraphQLNetCore.GraphQLTypes
 {
-    public class RootSchema:Schema, ISchema
+    public class RootSchema : Schema
     {
-        public RootSchema(IDependencyResolver resolver):base(resolver)
+        private readonly IServiceProvider _services;
+        public RootSchema(IServiceProvider services)
         {
-            Query = resolver.Resolve<RootQuery>();
+            _services = services;
+            Query = _services.GetService(typeof(RootQuery)).As<IObjectGraphType>();
         }
     }
 }
