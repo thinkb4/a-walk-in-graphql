@@ -6,6 +6,7 @@ from datetime import datetime
 
 query = QueryType()
 
+# Top level resolvers
 @query.field("randomSkill")
 def resolve_random_skill(_, info):
     records = session.query(Skill).count()
@@ -34,17 +35,18 @@ def resolve_skills(_, info, id=None):
 def resolve_skill(_, info, id=None):
     return session.query(Skill).get(id) if id else None
 
+# Type definition
 skill = ObjectType("Skill")
+person = ObjectType("Person")
 
+# Field level resolvers
 @skill.field("now")
 def resolve_now(_, info):
     return datetime.now()
 
 @skill.field("parent")
 def resolve_parent(obj, info):
-    return session.query(Skill).get(obj.parent)
-
-person = ObjectType("Person")
+    return obj.parent
 
 @person.field("fullName")
 def resolve_full_name(obj, info):
@@ -52,20 +54,12 @@ def resolve_full_name(obj, info):
 
 @person.field("friends")
 def resolve_friends(obj, info, id=None):
-    ids = [x.friend_id for x in obj.friends]
-    if id in ids:
-        return session.query(Person).filter(Person.id == id).all()
-    else:
-        return session.query(Person).filter(Person.id.in_(ids)).all()
+    return list(filter(lambda x: x.id == id, obj.friends)) if id else obj.friends
 
 @person.field("skills")
 def resolve_person_skills(obj, info, id=None):
-    ids = [x.skill_id for x in obj.skills]
-    if id in ids:
-        return session.query(Skill).filter(Skill.id == id).all()
-    else:
-        return session.query(Skill).filter(Skill.id.in_(ids)).all()
+    return list(filter(lambda x: x.id == id, obj.skills)) if id else obj.skills
 
 @person.field("favSkill")
 def resolve_fav_skill(obj, info):
-    return session.query(Skill).get(obj.favSkill) if obj.favSkill else None
+    return obj.favSkill

@@ -95,4 +95,4 @@ def resolve_person_skills(obj, info, input=None):
 
 @person.field("favSkill")
 def resolve_fav_skill(obj, info):
-    return session.query(Skill).get(obj.favSkill) if obj.favSkill else None
+    return obj.favSkill

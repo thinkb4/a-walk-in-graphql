@@ -22,7 +22,8 @@ class Skill(Base):
 
     id = Column(String, primary_key=True)
     name = Column(String)
-    parent = Column(String, ForeignKey('skills.id'))
+    parent_id = Column('parent', String, ForeignKey('skills.id'))
+    parent = relationship("Skill", remote_side=[id], uselist=False)
 
 class Person(Base):
     __tablename__ = 'persons'
@@ -40,4 +41,5 @@ class Person(Base):
         secondaryjoin="Person.id==person_friends.c.friend_id"
     )
     skills = relationship("Skill", secondary=person_skills)
-    favSkill = Column(String)
+    favSkill_id = Column('favSkill', String, ForeignKey('skills.id'))
+    favSkill = relationship("Skill", uselist=False)

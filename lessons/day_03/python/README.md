@@ -5,7 +5,9 @@
 Read the instructions on the [Day 3 exercise](../day_03.md#exercise) definition
 
 ### Run the server
+
 **This exercise is prepared to work with Python 3, with SQLite and SQAlchemy as ORM**
+>>>>>>> feature/day_04_python
 
 1. open a terminal
 2. go to the Python exercise directory
