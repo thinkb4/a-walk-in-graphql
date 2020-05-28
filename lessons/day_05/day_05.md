@@ -187,7 +187,7 @@ const resolvers = {
 }
 ```
 
-But now we can't use the `Character` fields resolvers, it's an `Interface`, hence we need first to identify the concrete Type and then let GraphQL know that because it doesn't know it at this point. I know it's not really beautiful (it might feel like going back to the dark ages) but the proposed way is to rely on what makes each type different from the others based on the shape.
+But now we can't use the `Character` fields resolvers, it's an `Interface`, hence we need first to identify the concrete Type and then let GraphQL know that because it doesn't know it at this point. I know it's not really beautiful (it might feel like going back to the dark ages) but the common way is to rely on what makes each type different from the others based on the shape, it'll vary depending on the server implementation, the language and in the end, the team writing the app.
 
 ```javascript
 const resolvers = {
@@ -646,10 +646,149 @@ The code contains the solution for previous exercises  so you can have a startin
 
 ### Exercise requirements
 
+This is a long one, keep it simple and put all your attention on the GraphQL aspects. Unless you're blocked, write down your questions so you can have the opportunity to discuss them later.
+
+#### Schema:
+
+- Add a `Grade` enum with some values of your choice (e.g. `TRAINEE`, `JUNIOR`, `SENIOR`)
+- Add a `Role` enum with some values of your choice (e.g. `DEVELOPER`, `SDET`, `TEAM_LEAD`)
+- Change `Person` type to an `Interface` (####)
+- Add an `Employee` `Interface` with a non-nullable `employeeId` property of type `ID`
+- Add a `Contact` type implementing `Person` interface with no extra properties
+- Add a `Candidate` type implementing `Person` interface with 2 extra properties
+  - non-nullable `targetRole` of type `Role`
+  - non-nullable `targetGrade` of type `Grade`
+- Add an `Engineer` type implementing `Person` and  `Employee` interfaces with 2 extra properties
+  - non-nullable `role` of type `Role`
+  - non-nullable `grade` of type `Grade`
+- Add a `GlobalSearch` union listing `Skill`, `Contact`, `Candidate` and `Engineer` object types
+- Add an `InputCandidateCreate` input with the same properties `InputPersonCreate` input has with some changes:
+  - `surname`, `email`, `age` should be non-nullable
+  - add non-nullable `targetRole` of type `Role`
+  - add non-nullable `targetGrade` of type `Grade`
+- Add an `InputEngineerCreate` input with the same properties `InputPersonCreate` input has with some changes:
+  - `surname`, `email`, `age` should be non-nullable
+  - add non-nullable `role` of type `Role`
+  - add non-nullable `grade` of type `Grade`
+- Add an `InputGlobalSearch` input with a non-nullable `name` property of type `String`
+- Update the `InputPerson` input with the following properties:
+  - nullable `targetRole` of type `Role`
+  - nullable `targetGrade` of type `Grade`
+  - nullable `role` of type `Role`
+  - nullable `grade` of type `Grade`
+- Add a `search` query operation with an `input` argument of type `InputGlobalSearch` which returns a nullable list of `GlobalSearch` union types
+- Add a `createCandidate` mutation operation with an `input` argument of type `InputCandidateCreate` which returns a non-nullable `Candidate` object types
+- Add a `createEngineer` mutation operation with an `input` argument of type `InputEngineerCreate` which returns a non-nullable `Engineer` object types
+
+#### Resolvers:
+
+- Add a `createCandidate` mutation resolver (use the `createPerson` resolver as a guide)
+- Add a `createEngineer` mutation resolver (use the `createPerson` resolver as a guide)
+- Add a `GlobalSearch` Root Operation definition with a type resolver to return the right Object type listed in the union type. This will change a lot depending on the language and the server implementation, e.g. with Apollo Server it's the `__resolverType` resolver.
+- Add `Person` and `Employee` Root Operation definitions with a type resolver to return the right Object type for the Object types implementing the interfaces. This will change a lot depending on the language and the server implementation, e.g. with Apollo Server it's the `__resolverType` resolver.
+- Add `Contact`, `Candidate`, and `Engineer` Root Operation definitions with the required field resolvers (hint: they were initially on the `Person` Root Operation before changing it to an interface).
+- Add a `search` query operation which returns the matching results on the persons and skills records (take a look at the Person and Skill models, they should provide a functionality to perform the concrete search)
+
+#### Extra considerations
+
+- All previous operations (from previous days) MUST still work
+- All queries related to the `Person` interface can now support inline fragments to request fields for specific types, try some options and see what happens (e.g. on the  `globalSearch` operation).
+- Don't bother about validations except for those provided by GraphQL and only GraphQL.
+
 #### Operations list
 
 ```graphql
 
+## Part 1
+
+mutation createCandidate(
+  $name: String!
+  $surname: String!
+  $email: String!
+  $age: Int!
+  $eyeColor: EyeColor
+  $friends: [ID!]
+  $skills: [ID!]
+  $favSkill: ID
+  $targetRole: Role!
+  $targetGrade: Grade!
+) {
+  createCandidate(
+    input: {
+      name: $name
+      surname: $surname
+      email: $email
+      age: $age
+      eyeColor: $eyeColor
+      friends: $friends
+      skills: $skills
+      favSkill: $favSkill
+      targetRole: $targetRole
+      targetGrade: $targetGrade
+    }
+  ) {
+    id
+    fullName
+    email
+    age
+    eyeColor
+    targetRole
+    targetGrade
+  }
+}
+
+## Part 2
+
+mutation createEngineer(
+  $name: String!
+  $surname: String!
+  $email: String!
+  $age: Int!
+  $eyeColor: EyeColor
+  $friends: [ID!]
+  $skills: [ID!]
+  $favSkill: ID
+  $role: Role!
+  $grade: Grade!
+) {
+  createEngineer(
+    input: {
+      name: $name
+      surname: $surname
+      email: $email
+      age: $age
+      eyeColor: $eyeColor
+      friends: $friends
+      skills: $skills
+      favSkill: $favSkill
+      role: $role
+      grade: $grade
+    }
+  ) {
+    id
+    employeeId
+    fullName
+    email
+    age
+    eyeColor
+    role
+    grade
+  }
+}
+
+## Part 3
+
+query globalSearch {
+  search (input: {name: "a"}){
+    __typename
+    ... on Person {
+      name
+    }
+    ... on Skill {
+      name
+    }
+  }
+}
 
 ```
 
@@ -662,6 +801,14 @@ Select the exercise on your preferred technology:
 ## Learning resources
 
 - GraphQL Spec (June 2018)
+  - [Interfaces](http://spec.graphql.org/June2018/#sec-Interfaces)
+  - [Interface](http://spec.graphql.org/June2018/#sec-Interface)
+  - [Value Completion](http://spec.graphql.org/June2018/#sec-Value-Completion)
+  - [Schema Introspection](http://spec.graphql.org/June2018/#sec-Schema-Introspection)
+  - [Union](http://spec.graphql.org/June2018/#sec-Union)
+  - [Unions](http://spec.graphql.org/June2018/#sec-Unions)
 - GraphQL Org
-- How to GraphQL
+  - [Inline fragments](https://graphql.org/learn/queries/#inline-fragments)
+  - [Meta field](https://graphql.org/learn/queries/#meta-fields)
 - Other articles
+  - [Apollo - Interface Type](https://www.apollographql.com/docs/apollo-server/schema/unions-interfaces/#interface-type)
