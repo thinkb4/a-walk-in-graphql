@@ -62,4 +62,4 @@ def resolve_person_skills(obj, info, id=None):
 
 @person.field("favSkill")
 def resolve_fav_skill(obj, info):
-    return obj.favSkill if obj.favSkill else None
+    return obj.favSkill
