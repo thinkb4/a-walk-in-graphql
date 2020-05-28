@@ -51,7 +51,7 @@ const model = ({ db, prepareFilter, datasetKey = DATASET_KEY } = {}) => {
      * @returns {Object}
      */
     create(input) {
-      const record = { id: nanoid(), ...input };
+      const record = { ...input, id: nanoid() };
 
       db.get(DATASET_KEY)
         .push(record)

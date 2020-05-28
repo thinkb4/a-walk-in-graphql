@@ -15,7 +15,7 @@ If you are here and followed the previous lessons you pretty much covered the ba
 
 Underestimating things is dangerous, especially when it comes to software engineering, and particularly when the same term is used across technologies and you're tempted to assume they work just like the other one works. **Interfaces** is one of these cases.
 
-Let's start with the spec and gradually break it down and understand how the "Interface" has similarities and differences from e.g OOP Interface implementation in Java or other language.
+Let's start with the spec and gradually break it down and understand how the "Interface" has similarities and differences from e.g. OOP Interface implementation in Java or other language.
 
 > GraphQL interfaces represent a list of named fields and their arguments. GraphQL objects can then implement these interfaces which requires that the object type will define all fields defined by those interfaces.
 >
@@ -187,7 +187,7 @@ const resolvers = {
 }
 ```
 
-But now we cant use the `Character` fields resolvers, it's an `Interface`, hence we need first to identify the concrete Type and then let GraphQL know that because it doesn't know it at this point. I know it's not really beautiful (it might feel like going back to the dark ages) but the proposed way is to rely on what makes each type different from the others based on the shape.
+But now we can't use the `Character` fields resolvers, it's an `Interface`, hence we need first to identify the concrete Type and then let GraphQL know that because it doesn't know it at this point. I know it's not really beautiful (it might feel like going back to the dark ages) but the proposed way is to rely on what makes each type different from the others based on the shape.
 
 ```javascript
 const resolvers = {
@@ -533,7 +533,7 @@ As you can see, we start having a LOT of repeated code, and because of the `__re
 - No common fields are declared
 - Provides for no guaranteed fields between Object Types listed in a Union type
 - Object types not aware of unions containing them.
-- Being an abstract type implies disambiguation happening at runtime on your resolvers (depending on the technology but usually achieved as Interfaces do, e.g `__resolveType(...)`).
+- Being an abstract type implies disambiguation happening at runtime on your resolvers (depending on the technology but usually achieved as Interfaces do, e.g. `__resolveType(...)`).
 
 ### Declaring a Union:
 
