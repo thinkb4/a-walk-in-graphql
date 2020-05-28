@@ -6,6 +6,14 @@ from datetime import datetime
 
 query = QueryType()
 
+def filter_with_input(obj, input):
+    if len(input) == 0:
+        return obj
+    else:
+        attr = next(iter(input))
+        value = input.pop(next(iter(input)))
+        return filter_with_input(list(filter(lambda x: getattr(x, attr) == value, obj)), input)
+
 # Top level resolvers
 @query.field("randomSkill")
 def resolve_random_skill(_, info):
@@ -79,23 +87,11 @@ def resolve_full_name(obj, info):
 
 @person.field("friends")
 def resolve_friends(obj, info, input=None):
-    ids = [x.friend_id for x in obj.friends]
-    q = session.query(Person)
-    q = q.filter(Person.id.in_(ids))
-    if input:
-        for attr, value in input.items():
-            q = q.filter(getattr(Person, attr) == value)
-    return q.all()
+    return filter_with_input(obj.friends, input) if input else obj.friends
 
 @person.field("skills")
 def resolve_person_skills(obj, info, input=None):
-    ids = [x.skill_id for x in obj.skills]
-    q = session.query(Skill)
-    q = q.filter(Skill.id.in_(ids))
-    if input:
-        for attr, value in input.items():
-            q = q.filter(getattr(Skill, attr) == value)
-    return q.all()
+    return filter_with_input(obj.skills, input) if input else obj.skills
 
 @person.field("favSkill")
 def resolve_fav_skill(obj, info):
