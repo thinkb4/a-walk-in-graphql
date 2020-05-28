@@ -58,7 +58,19 @@ const model = ({ db, prepareFilter, datasetKey = DATASET_KEY } = {}) => {
         .write()
 
       return record;
-    }
+    },
+    /**
+     * Case insensitive substring search by name
+     * @param {String} searchTerm
+     * 
+     * @returns {Array<Object>}
+     */
+    searchByName(searchTerm = '') {
+      const term = searchTerm.toLowerCase();
+      return db.get(datasetKey)
+        .filter(record => record.name.toLowerCase().includes(term))
+        .value()
+    },
   }
 }
 
