@@ -20,7 +20,7 @@ Read the instructions on the [Day 2 exercise](../day_02.md#exercise) definition
 
 ### The project
 
-- [Data source in Json format](../datasource/data.json) We are going to use SQLite
+- SQLite Data source (../datasource/data.db)
 - [Server app](app.py)
 - [Schema](schema.gql)
 - [Resolver map](resolvers.py)
