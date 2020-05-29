@@ -1,14 +1,9 @@
-from flask import Flask
-from flask_graphql import GraphQLView
-from schema import schema_query
+from ariadne import make_executable_schema, load_schema_from_path
+from ariadne.asgi import GraphQL
+from resolvers import skill, query
 
-app = Flask(__name__)
+# import schema from GraphQL file
+type_defs = load_schema_from_path("./schema.gql")
 
-# Flask Rest & Graphql Routes
-app.add_url_rule('/', view_func=GraphQLView.as_view(
-    '',
-    schema=schema_query, graphiql=True
-))
-
-if __name__ == '__main__':
-    app.run()
+schema = make_executable_schema(type_defs, query, skill)
+app = GraphQL(schema, debug=True)
