@@ -58,7 +58,7 @@ def resolve_friends(obj, info, id=None):
 
 @person.field("skills")
 def resolve_person_skills(obj, info, id=None):
-    return list(filter(lambda x: x.id == id, obj.skills)) if id else obj.skills
+    return [obj for obj in obj.skills if obj.id == id] if id else obj.skills
 
 @person.field("favSkill")
 def resolve_fav_skill(obj, info):
