@@ -29,7 +29,7 @@ def resolve_person(_, info, id=None):
 
 @query.field("skills")
 def resolve_skills(_, info, id=None):
-    return session.query(Skill).filter(Skill.id == id).all() if id else session.query(Skill).all()
+    return session.query(Skill).filter_by(id=id) if id else session.query(Skill).all()
 
 @query.field("skill")
 def resolve_skill(_, info, id=None):
