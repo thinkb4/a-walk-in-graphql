@@ -25,7 +25,7 @@ def resolve_persons(_, info, id=None):
 
 @query.field("person")
 def resolve_person(_, info, id=None):
-    return session.query(Person).get(id) if id else None
+    return session.query(Person).get(id)
 
 @query.field("skills")
 def resolve_skills(_, info, id=None):
