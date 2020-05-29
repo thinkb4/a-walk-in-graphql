@@ -2,6 +2,7 @@ from sqlalchemy import ForeignKey, Column, Integer, String, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
+
 Base = declarative_base()
 
 person_friends = Table(
@@ -24,6 +25,7 @@ class Skill(Base):
     name = Column(String)
     parent_id = Column('parent', String, ForeignKey('skills.id'))
     parent = relationship("Skill", remote_side=[id], uselist=False)
+
 
 class Person(Base):
     __tablename__ = 'persons'
