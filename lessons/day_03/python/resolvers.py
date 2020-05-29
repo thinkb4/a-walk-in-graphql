@@ -54,7 +54,7 @@ def resolve_full_name(obj, info):
 
 @person.field("friends")
 def resolve_friends(obj, info, id=None):
-    return list(filter(lambda x: x.id == id, obj.friends)) if id else obj.friends
+    return [obj for obj in obj.friends if obj.id == id] if id else obj.friends
 
 @person.field("skills")
 def resolve_person_skills(obj, info, id=None):
