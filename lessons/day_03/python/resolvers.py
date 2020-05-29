@@ -33,7 +33,7 @@ def resolve_skills(_, info, id=None):
 
 @query.field("skill")
 def resolve_skill(_, info, id=None):
-    return session.query(Skill).get(id) if id else None
+    return session.query(Skill).get(id)
 
 # Type definition
 skill = ObjectType("Skill")
