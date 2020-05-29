@@ -89,7 +89,7 @@ def resolve_now(_, info):
 
 @skill.field("parent")
 def resolve_parent(obj, info):
-    return session.query(Skill).get(obj.parent)
+    return obj.parent
 
 
 @person.field("fullName")
