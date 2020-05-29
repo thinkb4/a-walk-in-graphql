@@ -15,11 +15,12 @@
     "python",
     "apollo"
   ],
+  "author": "Javier Valderrama <jaxolotl@gmail.com>",
   "contributors": [
-    "Javier Valderrama <jaxolotl@gmail.com>",
-    "Ezequiel Alvarez",
-    "Ezequiel Tejerina",
-    "Franco Gribaudo"
+    "Ezequiel Alvarez <ezequielalvarez@gmail.com>",
+    "Ezequiel Tejerina <tejerinae@gmail.com>",
+    "Franco Gribaudo <francogribaudo@gmail.com>",
+    "Cristian Buffa <cristianbuffa@hotmail.com>"
   ],
   "license": "MIT",
   "bugs": {
