@@ -3,6 +3,7 @@ coverage
 live_demo.js
 *.pyc
 *.log
+yarn.lock
 
 ### Java ###
 target/
