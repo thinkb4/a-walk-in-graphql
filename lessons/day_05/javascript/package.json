@@ -1,7 +1,7 @@
 {
   "name": "lesson-04-exercises-javascript",
   "version": "1.0.0",
-  "description": "Lesson 04 exercises - JavaScript",
+  "description": "Lesson 05 exercises - JavaScript",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Jaxolotl/a-walk-in-graphql.git"
@@ -24,7 +24,9 @@
     "inputType",
     "enum",
     "mutation",
-    "mutations"
+    "mutations",
+    "interface",
+    "union"
   ],
   "license": "MIT",
   "bugs": {
