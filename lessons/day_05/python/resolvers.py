@@ -84,6 +84,7 @@ def resolve_skills(_, info, input=None):
             q = q.filter(getattr(Skill, attr) == value)
     return q.all()
 
+
 # Mutations
 @mutation.field("createSkill")
 def resolve_create_skill(_, info, input):
@@ -93,7 +94,7 @@ def resolve_create_skill(_, info, input):
     try:
         session.add(skill)
         session.commit()
-    except Exception as e:
+    except Exception:
         session.rollback()
     return skill
 
@@ -105,18 +106,22 @@ def resolve_create_person(_, info, input):
     for key in input.keys():
         if key == "friends":
             for friend_key in input.get(key):
-                add_friend = person_friends.insert().values(person_id=person.id, friend_id=friend_key)
+                add_friend = person_friends.insert().values(
+                    person_id=person.id, friend_id=friend_key
+                )
                 session.execute(add_friend)
         elif key == "skills":
             for skill_key in input.get(key):
-                add_skill = person_skills.insert().values(person_id=person.id, skill_id=skill_key)
+                add_skill = person_skills.insert().values(
+                    person_id=person.id, skill_id=skill_key
+                )
                 session.execute(add_skill)
         else:
             setattr(person, key, input.get(key))
     try:
         session.add(person)
         session.commit()
-    except Exception as e:
+    except Exception:
         session.rollback()
     return person
 
