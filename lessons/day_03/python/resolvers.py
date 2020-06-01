@@ -55,7 +55,7 @@ def resolve_now(_, info):
 
 @skill.field("parent")
 def resolve_parent(obj, info):
-    return obj.parent
+    return obj.parent_skill
 
 
 @person.field("fullName")
@@ -75,4 +75,4 @@ def resolve_person_skills(obj, info, id=None):
 
 @person.field("favSkill")
 def resolve_fav_skill(obj, info):
-    return obj.favSkill
+    return obj.person_favSkill
