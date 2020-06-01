@@ -51,13 +51,29 @@ const model = ({ db, prepareFilter, datasetKey = DATASET_KEY } = {}) => {
      * @returns {Object}
      */
     create(input) {
-      const record = { ...input, id: nanoid() };
+      let record = { ...input, id: nanoid() };
+
+      if (record.hasOwnProperty('role') && !record.hasOwnProperty('employeeId')) {
+        record.employeeId = nanoid();
+      }
 
       db.get(DATASET_KEY)
         .push(record)
         .write()
 
       return record;
+    },
+    /**
+     * Case insensitive substring search by name
+     * @param {String} searchTerm
+     * 
+     * @returns {Array<Object>}
+     */
+    searchByName(searchTerm = '') {
+      const term = searchTerm.toLowerCase();
+      return db.get(datasetKey)
+        .filter(record => record.name.toLowerCase().includes(term))
+        .value()
     },
   }
 }

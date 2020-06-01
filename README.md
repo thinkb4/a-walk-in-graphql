@@ -59,19 +59,19 @@ Hopefully your walk will be much easier than ours!
     - Description
     - Learning resources
     - Exercise
-- Day 5
+- [Day 5](lessons/day_05/day_05.md)
   - Interfaces and Unions
     - Interface
     - Union
     - Exercise
     - Learning resources
 - Day 6
-  - Errors
+  - Extending Types
     - Description
     - Exercise
     - Learning resources
 - Day 7
-  - Extending Types
+  - Errors
     - Description
     - Exercise
     - Learning resources

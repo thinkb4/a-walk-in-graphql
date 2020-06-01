@@ -34,9 +34,25 @@ input InputPerson {
   favSkill: ID
 }
 
+input InputPersonCreate {
+  name: String!
+  surname: String
+  email: String
+  age: Int
+  eyeColor: EyeColor
+  friends: [ID!]
+  skills: [ID!]
+  favSkill: ID
+}
+
 input InputSkill {
   id: ID
   name: String
+}
+
+input InputSkillCreate {
+  name: String!
+  parent: ID
 }
 
 type Person {
@@ -59,4 +75,9 @@ type Query {
   person (input: InputPerson): Person
   skills (input: InputSkill): [Skill!]
   persons (input: InputPerson): [Person!]
+}
+
+type Mutation {
+  createSkill (input: InputSkillCreate): Skill!
+  createPerson (input: InputPersonCreate): Person!
 }

@@ -7,7 +7,7 @@
     "url": "git+https://github.com/Jaxolotl/a-walk-in-graphql.git"
   },
   "scripts": {
-    "server": "nodemon src/server.js"
+    "server": "nodemon -e js,gql src/server.js"
   },
   "keywords": [
     "javascript",

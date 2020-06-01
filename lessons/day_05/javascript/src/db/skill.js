@@ -1,5 +1,5 @@
 const nanoid = require('nanoid');
-const DATASET_KEY = 'persons';
+const DATASET_KEY = 'skills';
 
 /**
  * @param {Object} Ø
@@ -35,7 +35,7 @@ const model = ({ db, prepareFilter, datasetKey = DATASET_KEY } = {}) => {
     /**
      * 
      * @param {Object|Function} filter { key: value [, key: value] } | predicate
-     * @param {Array<String>} subset an array of record ids
+     * @param {Array<String>} subset an array of records id
      * 
      * @returns {Array<Object>}
      */
@@ -58,6 +58,18 @@ const model = ({ db, prepareFilter, datasetKey = DATASET_KEY } = {}) => {
         .write()
 
       return record;
+    },
+    /**
+     * Case insensitive substring search by name
+     * @param {String} searchTerm
+     * 
+     * @returns {Array<Object>}
+     */
+    searchByName(searchTerm = '') {
+      const term = searchTerm.toLowerCase();
+      return db.get(datasetKey)
+        .filter(record => record.name.toLowerCase().includes(term))
+        .value()
     },
   }
 }

@@ -47,11 +47,11 @@ For example:
 
 ```graphql
 query {
-  buckLanders: users(input: { kind: HOBBIT, homeland: "Buckland" }) {
+  buckLanders: characters(input: { kind: HOBBIT, homeland: "Buckland" }) {
     id
     name
   }
-  shireLanders: users(input: { kind: HOBBIT, homeland: "The Shire" }) {
+  shireLanders: characters(input: { kind: HOBBIT, homeland: "The Shire" }) {
     id
     name
   }
