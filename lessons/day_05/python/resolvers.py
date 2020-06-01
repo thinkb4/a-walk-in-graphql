@@ -1,8 +1,9 @@
 from ariadne import QueryType, ObjectType, EnumType, MutationType
 from random import randint
-from models import Skill, Person
+from models import Skill, Person, person_friends, person_skills
 from data import session
 from datetime import datetime
+import uuid
 
 
 query = QueryType()
@@ -83,6 +84,42 @@ def resolve_skills(_, info, input=None):
             q = q.filter(getattr(Skill, attr) == value)
     return q.all()
 
+# Mutations
+@mutation.field("createSkill")
+def resolve_create_skill(_, info, input):
+    skill = Skill()
+    skill.id = str(uuid.uuid4())
+    [setattr(skill, key, input.get(key)) for key in input.keys()]
+    try:
+        session.add(skill)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+    return skill
+
+
+@mutation.field("createPerson")
+def resolve_create_person(_, info, input):
+    person = Person()
+    person.id = str(uuid.uuid4())
+    for key in input.keys():
+        if key == "friends":
+            for friend_key in input.get(key):
+                add_friend = person_friends.insert().values(person_id=person.id, friend_id=friend_key)
+                session.execute(add_friend)
+        elif key == "skills":
+            for skill_key in input.get(key):
+                add_skill = person_skills.insert().values(person_id=person.id, skill_id=skill_key)
+                session.execute(add_skill)
+        else:
+            setattr(person, key, input.get(key))
+    try:
+        session.add(person)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+    return person
+
 
 # Field level resolvers
 @skill.field("now")
@@ -92,7 +129,7 @@ def resolve_now(_, info):
 
 @skill.field("parent")
 def resolve_parent(obj, info):
-    return obj.parent
+    return obj.parent_skill
 
 
 @person.field("fullName")
@@ -112,9 +149,4 @@ def resolve_person_skills(obj, info, input=None):
 
 @person.field("favSkill")
 def resolve_fav_skill(obj, info):
-    return obj.favSkill
-
-
-@mutation.field("createSkill")
-def resolve_create_skill(_, info, input):
-    return session.query(Skill).get(1)
+    return obj.person_favSkill
