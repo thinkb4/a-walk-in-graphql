@@ -29,7 +29,7 @@ def resolve_random_person(_, info):
 
 @query.field("persons")
 def resolve_persons(_, info, id=None):
-    return session.query(Person).filter_by(id == id) if id else session.query(Person).all()
+    return session.query(Person).filter_by(id=id) if id else session.query(Person).all()
 
 
 # Field level resolvers

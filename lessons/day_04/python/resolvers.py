@@ -21,15 +21,6 @@ eye_color = EnumType(
 )
 
 
-def filter_with_input(obj, input):
-    if len(input) == 0:
-        return obj
-    else:
-        attr = next(iter(input))
-        value = input.pop(next(iter(input)))
-        return filter_with_input([x for x in obj if getattr(x, attr) == value], input)
-
-
 # Top level resolvers
 @query.field("randomSkill")
 def resolve_random_skill(_, info):
@@ -47,38 +38,22 @@ def resolve_random_person(_, info):
 
 @query.field("person")
 def resolve_person(_, info, input=None):
-    q = session.query(Person)
-    if input:
-        for attr, value in input.items():
-            q = q.filter(getattr(Person, attr) == value)
-    return q.first() if input else None
+    return session.query(Person).filter_by(**input).first() if input else None
 
 
 @query.field("persons")
 def resolve_persons(_, info, input=None):
-    q = session.query(Person)
-    if input:
-        for attr, value in input.items():
-            q = q.filter(getattr(Person, attr) == value)
-    return q.all()
+    return session.query(Person).filter_by(**input).all() if input else session.query(Person).all()
 
 
 @query.field("skill")
 def resolve_skill(_, info, input=None):
-    q = session.query(Skill)
-    if input:
-        for attr, value in input.items():
-            q = q.filter(getattr(Skill, attr) == value)
-    return q.first() if input else None
+    return session.query(Skill).filter_by(**input).first() if input else None
 
 
 @query.field("skills")
 def resolve_skills(_, info, input=None):
-    q = session.query(Skill)
-    if input:
-        for attr, value in input.items():
-            q = q.filter(getattr(Skill, attr) == value)
-    return q.all()
+    return session.query(Skill).filter_by(**input).all() if input else session.query(Skill).all()
 
 
 # Field level resolvers
@@ -99,12 +74,12 @@ def resolve_full_name(obj, info):
 
 @person.field("friends")
 def resolve_friends(obj, info, input=None):
-    return filter_with_input(obj.friends, input) if input else obj.friends
+    return obj.friends.filter_by(**input).all() if input else obj.friends
 
 
 @person.field("skills")
 def resolve_person_skills(obj, info, input=None):
-    return filter_with_input(obj.skills, input) if input else obj.skills
+    return obj.skills.filter_by(**input).all() if input else obj.skills
 
 
 @person.field("favSkill")
