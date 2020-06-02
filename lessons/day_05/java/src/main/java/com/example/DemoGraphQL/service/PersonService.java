@@ -104,6 +104,22 @@ public class PersonService {
         }).orElse(null);
     }
 
+    /**
+     * Case insensitive substring search by name
+     * @param searchTerm:  String search term
+     *
+     * @return List<Person>
+     */
+    public List<Person> searchByName(Optional<String> searchTerm) {
+        Person filterBy = new Person();
+        filterBy.setName(searchTerm.orElse(""));
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase()
+                .withIgnoreNullValues();
+        return this.personRepository.findAll(Example.of(filterBy, matcher));
+    }
+
     private Optional<Person> findByInput(InputPerson input) {
         // Considering that depending on the search criteria more than one result can be obtained, we need to findAll limit to 1.
         return this.personRepository.findAll(prepareQueryByExample(input), PageRequest.of(0, 1)).get().findFirst();

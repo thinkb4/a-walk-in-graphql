@@ -5,6 +5,7 @@ import com.example.DemoGraphQL.input.InputSkillCreate;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.repository.SkillRepository;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -49,6 +50,22 @@ public class SkillService {
             Skill newSkill = new Skill(v.getName(), parent);
             return skillRepository.save(newSkill);
         }).orElse(null);
+    }
+
+    /**
+     * Case insensitive substring search by name
+     * @param searchTerm:  String search term
+     *
+     * @return List<Skill>
+     */
+    public List<Skill> searchByName(Optional<String> searchTerm) {
+        Skill filterBy = new Skill();
+        filterBy.setName(searchTerm.orElse(""));
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase()
+                .withIgnoreNullValues();
+        return this.skillRepository.findAll(Example.of(filterBy, matcher));
     }
 
     private Optional<Skill> filterByInput(InputSkill input) {
