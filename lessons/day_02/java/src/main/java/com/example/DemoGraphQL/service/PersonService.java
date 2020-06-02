@@ -18,10 +18,6 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-    public Optional<Person> getPerson(final long id) {
-        return this.personRepository.findById(id);
-    }
-
     public Person getRandomPerson() {
         List<Person> givenList = this.personRepository.findAll();
         Random rand = new Random();
@@ -30,12 +26,9 @@ public class PersonService {
 
     public List<Person> getPersons(Optional<Long> id) {
         List<Person> persons = new ArrayList<>();
-        if (id.isPresent()) {
-            Optional<Person> person = this.personRepository.findById(id.get());
-            if (person.isPresent()) persons.add(person.get());
-        } else {
-            persons.addAll(this.personRepository.findAll());
-        }
-        return persons;
+        return id.map(v -> {
+            this.personRepository.findById(v).ifPresent(persons::add);
+            return persons;
+        }).orElse(this.personRepository.findAll());
     }
 }

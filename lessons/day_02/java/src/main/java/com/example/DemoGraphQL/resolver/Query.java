@@ -1,10 +1,10 @@
 package com.example.DemoGraphQL.resolver;
 
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.example.DemoGraphQL.model.Person;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.PersonService;
 import com.example.DemoGraphQL.service.SkillService;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,8 +32,8 @@ public class Query implements GraphQLQueryResolver {
         return this.personService.getRandomPerson();
     }
 
-    public List<Person> persons(final Optional<Long> id) {
-        return this.personService.getPersons(id);
+    public List<Person> persons(final Long id) {
+        return this.personService.getPersons(Optional.ofNullable(id));
     }
 
 }
