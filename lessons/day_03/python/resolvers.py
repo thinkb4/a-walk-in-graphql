@@ -29,7 +29,7 @@ def resolve_random_person(_, info):
 
 @query.field("persons")
 def resolve_persons(_, info, id=None):
-    return session.query(Person).filter_by(id == id) if id else session.query(Person).all()
+    return session.query(Person).filter_by(id=id) if id else session.query(Person).all()
 
 
 @query.field("person")
@@ -55,7 +55,7 @@ def resolve_now(_, info):
 
 @skill.field("parent")
 def resolve_parent(obj, info):
-    return obj.parent
+    return obj.parent_skill
 
 
 @person.field("fullName")
@@ -65,14 +65,14 @@ def resolve_full_name(obj, info):
 
 @person.field("friends")
 def resolve_friends(obj, info, id=None):
-    return [obj for obj in obj.friends if obj.id == id] if id else obj.friends
+    return obj.friends.filter_by(id=id) if id else obj.friends
 
 
 @person.field("skills")
 def resolve_person_skills(obj, info, id=None):
-    return [obj for obj in obj.skills if obj.id == id] if id else obj.skills
+    return obj.skills.filter_by(id=id) if id else obj.skills
 
 
 @person.field("favSkill")
 def resolve_fav_skill(obj, info):
-    return obj.favSkill
+    return obj.person_favSkill

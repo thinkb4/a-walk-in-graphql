@@ -29,7 +29,7 @@ def resolve_random_person(_, info):
 
 @query.field("persons")
 def resolve_persons(_, info, id=None):
-    return session.query(Person).filter_by(id == id) if id else session.query(Person).all()
+    return session.query(Person).filter_by(id=id) if id else session.query(Person).all()
 
 
 # Field level resolvers
@@ -40,7 +40,7 @@ def resolve_now(_, info):
 
 @skill.field("parent")
 def resolve_parent(obj, info):
-    return obj.parent
+    return obj.parent_skill
 
 
 @person.field("fullName")
@@ -60,4 +60,4 @@ def resolve_skills(obj, info):
 
 @person.field("favSkill")
 def resolve_fav_skill(obj, info):
-    return obj.favSkill
+    return obj.person_favSkill

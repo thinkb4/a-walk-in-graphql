@@ -40,8 +40,9 @@ class Person(Base):
         "Person",
         secondary=person_friends,
         primaryjoin="Person.id==person_friends.c.person_id",
-        secondaryjoin="Person.id==person_friends.c.friend_id"
+        secondaryjoin="Person.id==person_friends.c.friend_id",
+        lazy='dynamic'
     )
-    skills = relationship("Skill", secondary=person_skills)
+    skills = relationship("Skill", secondary=person_skills, lazy='dynamic')
     favSkill = Column(String, ForeignKey('skills.id'))
     person_favSkill = relationship("Skill", uselist=False)
