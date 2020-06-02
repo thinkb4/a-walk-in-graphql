@@ -1,4 +1,4 @@
-from ariadne import QueryType, ObjectType
+from ariadne import QueryType, ObjectType, EnumType
 from random import randint
 from models import Skill, Person
 from data import session
@@ -7,9 +7,18 @@ from datetime import datetime
 
 query = QueryType()
 
-# Type definition
+# Type definitions
 skill = ObjectType("Skill")
 person = ObjectType("Person")
+eye_color = EnumType(
+    "EyeColor",
+    {
+        'BLUE': 'blue',
+        'GREEN': 'green',
+        'BROWN': 'brown',
+        'BLACK': 'black',
+    },
+)
 
 
 # Top level resolvers
@@ -27,9 +36,24 @@ def resolve_random_person(_, info):
     return session.query(Person).get(random_id)
 
 
+@query.field("person")
+def resolve_person(_, info, input=None):
+    return session.query(Person).filter_by(**input).first() if input else None
+
+
 @query.field("persons")
-def resolve_persons(_, info, id=None):
-    return session.query(Person).filter_by(id=id) if id else session.query(Person).all()
+def resolve_persons(_, info, input=None):
+    return session.query(Person).filter_by(**input).all() if input else session.query(Person).all()
+
+
+@query.field("skill")
+def resolve_skill(_, info, input=None):
+    return session.query(Skill).filter_by(**input).first() if input else None
+
+
+@query.field("skills")
+def resolve_skills(_, info, input=None):
+    return session.query(Skill).filter_by(**input).all() if input else session.query(Skill).all()
 
 
 # Field level resolvers
@@ -49,13 +73,13 @@ def resolve_full_name(obj, info):
 
 
 @person.field("friends")
-def resolve_friends(obj, info):
-    return obj.friends
+def resolve_friends(obj, info, input=None):
+    return obj.friends.filter_by(**input).all() if input else obj.friends
 
 
 @person.field("skills")
-def resolve_skills(obj, info):
-    return obj.skills
+def resolve_person_skills(obj, info, input=None):
+    return obj.skills.filter_by(**input).all() if input else obj.skills
 
 
 @person.field("favSkill")
