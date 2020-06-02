@@ -15,17 +15,17 @@ public class Person {
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "SURNAME", nullable = false)
+    @Column(name = "SURNAME")
     private String surname;
 
-    @Column(name = "EMAIL", nullable = false)
+    @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "EYECOLOR", nullable = false)
+    @Column(name = "EYECOLOR")
     @Enumerated(EnumType.STRING)
     private EyeColor eyeColor;
 
-    @Column(name = "AGE", nullable = false)
+    @Column(name = "AGE")
     private Integer age;
 
     @ManyToMany

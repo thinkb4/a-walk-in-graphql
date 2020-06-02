@@ -1,12 +1,12 @@
 package com.example.DemoGraphQL.resolver;
 
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.example.DemoGraphQL.input.InputPerson;
 import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.model.Person;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.PersonService;
 import com.example.DemoGraphQL.service.SkillService;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,19 +34,19 @@ public class Query implements GraphQLQueryResolver {
         return this.personService.getRandomPerson();
     }
 
-    public Optional<Person> person(final Optional<InputPerson> input) {
-        return this.personService.getPerson(input);
+    public Optional<Person> person(final InputPerson input) {
+        return this.personService.getPerson(Optional.ofNullable(input));
     }
 
-    public List<Person> persons(final Optional<InputPerson> input) {
-        return this.personService.getPersons(input);
+    public List<Person> persons(final InputPerson input) {
+        return this.personService.getPersons(Optional.ofNullable(input));
     }
 
-    public Optional<Skill> skill(final Optional<InputSkill> input) {
-        return this.skillService.getSkill(input);
+    public Optional<Skill> skill(final InputSkill input) {
+        return this.skillService.getSkill(Optional.ofNullable(input));
     }
 
-    public List<Skill> skills(final Optional<InputSkill> input) {
-        return this.skillService.getSkills(input);
+    public List<Skill> skills(final InputSkill input) {
+        return this.skillService.getSkills(Optional.ofNullable(input));
     }
 }
