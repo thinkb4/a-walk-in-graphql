@@ -1,8 +1,8 @@
 package com.example.DemoGraphQL.resolver;
 
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.SkillService;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.stereotype.Component;
 
 /**

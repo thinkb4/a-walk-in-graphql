@@ -1,9 +1,9 @@
 package com.example.DemoGraphQL.resolver;
 
-import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.example.DemoGraphQL.model.Person;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.PersonService;
+import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,11 +25,11 @@ public class PersonResolver implements GraphQLResolver<Person> {
         return person.getName() + " " + person.getSurname();
     }
 
-    public List<Person> friends(final Person person, final Optional<Long> friendId) {
-        return this.personService.getFriends(person, friendId);
+    public List<Person> friends(final Person person, final Long friendId) {
+        return this.personService.getFriends(person, Optional.ofNullable(friendId));
     }
 
-    public List<Skill> skills(final Person person, final Optional<Long> skillId) {
-        return this.personService.getSkills(person, skillId);
+    public List<Skill> skills(final Person person, final Long skillId) {
+        return this.personService.getSkills(person, Optional.ofNullable(skillId));
     }
 }
