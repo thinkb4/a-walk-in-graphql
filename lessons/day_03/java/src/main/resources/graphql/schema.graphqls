@@ -10,7 +10,7 @@ type Skill {
     parent: Skill
 
     "this is a field level description"
-    name: String
+    name: String!
 
     """
     This field has a @deprecated directive
@@ -21,7 +21,7 @@ type Skill {
 
 type Person {
     id: ID
-    name: String
+    name: String!
     surname: String
     fullName: String
     email: String
