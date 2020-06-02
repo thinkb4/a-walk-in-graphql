@@ -16,7 +16,7 @@ Spring Boot will automatically pick these up and set up the appropriate handlers
 3. run `./mvnw spring-boot:run`(linux) or `mvnw.cmd spring-boot:run`(windows) to start the GraphQL server.
 
 #### Testing GraphQL queries
-To display a GUI for editing and testing GraphQL queries and mutations against the server you can open your browser and type [http://localhost:8080/graphiql](http://localhost:8080/graphiql)
+To display a GUI for editing and testing GraphQL queries and mutations against the server you can open your browser and type [http://localhost:8080/playground](http://localhost:8080/playground)
 
 #### Database
 H2 database has an embedded GUI console for browsing the contents of a database and running SQL queries.
