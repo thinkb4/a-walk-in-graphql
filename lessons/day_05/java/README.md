@@ -1,8 +1,8 @@
 # [A walk in graphql with Spring boot]((/README.md))
 The [Spring Boot GraphQL Starter](https://github.com/graphql-java-kickstart/graphql-spring-boot) combined with the [GraphQL Java Tools](https://github.com/graphql-java-kickstart/graphql-java-tools) library offer a fantastic way to get a GraphQL server running in a very short time, we need only write the code necessary for our resolvers.
 
-## Day 4 exercise - Java
-(Read the instructions on the [Day 4 exercise](../day_04.md#exercise) definition)
+## Day 5 exercise - Java
+(Read the instructions on the [Day 5 exercise](../day_05.md#exercise) definition)
 
 ### Run Application
 
