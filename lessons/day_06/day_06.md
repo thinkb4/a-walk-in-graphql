@@ -304,16 +304,16 @@ Here some of the most evident differences
 |:-:|:-:|
 | Compose 2 or more schemas into 1 (stiching them together) | Compose 2 or more services into 1 (gateway) |
 | Typically organized by Type (e.g. a team controlling a Type) | Typically organized by concerns (e.g. a team controlling a domain) |
-| A relationship is imperatively resolved at runtime. | An implementing service must add the `@key` directive to a type's definition in order t o declare how the relationship will be established. |
-| Optimizations and metrics are harder to separate | Each service can be optimized independently |
+| A relationship is imperatively resolved at runtime. | An implementing service must add the `@key` directive to a type's definition in order to declare how the relationship will be established. |
+| Optimizations and metrics are harder to separate | Each service can be optimized and monitored independently |
 
 Another summarized high level description I like can be read in [GraphQL Federation vs Stitching](https://gunargessner.com/graphql-federation-vs-stitching) by [Gunar Gessner](https://medium.com/@gunar).
 
 All above is only achievable through `extend`, a simple keyword on the spec that opens the hell or heaven depending on how you use it.
 
-### Schema Stitching example
+## Schema Stitching example
 
-#### SDL
+### SDL
 
 So how our example would look like if we use the stitching technique?
 
@@ -439,13 +439,13 @@ extend type Query {
 }
 ```
 
-#### Resolvers
+### Resolvers
 
 And the resolvers?
 
 Well, you might separate them into specific files too or keep them in one place, again, that's an engineering concern and will depend on the technology, GraphQL just doesn't care, granted they're passed along with the type definitions to the server.
 
-#### Server
+### Server
 
 See here how our implementation might look like using Apollo Server in an oversimplified example.
 
@@ -471,6 +471,27 @@ const server = new ApolloServer({
 server.listen(4000)
   .then(() => console.log('listening'))
 ```
+
+### When things go wrong (︶︹︶)
+
+> a.k.a. how to resolve conflicts
+
+So far our example worked smoothly just because we were moving a working SDL document to 3 documents, but what happens when hte number of documents and lines of code scale and you need to handle fields, types or other conflicts? Clearly just importing the SDL files won't work anymore. In this case you'll have to leverage the existing tools available for your technology or eventually write your own if nothing fit your needs.
+
+- `graphql-tools/merge`
+  - [onTypeConflict](https://www.graphql-tools.com/docs/schema-stitching#ontypeconflict)
+  - [mergeTypeDefs](https://www.graphql-tools.com/docs/merge-typedefs#manually-import-each-type)
+
+You might still find some previous implementations using `graphql-tools/mergeSchemas` which has been deprecated in favor of the above mentioned.
+
+See below the migration tutorial and some old documentation as you might still find it in a project.
+
+- [Migration from Merge GraphQL Schemas](https://www.graphql-tools.com/docs/migration-from-merge-graphql-schemas)
+- [Merging Schemas](https://www.advancedgraphql.com/content/schema-stitching#merging-schemas) with `graphql-tools/mergeSchemas`
+  - [No conflicts](https://www.advancedgraphql.com/content/schema-stitching/ex1)
+  - [Conflicts for root fields](https://www.advancedgraphql.com/content/schema-stitching/ex2)
+  - [Conflicts for types](https://www.advancedgraphql.com/content/schema-stitching/ex3)
+  - [Merging an executable with a non-executable schema](https://www.advancedgraphql.com/content/schema-stitching/ex4)
 
 ## Exercise
 
@@ -517,11 +538,21 @@ Select the exercise on your preferred technology:
   - [Schema Stitching](https://www.apollographql.com/docs/graphql-tools/schema-stitching/)
   - [Apollo Federation](https://www.apollographql.com/docs/apollo-server/federation/introduction/)
   - [Migrating from schema stitching](https://www.apollographql.com/docs/apollo-server/federation/migrating-from-stitching/)
+- graphql-tools
+  - [Schema Delegation](https://www.graphql-tools.com/docs/schema-delegation)
+  - [Remote Schemas](https://www.graphql-tools.com/docs/remote-schemas)
+  - [Schema Wrapping](https://www.graphql-tools.com/docs/schema-wrapping)
+  - Schema Merging
+    - [Type definitions (SDL) merging](https://www.graphql-tools.com/docs/merge-typedefs)
+    - [Resolvers merging](https://www.graphql-tools.com/docs/merge-resolvers)
+    - [GraphQLSchema merging](https://www.graphql-tools.com/docs/merge-schemas)
+    - [Schema stitching](https://www.graphql-tools.com/docs/schema-stitching)
+
 - Advanced GraphQL dot com
   - [Schema Stitching](https://www.advancedgraphql.com/content/schema-stitching)
   - [Schema Federation](https://www.advancedgraphql.com/content/schema-federation)
 - Youtube
-- [GraphQL Schema Design @ Scale](https://youtu.be/pJamhW2xPYw) by Marc-André Giroux (**amazing video**)
+  - [GraphQL Schema Design @ Scale](https://youtu.be/pJamhW2xPYw) by Marc-André Giroux (**amazing video**)
   - [Migrating Apollo’s Data Graph from Schema stitching to Federation](https://www.youtube.com/watch?v=ra5WuUvQRIM) by Adam Zionts
   
 - Other articles
