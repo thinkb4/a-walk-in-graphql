@@ -35,10 +35,13 @@ def resolve_candidate(obj, *_):
 
 @global_search.type_resolver
 def resolve_global_search_type(obj, *_):
-    print(obj)
     if isinstance(obj, Skill):
         return "Skill"
     if isinstance(obj, Person):
+        if obj.grade:
+            return "Engineer"
+        if obj.targetGrade:
+            return "Candidate"
         return "Contact"
     return None
 
@@ -80,14 +83,9 @@ def resolve_skills(_, info, input=None):
 
 @query.field("search")
 def resolve_search(_, info, input=None):
-    searchResult = []
     persons = session.query(Person).filter(Person.name.like('%' + input['name'] + '%')).all()
-    for person in persons:
-        searchResult.append(person)
     skills = session.query(Skill).filter(Skill.name.like('%' + input['name'] + '%')).all()
-    for skill in skills:
-        searchResult.append(skill)
-    return searchResult
+    return persons + skills
 
 
 # Mutations
