@@ -7,13 +7,11 @@ from datetime import datetime
 import uuid
 
 
+# Type definitions
 query = QueryType()
 mutation = MutationType()
 contact = InterfaceType("Person")
-
-# Type definitions
 skill = ObjectType("Skill")
-person = ObjectType("Person")
 eye_color = EnumType(
     "EyeColor",
     {
@@ -28,9 +26,11 @@ global_search = UnionType("GlobalSearch")
 
 @contact.type_resolver
 def resolve_candidate(obj, *_):
-    if isinstance(obj, Person):
-        return "Person"
-    return None
+    if obj.grade:
+        return "Engineer"
+    if obj.targetGrade:
+        return "Candidate"
+    return "Contact"
 
 
 @global_search.type_resolver
