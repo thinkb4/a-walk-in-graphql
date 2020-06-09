@@ -5,6 +5,7 @@ The [Spring Boot GraphQL Starter](https://github.com/graphql-java-kickstart/grap
 
 ## Day 3 exercise - Java
 (Read the instructions on the [Day 3 exercise](../day_03.md#exercise) definition)
+##### HINT: Take a look at the commented out PersonService and SkillService methods!!
 
 ####Requirements:
 * Java 1.8

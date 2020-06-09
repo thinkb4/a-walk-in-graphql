@@ -51,7 +51,7 @@ public class PersonService {
             if (inputPerson.getEyeColor() != null)
                 allPredicates.add(p -> p.getEyeColor().equals(inputPerson.getEyeColor()));
             if (inputPerson.getFavSkill() != null)
-                allPredicates.add(p -> p.getFavSkill().getId().equals(inputPerson.getFavSkill()));
+                allPredicates.add(p -> p.getFavSkill()!=null && p.getFavSkill().getId().equals(inputPerson.getFavSkill()));
 
             //Composes several predicates into a single predicate, and then applies the composite predicate to a stream.
             Predicate<Person> compositePredicate = allPredicates.stream().reduce(w -> true, Predicate::and);
@@ -131,11 +131,14 @@ public class PersonService {
 
     private Example<Person> prepareQueryByExample(InputPerson input) {
         Person filterBy = new Person();
-        ExampleMatcher matcher = ExampleMatcher.matching();
         filterBy.setId(input.getId());
         filterBy.setAge(input.getAge());
         filterBy.setEyeColor(input.getEyeColor());
-        if (input.getFavSkill() != null) matcher.withMatcher("favSkill.id", match -> match.equals(input.getFavSkill()));
-        return Example.of(filterBy, matcher);
+        if (input.getFavSkill() != null) {
+            Skill tmpSkill = new Skill();
+            tmpSkill.setId(input.getFavSkill());
+            filterBy.setFavSkill(tmpSkill);
+        }
+        return Example.of(filterBy);
     }
 }
