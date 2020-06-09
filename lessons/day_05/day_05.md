@@ -792,11 +792,14 @@ query globalSearch {
 
 ```
 
+#### Technologies
+
 Select the exercise on your preferred technology:
 
 - [JavaScript](javascript/README.md)
 - [Java](java/README.md)
 - [Python](python/README.md)
+- [NetCore](netcore/README.md)
 
 ## Learning resources
 

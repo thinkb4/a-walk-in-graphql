@@ -555,11 +555,14 @@ query multipleSkills{
 
 ```
 
+#### Technologies
+
 Select the exercise on your preferred technology:
 
 - [JavaScript](javascript/README.md)
 - [Java](java/README.md)
 - [Python](python/README.md)
+- [NetCore](netcore/README.md)
 
 This exercise, hopefully, will generate more questions than answers depending on how deep you want to dig into reusability, scalability, performance and other topics. Here you have some extra considerations to investigate; they're beyond the scope of the exercise, but really worthy to be mentioned, of course they're NOT the absolute truth but they'll provide you some starting point to investigate further if you want.
 

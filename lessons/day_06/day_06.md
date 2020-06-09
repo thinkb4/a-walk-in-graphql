@@ -177,7 +177,11 @@ A pretty simple file with a simple domain complexity, still, if we start organiz
 
 # ROOT OPERATIONS
 
-""" For the time being it's invalid to define a type without fields """
+"""
+For the time being  
+it's invalid to define a type  
+without fields
+"""
 type Query {
     # Empty field obligatory
     _empty: String
@@ -309,7 +313,7 @@ Here some of the most evident differences
 
 Another summarized high level description I like can be read in [GraphQL Federation vs Stitching](https://gunargessner.com/graphql-federation-vs-stitching) by [Gunar Gessner](https://medium.com/@gunar).
 
-All above is only achievable through `extend`, a simple keyword on the spec that opens the hell or heaven depending on how you use it.
+All above is only achievable thanks to `extend`, a simple keyword on the spec is the door that opens towards hell or heaven depending on how you use it.
 
 ## Schema Stitching example
 
@@ -322,8 +326,11 @@ So how our example would look like if we use the stitching technique?
 ```graphql
 
 # ROOT OPERATIONS
-
-""" For the time being it's invalid to define a type without fields """
+"""
+For the time being  
+it's invalid to define a type  
+without fields
+"""
 type Query {
     # Empty field obligatory
     _empty: String
@@ -507,18 +514,33 @@ The code contains the solution for previous exercises so you can have a starting
 
 ### Exercise requirements
 
+This exercise might require additional instructions depending on the technology, please read them carefully before starting.
+
+#### Schema
+
+- Identify and separate the SDL document into 4 documents in a per-type bases
+- Here a completely arbitrary example (you can experiment different setups y you want)
+  - globalSearch.gql
+  - person.gql
+  - schema.gql
+  - skill.gql
+- Update the server app in order to include and stitch all schemas together
+- You can directly import the *.gql files or use a technology specific utility like `apollo-tools` or whatever you want
+
+As you can see, the challenge here will depend on the technology and I encourage you to experiment and try different approaches.
+
 #### Operations list
 
-```graphql
+All previous operations MUST work regardless the stitching technique implemented.
 
-
-```
+#### Technologies
 
 Select the exercise on your preferred technology:
 
 - [JavaScript](javascript/README.md)
 - [Java](java/README.md)
 - [Python](python/README.md)
+- [NetCore](netcore/README.md)
 
 ## Learning resources
 
