@@ -10,8 +10,9 @@ import uuid
 # Type definitions
 query = QueryType()
 mutation = MutationType()
-contact = InterfaceType("Person")
+person = InterfaceType("Person")
 skill = ObjectType("Skill")
+# person = ObjectType("Person")
 eye_color = EnumType(
     "EyeColor",
     {
@@ -24,8 +25,8 @@ eye_color = EnumType(
 global_search = UnionType("GlobalSearch")
 
 
-@contact.type_resolver
-def resolve_candidate(obj, *_):
+@person.type_resolver
+def resolve_person_interface(obj, *_):
     if obj.grade:
         return "Engineer"
     if obj.targetGrade:
@@ -195,21 +196,21 @@ def resolve_parent(obj, info):
     return obj.parent_skill
 
 
-@contact.field("fullName")
+@person.field("fullName")
 def resolve_full_name(obj, info):
     return f'{obj.name} {obj.surname}'
 
 
-@contact.field("friends")
+@person.field("friends")
 def resolve_friends(obj, info, input=None):
     return obj.friends.filter_by(**input).all() if input else obj.friends
 
 
-@contact.field("skills")
+@person.field("skills")
 def resolve_person_skills(obj, info, input=None):
     return obj.skills.filter_by(**input).all() if input else obj.skills
 
 
-@contact.field("favSkill")
+@person.field("favSkill")
 def resolve_fav_skill(obj, info):
     return obj.person_favSkill
