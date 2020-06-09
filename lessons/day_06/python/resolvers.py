@@ -1,4 +1,5 @@
 from ariadne import QueryType, ObjectType, EnumType, MutationType
+from ariadne import InterfaceType, UnionType
 from random import randint
 from models import Skill, Person, person_friends, person_skills
 from data import session
@@ -8,6 +9,7 @@ import uuid
 
 query = QueryType()
 mutation = MutationType()
+contact = InterfaceType("Person")
 
 # Type definitions
 skill = ObjectType("Skill")
@@ -21,6 +23,24 @@ eye_color = EnumType(
         'BLACK': 'black',
     },
 )
+global_search = UnionType("GlobalSearch")
+
+
+@contact.type_resolver
+def resolve_candidate(obj, *_):
+    if isinstance(obj, Person):
+        return "Person"
+    return None
+
+
+@global_search.type_resolver
+def resolve_global_search_type(obj, *_):
+    print(obj)
+    if isinstance(obj, Skill):
+        return "Skill"
+    if isinstance(obj, Person):
+        return "Contact"
+    return None
 
 
 # Top level resolvers
@@ -56,6 +76,18 @@ def resolve_skill(_, info, input=None):
 @query.field("skills")
 def resolve_skills(_, info, input=None):
     return session.query(Skill).filter_by(**input).all() if input else session.query(Skill).all()
+
+
+@query.field("search")
+def resolve_search(_, info, input=None):
+    searchResult = []
+    persons = session.query(Person).filter(Person.name.like('%' + input['name'] + '%')).all()
+    for person in persons:
+        searchResult.append(person)
+    skills = session.query(Skill).filter(Skill.name.like('%' + input['name'] + '%')).all()
+    for skill in skills:
+        searchResult.append(skill)
+    return searchResult
 
 
 # Mutations
@@ -126,6 +158,34 @@ def resolve_create_candidate(_, info, input):
     return person
 
 
+@mutation.field("createEngineer")
+def resolve_create_engineer(_, info, input):
+    person = Person()
+    person.id = str(uuid.uuid4())
+    person.employeeId = str(uuid.uuid4())
+    for key in input.keys():
+        if key == "friends":
+            for friend_key in input.get(key):
+                add_friend = person_friends.insert().values(
+                    person_id=person.id, friend_id=friend_key
+                )
+                session.execute(add_friend)
+        elif key == "skills":
+            for skill_key in input.get(key):
+                add_skill = person_skills.insert().values(
+                    person_id=person.id, skill_id=skill_key
+                )
+                session.execute(add_skill)
+        else:
+            setattr(person, key, input.get(key))
+    try:
+        session.add(person)
+        session.commit()
+    except Exception:
+        session.rollback()
+    return person
+
+
 # Field level resolvers
 @skill.field("now")
 def resolve_now(_, info):
@@ -137,21 +197,21 @@ def resolve_parent(obj, info):
     return obj.parent_skill
 
 
-@person.field("fullName")
+@contact.field("fullName")
 def resolve_full_name(obj, info):
     return f'{obj.name} {obj.surname}'
 
 
-@person.field("friends")
+@contact.field("friends")
 def resolve_friends(obj, info, input=None):
     return obj.friends.filter_by(**input).all() if input else obj.friends
 
 
-@person.field("skills")
+@contact.field("skills")
 def resolve_person_skills(obj, info, input=None):
     return obj.skills.filter_by(**input).all() if input else obj.skills
 
 
-@person.field("favSkill")
+@contact.field("favSkill")
 def resolve_fav_skill(obj, info):
     return obj.person_favSkill
