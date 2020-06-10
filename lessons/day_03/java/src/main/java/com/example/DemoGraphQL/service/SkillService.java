@@ -20,14 +20,18 @@ public class SkillService {
         this.skillRepository = skillRepository;
     }
 
-    public Optional<Skill> getSkill(Optional<Long> id) {
-        return id.map(v -> this.skillRepository.findById(v)).orElse(null);
+    public Optional<Skill> getSkill(Long id) {
+        return this.skillRepository.findById(id);
     }
 
     public Skill getRandomSkill() {
         List<Skill> givenList = this.skillRepository.findAll();
         Random rand = new Random();
         return givenList.get(rand.nextInt(givenList.size()));
+    }
+
+    public Optional<Skill> getSkill(Optional<Long> id) {
+        return id.map(v -> this.skillRepository.findById(v)).orElse(null);
     }
 
     public List<Skill> getSkills(Optional<Long> id) {
