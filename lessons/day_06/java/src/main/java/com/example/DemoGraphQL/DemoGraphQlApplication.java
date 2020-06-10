@@ -23,7 +23,7 @@ public class DemoGraphQlApplication {
 
     /**
      * "Contact" type is not being referenced from any resolver methods
-     * so you'll have to tell graphql-java-tools what type it is. There's no other way for it to figure out the java type.
+     * so you'll have to tell graphql-java-tools what type it is.
      */
     @Bean
     public SchemaParserDictionary schemaParserDictionary() {
