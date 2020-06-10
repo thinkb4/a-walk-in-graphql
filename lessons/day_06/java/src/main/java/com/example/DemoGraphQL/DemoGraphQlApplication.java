@@ -1,12 +1,11 @@
 package com.example.DemoGraphQL;
 
-import com.example.DemoGraphQL.model.EyeColor;
-import com.example.DemoGraphQL.model.Person;
-import com.example.DemoGraphQL.model.Skill;
+import com.example.DemoGraphQL.model.*;
 import com.example.DemoGraphQL.repository.PersonRepository;
 import com.example.DemoGraphQL.repository.SkillRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import graphql.kickstart.tools.SchemaParserDictionary;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,6 +19,16 @@ public class DemoGraphQlApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DemoGraphQlApplication.class, args);
+    }
+
+    /**
+     * "Contact" type is not being referenced from any resolver methods
+     * so you'll have to tell graphql-java-tools what type it is. There's no other way for it to figure out the java type.
+     */
+    @Bean
+    public SchemaParserDictionary schemaParserDictionary() {
+        return new SchemaParserDictionary()
+                .add(Contact.class);
     }
 
     /**
@@ -47,12 +56,12 @@ public class DemoGraphQlApplication {
             // load persons
             Map<Long, Person> personsMap = new HashMap<>();
             for (JsonNode person : rootNode.path("persons")) {
-                Person newPerson = new Person(
-                        person.path("name").asText(),
-                        person.path("surname").asText(),
-                        person.path("email").asText(),
-                        EyeColor.fromLabel(person.path("eyeColor").asText()),
-                        person.path("age").asInt());
+                Person newPerson = new Contact();
+                newPerson.setName(person.path("name").asText());
+                newPerson.setSurname(person.path("surname").asText());
+                newPerson.setEmail(person.path("email").asText());
+                newPerson.setEyeColor(EyeColor.fromLabel(person.path("eyeColor").asText()));
+                newPerson.setAge(person.path("age").asInt());
 
                 // load favourite skill
                 if (!person.path("favSkill").isNull()) {

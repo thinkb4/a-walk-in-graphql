@@ -1,9 +1,10 @@
 package com.example.DemoGraphQL.resolver;
 
+import com.example.DemoGraphQL.input.InputCandidateCreate;
+import com.example.DemoGraphQL.input.InputEngineerCreate;
 import com.example.DemoGraphQL.input.InputPersonCreate;
 import com.example.DemoGraphQL.input.InputSkillCreate;
-import com.example.DemoGraphQL.model.Person;
-import com.example.DemoGraphQL.model.Skill;
+import com.example.DemoGraphQL.model.*;
 import com.example.DemoGraphQL.service.PersonService;
 import com.example.DemoGraphQL.service.SkillService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -33,4 +34,11 @@ public class Mutation implements GraphQLMutationResolver {
         return this.personService.createPerson(Optional.ofNullable(input));
     }
 
+    public Candidate createCandidate(final InputCandidateCreate input) {
+        return (Candidate) this.personService.createCandidate(Optional.ofNullable(input));
+    }
+
+    public Engineer createEngineer(final InputEngineerCreate input) {
+        return (Engineer) this.personService.createEngineer(Optional.ofNullable(input));
+    }
 }

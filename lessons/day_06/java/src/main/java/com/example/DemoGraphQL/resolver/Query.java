@@ -1,5 +1,6 @@
 package com.example.DemoGraphQL.resolver;
 
+import com.example.DemoGraphQL.input.InputGlobalSearch;
 import com.example.DemoGraphQL.input.InputPerson;
 import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.model.Person;
@@ -9,6 +10,7 @@ import com.example.DemoGraphQL.service.SkillService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,5 +50,12 @@ public class Query implements GraphQLQueryResolver {
 
     public List<Skill> skills(final InputSkill input) {
         return this.skillService.getSkills(Optional.ofNullable(input));
+    }
+
+    public List<Object> search(final InputGlobalSearch input) {
+        List<Object> searchList = new ArrayList<>();
+        searchList.addAll(this.personService.searchByName(Optional.ofNullable(input.getName())));
+        searchList.addAll(this.skillService.searchByName(Optional.ofNullable(input.getName())));
+        return searchList;
     }
 }
