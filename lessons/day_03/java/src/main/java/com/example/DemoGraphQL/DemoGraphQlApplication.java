@@ -1,5 +1,6 @@
 package com.example.DemoGraphQL;
 
+import com.example.DemoGraphQL.model.EyeColor;
 import com.example.DemoGraphQL.model.Person;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.repository.PersonRepository;
@@ -50,7 +51,7 @@ public class DemoGraphQlApplication {
                         person.path("name").asText(),
                         person.path("surname").asText(),
                         person.path("email").asText(),
-                        person.path("eyeColor").asText(),
+                        EyeColor.fromLabel(person.path("eyeColor").asText()),
                         person.path("age").asInt());
 
                 // load favourite skill

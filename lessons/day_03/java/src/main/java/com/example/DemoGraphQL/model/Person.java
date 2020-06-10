@@ -22,7 +22,8 @@ public class Person {
     private String email;
 
     @Column(name = "EYECOLOR")
-    private String eyeColor;
+    @Enumerated(EnumType.STRING)
+    private EyeColor eyeColor;
 
     @Column(name = "AGE")
     private Integer age;
@@ -52,7 +53,7 @@ public class Person {
     public Person() {
     }
 
-    public Person(String name, String surname, String email, String eyeColor, Integer age) {
+    public Person(String name, String surname, String email, EyeColor eyeColor, Integer age) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -92,11 +93,11 @@ public class Person {
         this.email = email;
     }
 
-    public String getEyeColor() {
+    public EyeColor getEyeColor() {
         return eyeColor;
     }
 
-    public void setEyeColor(String eyeColor) {
+    public void setEyeColor(EyeColor eyeColor) {
         this.eyeColor = eyeColor;
     }
 

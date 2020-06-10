@@ -1,9 +1,11 @@
 package com.example.DemoGraphQL.service;
 
 import com.example.DemoGraphQL.input.InputSkill;
+import com.example.DemoGraphQL.input.InputSkillCreate;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.repository.SkillRepository;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,6 +42,14 @@ public class SkillService {
             filterByInput(v).ifPresent(skills::add);
             return skills;
         }).orElse(this.skillRepository.findAll());
+    }
+
+    public Skill createSkill(Optional<InputSkillCreate> input) {
+        return input.map(v -> {
+            Skill parent = (v.getParent() != null) ? getSkill(v.getParent()).orElse(null) : null;
+            Skill newSkill = new Skill(v.getName(), parent);
+            return skillRepository.save(newSkill);
+        }).orElse(null);
     }
 
     private Optional<Skill> filterByInput(InputSkill input) {
