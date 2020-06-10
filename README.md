@@ -26,15 +26,11 @@ Hopefully your walk will be much easier than ours!
       - Subscription
   - Resolvers
   - Learning resources
-- [Setup](setup/setup.md)
-  - JS ecosystem
-    - Node.js
-    - Apollo server
-    - lowDB
-  - Python
-    - ...
-  - Java
-    - ...
+- **Setup**
+  - [JavaScript](setup/javascript.md)
+  - [Java](setup/java.md)
+  - [Python](setup/python.md)
+  - [NetCore](setup/netcore.md)
 - [Day 1](lessons/day_01/day_01.md)
   - Queries and Resolvers
     - Query
