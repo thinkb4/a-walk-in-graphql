@@ -34,7 +34,8 @@
     "lessons/day_03/javascript",
     "lessons/day_04/javascript",
     "lessons/day_05/javascript",
-    "lessons/day_06/javascript"
+    "lessons/day_06/javascript",
+    "lessons/day_07/javascript"
   ],
   "scripts": {
     "js_01": "yarn workspace lesson-01-javascript start",
@@ -42,6 +43,7 @@
     "js_03": "yarn workspace lesson-03-javascript start",
     "js_04": "yarn workspace lesson-04-javascript start",
     "js_05": "yarn workspace lesson-05-javascript start",
-    "js_06": "yarn workspace lesson-06-javascript start"
+    "js_06": "yarn workspace lesson-06-javascript start",
+    "js_07": "yarn workspace lesson-07-javascript start"
   }
 }

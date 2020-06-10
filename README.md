@@ -74,7 +74,7 @@ Hopefully your walk will be much easier than ours!
       - Federation
     - Exercise
     - Learning resources
-- Day 7
+- [Day 7](lessons/day_07/day_07.md)
   - Errors
     - Description
     - Exercise
