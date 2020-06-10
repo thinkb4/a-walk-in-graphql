@@ -5,6 +5,7 @@ The [Spring Boot GraphQL Starter](https://github.com/graphql-java-kickstart/grap
 
 ## Day 4 exercise - Java
 (Read the instructions on the [Day 4 exercise](../day_04.md#exercise) definition)
+##### HINT: Mutation objects are root GraphQL objects. They don’t have any associated "data" class. In such cases, the "resolver" class have to implement `GraphQLMutationResolver`.
 
 ####Requirements:
 * Java 1.8
