@@ -1,10 +1,7 @@
 package com.example.DemoGraphQL.service;
 
-import com.example.DemoGraphQL.input.InputPerson;
-import com.example.DemoGraphQL.input.InputPersonCreate;
-import com.example.DemoGraphQL.input.InputSkill;
-import com.example.DemoGraphQL.model.Person;
-import com.example.DemoGraphQL.model.Skill;
+import com.example.DemoGraphQL.input.*;
+import com.example.DemoGraphQL.model.*;
 import com.example.DemoGraphQL.repository.PersonRepository;
 import com.example.DemoGraphQL.repository.SkillRepository;
 import org.springframework.data.domain.Example;
@@ -13,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -52,6 +50,14 @@ public class PersonService {
                 allPredicates.add(p -> p.getEyeColor().equals(inputPerson.getEyeColor()));
             if (inputPerson.getFavSkill() != null)
                 allPredicates.add(p -> p.getFavSkill()!=null && p.getFavSkill().getId().equals(inputPerson.getFavSkill()));
+            if (inputPerson.getRole() != null)
+                allPredicates.add(p -> p instanceof Engineer && ((Engineer)p).getRole()!=null && ((Engineer)p).getRole().equals(inputPerson.getRole()));
+            if (inputPerson.getGrade() != null)
+                allPredicates.add(p -> p instanceof Engineer && ((Engineer)p).getGrade()!=null && ((Engineer)p).getGrade().equals(inputPerson.getGrade()));
+            if (inputPerson.getTargetRole() != null)
+                allPredicates.add(p -> p instanceof Candidate && ((Candidate)p).getTargetRole()!=null && ((Candidate)p).getTargetRole().equals(inputPerson.getTargetRole()));
+            if (inputPerson.getTargetGrade() != null)
+                allPredicates.add(p -> p instanceof Candidate && ((Candidate)p).getTargetGrade()!=null && ((Candidate)p).getTargetGrade().equals(inputPerson.getTargetGrade()));
 
             //Composes several predicates into a single predicate, and then applies the composite predicate to a stream.
             Predicate<Person> compositePredicate = allPredicates.stream().reduce(w -> true, Predicate::and);
@@ -85,7 +91,7 @@ public class PersonService {
 
     public Person createPerson(Optional<InputPersonCreate> input) {
         return input.map(v -> {
-            Person newPerson = new Person();
+            Person newPerson = new Contact();
             newPerson.setName(v.getName());
             newPerson.setSurname(v.getSurname());
             newPerson.setEmail(v.getEmail());
@@ -104,12 +110,54 @@ public class PersonService {
         }).orElse(null);
     }
 
-    /**
-     * Case insensitive substring search by name
-     * @param searchTerm:  String search term
-     *
-     * @return List<Person>
-     */
+
+    public Person createCandidate(Optional<InputCandidateCreate> input) {
+        return input.map(v -> {
+            Candidate newCandidate = new Candidate();
+            newCandidate.setName(v.getName());
+            newCandidate.setSurname(v.getSurname());
+            newCandidate.setEmail(v.getEmail());
+            newCandidate.setAge(v.getAge());
+            newCandidate.setEyeColor(v.getEyeColor());
+            newCandidate.setTargetGrade(v.getTargetGrade());
+            newCandidate.setTargetRole(v.getTargetRole());
+            if (v.getFavSkill() != null) {
+                newCandidate.setFavSkill(this.skillRepository.findById(v.getFavSkill()).orElse(null));
+            }
+            if (v.getSkills() != null) {
+                newCandidate.setSkills(new HashSet<>(this.skillRepository.findAllById(v.getSkills())));
+            }
+            if (v.getFriends() != null) {
+                newCandidate.setFriends(new HashSet<>(this.personRepository.findAllById(v.getFriends())));
+            }
+            return personRepository.save(newCandidate);
+        }).orElse(null);
+    }
+
+    public Person createEngineer(Optional<InputEngineerCreate> input) {
+        return input.map(v -> {
+            Engineer newEngineer = new Engineer();
+            newEngineer.setEmployeeId(ThreadLocalRandom.current().nextLong(1,999));
+            newEngineer.setName(v.getName());
+            newEngineer.setSurname(v.getSurname());
+            newEngineer.setEmail(v.getEmail());
+            newEngineer.setAge(v.getAge());
+            newEngineer.setEyeColor(v.getEyeColor());
+            newEngineer.setGrade(v.getGrade());
+            newEngineer.setRole(v.getRole());
+            if (v.getFavSkill() != null) {
+                newEngineer.setFavSkill(this.skillRepository.findById(v.getFavSkill()).orElse(null));
+            }
+            if (v.getSkills() != null) {
+                newEngineer.setSkills(new HashSet<>(this.skillRepository.findAllById(v.getSkills())));
+            }
+            if (v.getFriends() != null) {
+                newEngineer.setFriends(new HashSet<>(this.personRepository.findAllById(v.getFriends())));
+            }
+            return personRepository.save(newEngineer);
+        }).orElse(null);
+    }
+
     public List<Person> searchByName(Optional<String> searchTerm) {
         Person filterBy = new Person();
         filterBy.setName(searchTerm.orElse(""));
@@ -138,6 +186,15 @@ public class PersonService {
             Skill tmpSkill = new Skill();
             tmpSkill.setId(input.getFavSkill());
             filterBy.setFavSkill(tmpSkill);
+        }
+        if (input.getRole() != null || input.getGrade() != null) {
+            filterBy = new Engineer();
+            ((Engineer) filterBy).setRole(input.getRole());
+            ((Engineer) filterBy).setGrade(input.getGrade());
+        } else if(input.getTargetRole()!= null || input.getTargetGrade() != null) {
+            filterBy = new Candidate();
+            ((Candidate) filterBy).setTargetRole(input.getTargetRole());
+            ((Candidate) filterBy).setTargetGrade(input.getTargetGrade());
         }
         return Example.of(filterBy);
     }

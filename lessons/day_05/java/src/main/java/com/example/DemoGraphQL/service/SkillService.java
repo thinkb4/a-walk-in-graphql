@@ -52,12 +52,6 @@ public class SkillService {
         }).orElse(null);
     }
 
-    /**
-     * Case insensitive substring search by name
-     * @param searchTerm:  String search term
-     *
-     * @return List<Skill>
-     */
     public List<Skill> searchByName(Optional<String> searchTerm) {
         Skill filterBy = new Skill();
         filterBy.setName(searchTerm.orElse(""));
