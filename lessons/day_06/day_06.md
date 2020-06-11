@@ -291,11 +291,11 @@ An underlying pattern is becoming evident, we have at least two potential domain
 
 ## Scaling your Schema
 
-There's so much to say about this argument, and the considerations will vary depending on the prerequisites and circumstances, e.g. the project type (personal, enterprise, experimental), the scale (single person, small team, multiple teams, distributed teams) and many other! So in a high level overview I'll mention some of those considerations and leave you the links to the most valuable documents I've seen so far which represent the best practices determined by the industry after years of designing GraphQL at scale. One of the most relevant documents is the "[Principled GraphQL](https://principledgraphql.com/)", written by [Geoff Schmidt](https://twitter.com/GeoffQL) and [Matt DeBergalis](https://twitter.com/debergalis), which I'll mention several times in this chapter, but it's not the only one as many great engineers are sharing with all of us their invaluable experience.
+There's so much to say about this argument, and the considerations will vary depending on the prerequisites and circumstances, e.g. the project type (personal, enterprise, experimental), the scale (single person, small team, multiple teams, distributed teams) and many other! So in a high level overview we'll mention some of those considerations and leave you the links to the most valuable documents I've seen so far which represent the best practices determined by the industry after years of designing GraphQL at scale. One of the most relevant documents is the "[Principled GraphQL](https://principledgraphql.com/)", written by [Geoff Schmidt](https://twitter.com/GeoffQL) and [Matt DeBergalis](https://twitter.com/debergalis), which we'll mention several times in this chapter, but it's not the only one as many great engineers are sharing with all of us their invaluable experience.
 
 ### Graph Breakdown
 
-One of the first things that will hit you is the "[One Graph](https://principledgraphql.com/integrity#1-one-graph)" principle which by any means is referred to have one single file; it means that you have to have a single source of truth (one unified graph) that represents the interactions between the actors and the data through [Aggregates](https://khalilstemmler.com/articles/typescript-domain-driven-design/aggregate-design-persistence/#Aggregates) (Objects & Relationships), Views (Queries) and Commands (Mutations); here is where we have 2 primary options, the **Monolithic architecture** (e.g. **Schema Stitching**), and the **Federated architecture**, (e.g. **Apollo Federation**). Other options like [graphql-modules](https://github.com/Urigo/graphql-modules) combine the declaration and execution code all together but we won't describe it here. While the former is considered deprecated or not recommended for many reasons we'll see later, I still encourage you to know it and practice it because:
+One of the first things that will hit you is the "[One Graph](https://principledgraphql.com/integrity#1-one-graph)" principle which by any means is referred to have one single file; it means that you have to have a single source of truth (one unified graph) that represents the interactions between the actors and the data through [Aggregates](https://khalilstemmler.com/articles/typescript-domain-driven-design/aggregate-design-persistence/#Aggregates) (Objects & Relationships), Views (Queries) and Commands (Mutations); here is where we have 2 primary options, the **Monolithic architecture** (e.g. **Schema Stitching**), and the **Federated architecture**, (e.g. **Apollo Federation**). Other options like [graphql-modules](https://github.com/Urigo/graphql-modules) combine the declaration and execution code all together but we won't describe it here. While the former is considered deprecated or not recommended for many reasons we'll see later, we still encourage you to know it and practice it because:
 
   1. It's still applies to small project
   2. You'll still find it alive and kicking in many projects
@@ -306,16 +306,18 @@ Clearly this discussion is around architecture and not about GraphQL explicitly,
 Here some of the most evident differences
 | [Schema Stitching](https://www.apollographql.com/docs/graphql-tools/schema-stitching/) | [Apollo Federation](https://www.apollographql.com/docs/apollo-server/federation/federation-spec/) |
 |:-:|:-:|
-| Compose 2 or more schemas into 1 (stiching them together) | Compose 2 or more services into 1 (gateway) |
+| Compose 2 or more schemas into 1 (stitching them together) | Compose 2 or more services into 1 (gateway) |
 | Typically organized by Type (e.g. a team controlling a Type) | Typically organized by concerns (e.g. a team controlling a domain) |
 | A relationship is imperatively resolved at runtime. | An implementing service must add the `@key` directive to a type's definition in order to declare how the relationship will be established. |
 | Optimizations and metrics are harder to separate | Each service can be optimized and monitored independently |
 
-Another summarized high level description I like can be read in [GraphQL Federation vs Stitching](https://gunargessner.com/graphql-federation-vs-stitching) by [Gunar Gessner](https://medium.com/@gunar).
+Another summarized high level description we like can be read in [GraphQL Federation vs Stitching](https://gunargessner.com/graphql-federation-vs-stitching) by [Gunar Gessner](https://medium.com/@gunar).
 
 All above is only achievable thanks to `extend`, a simple keyword on the spec is the door that opens towards hell or heaven depending on how you use it.
 
 ## Schema Stitching example
+
+> In order to keep the learning path more natural and start with the simplest example we will go for the Stitching technique for now and dedicate a whole day for Federation in the future.
 
 ### SDL
 
@@ -483,7 +485,7 @@ server.listen(4000)
 
 > a.k.a. how to resolve conflicts
 
-So far our example worked smoothly just because we were moving a working SDL document to 3 documents, but what happens when hte number of documents and lines of code scale and you need to handle fields, types or other conflicts? Clearly just importing the SDL files won't work anymore. In this case you'll have to leverage the existing tools available for your technology or eventually write your own if nothing fit your needs.
+So far our example worked smoothly just because we were moving a working SDL document to 3 documents, but what happens when the number of documents and lines of code scale and you need to handle fields, types or other conflicts? Clearly just importing the SDL files won't work anymore. In this case you'll have to leverage the existing tools available for your technology or eventually write your own if nothing fit your needs.
 
 - `graphql-tools/merge`
   - [onTypeConflict](https://www.graphql-tools.com/docs/schema-stitching#ontypeconflict)
@@ -519,7 +521,7 @@ This exercise might require additional instructions depending on the technology,
 #### Schema
 
 - Identify and separate the SDL document into 4 documents in a per-type bases
-- Here a completely arbitrary example (you can experiment different setups y you want)
+- Here a completely arbitrary example (you can experiment different setups if you want)
   - globalSearch.gql
   - person.gql
   - schema.gql
@@ -527,7 +529,7 @@ This exercise might require additional instructions depending on the technology,
 - Update the server app in order to include and stitch all schemas together
 - You can directly import the *.gql files or use a technology specific utility like `apollo-tools` or whatever you want
 
-As you can see, the challenge here will depend on the technology and I encourage you to experiment and try different approaches.
+As you can see, the challenge here will depend on the technology and we encourage you to experiment and try different approaches.
 
 #### Operations list
 
