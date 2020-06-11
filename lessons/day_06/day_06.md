@@ -317,6 +317,8 @@ All above is only achievable thanks to `extend`, a simple keyword on the spec is
 
 ## Schema Stitching example
 
+> In order to keep the learning path more natural and start with the simplest example we will go for the Stitching technique for now and dedicate a whole day for Federation in the future.
+
 ### SDL
 
 So how our example would look like if we use the stitching technique?
