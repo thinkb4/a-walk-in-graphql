@@ -1,7 +1,7 @@
 {
-  "name": "lesson-03-javascript",
+  "name": "lesson-06-javascript",
   "version": "1.0.0",
-  "description": "Lesson 03 exercises - JavaScript",
+  "description": "Lesson 06 exercises - JavaScript",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Jaxolotl/a-walk-in-graphql.git"
@@ -22,7 +22,12 @@
     "variable",
     "input type",
     "inputType",
-    "enum"
+    "enum",
+    "mutation",
+    "mutations",
+    "interface",
+    "union",
+    "extending types"
   ],
   "author": "Javier Valderrama <jaxolotl@gmail.com>",
   "contributors": [

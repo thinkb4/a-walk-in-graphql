@@ -1,8 +1,8 @@
 # [A walk in GraphQL](/README.md)
 
-## Day 1 exercise - Javascript
+## Day 6 exercise - Javascript
 
-Read the instructions on the [Day 1 exercise](../day_01.md#exercise) definition
+Read the instructions on the [Day 6 exercise](../day_06.md#exercise) definition
 
 ### Run the server
 
@@ -10,7 +10,7 @@ Read the instructions on the [Day 1 exercise](../day_01.md#exercise) definition
 
 1. open a terminal on the root directory
 2. run `yarn` to install the dependencies if you didn't before
-3. run `yarn js_01` to start the GraphQL server
+3. run `yarn js_06` to start the GraphQL server
 
 #### Using `NPM`
 
@@ -30,4 +30,5 @@ Open your browser and type `http://localhost:4000/` to display the GraphQL playg
 - [Schema](src/schema/schema.gql)
 - [Resolver map](src/resolvers/resolvers.js)
 - [Skill entity model](src/db/skill.js)
+- [Person entity model](src/db/person.js)
 - [db abstraction](src/db/index.js)

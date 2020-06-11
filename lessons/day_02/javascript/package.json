@@ -1,5 +1,5 @@
 {
-  "name": "lesson-02-exercises-javascript",
+  "name": "lesson-02-javascript",
   "version": "1.0.0",
   "description": "Lesson 02 exercises - JavaScript",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "git+https://github.com/Jaxolotl/a-walk-in-graphql.git"
   },
   "scripts": {
-    "server": "nodemon -e js,gql src/server.js"
+    "start": "nodemon -e js,gql src/server.js"
   },
   "keywords": [
     "javascript",
@@ -21,6 +21,13 @@
     "argument",
     "variable"
   ],
+  "author": "Javier Valderrama <jaxolotl@gmail.com>",
+  "contributors": [
+    "Ezequiel Alvarez <ezequielalvarez@gmail.com>"
+  ],
+  "engines" : { 
+    "node" : ">=10.17.0"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Jaxolotl/a-walk-in-graphql/issues"
@@ -31,9 +38,7 @@
     "apollo-server": "~2.11.0",
     "graphql-tag": "~2.10.3",
     "lowdb": "~1.0.0",
-    "nanoid": "~2.1.11"
-  },
-  "devDependencies": {
+    "nanoid": "~2.1.11",
     "nodemon": "~2.0.3"
   }
 }

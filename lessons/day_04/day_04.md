@@ -298,11 +298,14 @@ mutation createPerson(
 1. There are many topics around mutation bests practices, optimizations, "do's and don'ts"; some are excellent, all of them way beyond the scope of this stage of the course (we might get there), some super detailed and precise, some fuzzy or inaccurate. Usually the rule of thumb for finding that kind of info is **"first the authors, then the SMEs (subject matter expert), then the official community, then the rest"**, e.g. Apollo has a huge community and a YouTube channel where actual Apollo engineers and even the creators of GraphQL, like Lee Byron, do conferences and share tons of invaluable insights related to the technology itself and the engineering decisions you'll have to make on top and under GraphQL's layer.
 2. Whenever you struggle finding the root cause of a problem whilst working with GraphQL step aside and make you this question:  « *Is this a GraphQL problem?* » MOST of the time the answer is NO, it's about engineering and probably related to a non-graph mental state (you might be still thinking it in REST)
 
+#### Technologies
+
 Select the exercise on your preferred technology:
 
 - [JavaScript](javascript/README.md)
 - [Java](java/README.md)
 - [Python](python/README.md)
+- [NetCore](netcore/README.md)
 
 ## Learning resources
 
