@@ -1,0 +1,190 @@
+# ENUMS
+enum EyeColor {
+    BLUE
+    GREEN
+    BROWN
+    BLACK
+}
+
+enum Grade {
+    TRAINEE
+    JUNIOR
+    SENIOR
+}
+
+enum Role {
+    DEVELOPER
+    SDET
+    TEAM_LEAD
+}
+
+# INPUTS
+input InputPersonCreate {
+    name: String!
+    surname: String
+    email: String
+    age: Int
+    eyeColor: EyeColor
+    friends: [ID!]
+    skills: [ID!]
+    favSkill: ID
+}
+
+input InputCandidateCreate {
+    name: String!
+    surname: String!
+    email: String!
+    age: Int!
+    eyeColor: EyeColor
+    friends: [ID!]
+    skills: [ID!]
+    favSkill: ID
+
+    # Candidate Props
+    targetRole: Role!
+    targetGrade: Grade!
+}
+
+input InputEngineerCreate {
+    name: String!
+    surname: String!
+    email: String!
+    age: Int!
+    eyeColor: EyeColor
+    friends: [ID!]
+    skills: [ID!]
+    favSkill: ID
+
+    # Engineer props
+    role: Role!
+    grade: Grade!
+}
+
+input InputSkill {
+    id: ID
+    name: String
+}
+
+input InputSkillCreate {
+    name: String!
+    parent: ID
+}
+
+input InputGlobalSearch {
+    name: String!
+}
+
+input InputPerson {
+    id: ID
+    age: Int
+    eyeColor: EyeColor
+    favSkill: ID
+    targetRole: Role
+    targetGrade: Grade
+    role: Role
+    grade: Grade
+}
+
+# INTERFACES
+interface Person {
+    id: ID
+    name: String!
+    surname: String
+    fullName: String
+    email: String
+    age: Int
+    eyeColor: EyeColor
+    friends (input: InputPerson): [Person!]
+    skills (input: InputSkill): [Skill!]
+    favSkill: Skill
+}
+
+interface Employee {
+    employeeId: ID!
+}
+
+# UNIONS
+union GlobalSearch =
+    | Skill
+    | Engineer
+    | Candidate
+    | Contact
+
+# OBJECT TYPES
+type Skill {
+    id: ID
+    parent: Skill
+    name: String!
+    now: String! @deprecated(reason: "This is just an example of a virtual field.")
+}
+
+type Contact implements Person {
+    # Person props
+    id: ID
+    name: String!
+    surname: String
+    fullName: String
+    email: String
+    age: Int
+    eyeColor: EyeColor
+    friends (input: InputPerson): [Person!]
+    skills (input: InputSkill): [Skill!]
+    favSkill: Skill
+}
+
+type Candidate implements Person {
+    # Person props
+    id: ID
+    name: String!
+    surname: String!
+    fullName: String
+    email: String!
+    age: Int!
+    eyeColor: EyeColor
+    friends (input: InputPerson): [Person!]
+    skills (input: InputSkill): [Skill!]!
+    favSkill: Skill
+
+    # Candidate Props
+    targetRole: Role!
+    targetGrade: Grade!
+}
+
+type Engineer implements Person & Employee {
+    # Person props
+    id: ID
+    name: String!
+    surname: String!
+    fullName: String
+    email: String!
+    age: Int!
+    eyeColor: EyeColor
+    friends (input: InputPerson): [Person!]
+    skills (input: InputSkill): [Skill!]!
+    favSkill: Skill
+
+    # Employee props
+    employeeId: ID!
+
+    # Engineer props
+    role: Role!
+    grade: Grade!
+}
+
+# ROOT OPERATIONS
+type Query {
+    randomSkill: Skill!
+    randomPerson: Person!
+    skill (input: InputSkill): Skill
+    person (input: InputPerson): Person
+    skills (input: InputSkill): [Skill!]
+    persons (input: InputPerson): [Person!]
+    search (input: InputGlobalSearch): [GlobalSearch!]
+}
+
+type Mutation {
+    createSkill (input: InputSkillCreate): Skill!
+    createPerson (input: InputPersonCreate): Person!
+    createCandidate (input: InputCandidateCreate): Candidate!
+    createEngineer (input: InputEngineerCreate): Engineer!
+}
