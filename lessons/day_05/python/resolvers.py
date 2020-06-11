@@ -61,9 +61,8 @@ def resolve_skills(_, info, input=None):
 # Mutations
 @mutation.field("createSkill")
 def resolve_create_skill(_, info, input):
-    skill = Skill()
+    skill = Skill(**input)
     skill.id = str(uuid.uuid4())
-    [setattr(skill, key, input.get(key)) for key in input.keys()]
     try:
         session.add(skill)
         session.commit()
