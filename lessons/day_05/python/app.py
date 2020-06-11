@@ -1,7 +1,6 @@
 from ariadne import make_executable_schema, load_schema_from_path
 from ariadne.asgi import GraphQL
-from resolvers import query, skill, person, eye_color
-from resolvers import mutation
+from resolvers import query, skill, person, eye_color, mutation
 
 
 # import schema from GraphQL file
