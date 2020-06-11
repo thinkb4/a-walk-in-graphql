@@ -73,23 +73,21 @@ def resolve_create_skill(_, info, input):
 
 @mutation.field("createPerson")
 def resolve_create_person(_, info, input):
-    person = Person()
+    friends = []
+    skills = []
+    if 'friends' in input:
+        person_ids = input.pop('friends')
+        friends = session.query(Person).filter(Person.id.in_(person_ids)).all()
+    if 'skills' in input:
+        skill_ids = input.pop('skills')
+        skills = session.query(Skill).filter(Skill.id.in_(skill_ids)).all()
+
+    person = Person(**input)
     person.id = str(uuid.uuid4())
-    for key in input.keys():
-        if key == "friends":
-            for friend_key in input.get(key):
-                add_friend = person_friends.insert().values(
-                    person_id=person.id, friend_id=friend_key
-                )
-                session.execute(add_friend)
-        elif key == "skills":
-            for skill_key in input.get(key):
-                add_skill = person_skills.insert().values(
-                    person_id=person.id, skill_id=skill_key
-                )
-                session.execute(add_skill)
-        else:
-            setattr(person, key, input.get(key))
+    for friend in friends:
+        person.friends.append(friend)
+    for skill in skills:
+        person.skills.append(skill)
     try:
         session.add(person)
         session.commit()
