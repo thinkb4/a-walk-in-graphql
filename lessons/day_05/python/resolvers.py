@@ -1,6 +1,6 @@
 from ariadne import QueryType, ObjectType, EnumType, MutationType
 from random import randint
-from models import Skill, Person, person_friends, person_skills
+from models import Skill, Person
 from data import session
 from datetime import datetime
 import uuid
