@@ -149,6 +149,7 @@ def resolve_create_candidate(_, info, input):
         session.commit()
     except Exception:
         session.rollback()
+    return person
 
 
 @mutation.field("createEngineer")
@@ -164,6 +165,7 @@ def resolve_create_engineer(_, info, input):
 
     person = Person(**input)
     person.id = str(uuid.uuid4())
+    person.employeeId = str(uuid.uuid4())
     for friend in friends:
         person.friends.append(friend)
     for skill in skills:
