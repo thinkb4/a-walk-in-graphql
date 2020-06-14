@@ -7,6 +7,31 @@ from datetime import datetime
 import uuid
 
 
+def create_persons(info, input):
+    friends = []
+    skills = []
+    if 'friends' in input:
+        person_ids = input.pop('friends')
+        friends = session.query(Person).filter(Person.id.in_(person_ids)).all()
+    if 'skills' in input:
+        skill_ids = input.pop('skills')
+        skills = session.query(Skill).filter(Skill.id.in_(skill_ids)).all()
+
+    person = Person(**input)
+    person.id = str(uuid.uuid4())
+    if 'Engineer' in str(info.return_type):
+        person.employeeId = str(uuid.uuid4())
+    for friend in friends:
+        person.friends.append(friend)
+    for skill in skills:
+        person.skills.append(skill)
+    try:
+        session.add(person)
+        session.commit()
+    except Exception:
+        session.rollback()
+    return person
+
 # Type definitions
 query = QueryType()
 mutation = MutationType()
@@ -104,78 +129,17 @@ def resolve_create_skill(_, info, input):
 
 @mutation.field("createPerson")
 def resolve_create_person(_, info, input):
-    friends = []
-    skills = []
-    if 'friends' in input:
-        person_ids = input.pop('friends')
-        friends = session.query(Person).filter(Person.id.in_(person_ids)).all()
-    if 'skills' in input:
-        skill_ids = input.pop('skills')
-        skills = session.query(Skill).filter(Skill.id.in_(skill_ids)).all()
-
-    person = Person(**input)
-    person.id = str(uuid.uuid4())
-    for friend in friends:
-        person.friends.append(friend)
-    for skill in skills:
-        person.skills.append(skill)
-    try:
-        session.add(person)
-        session.commit()
-    except Exception:
-        session.rollback()
-    return person
+    return create_persons(info, input)
 
 
 @mutation.field("createCandidate")
 def resolve_create_candidate(_, info, input):
-    friends = []
-    skills = []
-    if 'friends' in input:
-        person_ids = input.pop('friends')
-        friends = session.query(Person).filter(Person.id.in_(person_ids)).all()
-    if 'skills' in input:
-        skill_ids = input.pop('skills')
-        skills = session.query(Skill).filter(Skill.id.in_(skill_ids)).all()
-
-    person = Person(**input)
-    person.id = str(uuid.uuid4())
-    for friend in friends:
-        person.friends.append(friend)
-    for skill in skills:
-        person.skills.append(skill)
-    try:
-        session.add(person)
-        session.commit()
-    except Exception:
-        session.rollback()
-    return person
+    return create_persons(info, input)
 
 
 @mutation.field("createEngineer")
 def resolve_create_engineer(_, info, input):
-    friends = []
-    skills = []
-    if 'friends' in input:
-        person_ids = input.pop('friends')
-        friends = session.query(Person).filter(Person.id.in_(person_ids)).all()
-    if 'skills' in input:
-        skill_ids = input.pop('skills')
-        skills = session.query(Skill).filter(Skill.id.in_(skill_ids)).all()
-
-    person = Person(**input)
-    person.id = str(uuid.uuid4())
-    person.employeeId = str(uuid.uuid4())
-    for friend in friends:
-        person.friends.append(friend)
-    for skill in skills:
-        person.skills.append(skill)
-    try:
-        session.add(person)
-        session.commit()
-    except Exception:
-        session.rollback()
-    return person
+    return create_persons(info, input)
 
 
 # Field level resolvers
