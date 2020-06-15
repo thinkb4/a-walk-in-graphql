@@ -3,11 +3,33 @@
 ## Preface
 
 A lot of information has been written about **`GraphQL`** since it was unleashed to the world by **Facebook** in **2015**. As the curious nerds we are, we tend to embrace the **self-taught** approach first, which implies **research**, reading documents and tutorials, and more documents and tutorials, and **trying/error** in a continuous loop, until we feel confident with the topic.  
-The intention of this road map is to share with you one of many paths you can take to grok the language and specially to draw you to the highest quality information (which we won't be ever able to write in a better way) in the attempt to prevent you from coming across misleading (when not completely wrong) documents outside in the wild; and keeping you on the **implementation agnostic** spirit of the language, providing **abstract examples** as well as **practical exercises** in different languages so you can **understand the correlations and differences without losing focus on the main topic: `GraphQL`**.
+The intention of this road map is to share with you our own learning experience (one of many paths you can take to grok the language) and to draw you to the highest quality information (which we won't be ever able to write in a better way) in the attempt to prevent you from coming across misleading (when not completely wrong) documents outside in the wild; and keeping you on the **implementation agnostic** spirit of the language, providing **abstract examples** as well as **practical exercises** in different languages so you can **understand the correlations and differences without losing focus on the main topic: `GraphQL`**.
 
 We'll walk through this **starting from the language and the API definition** on the **backend**, gradually **increasing the complexity** as the *walk* develop; it might contain new examples on the future, or more "**days**" including client-side, testing or architecture specific topic, or we might create another *walk* for them, we don't really know.
 
 Hopefully your walk will be much easier than ours!
+
+### Collaborators
+
+- Ezequiel Alvarez - [@ealvarezk](https://github.com/ealvarezk)
+  - Execution coordinator and reviewer
+- Ezequiel Tejerina - [@quequitejerina](https://github.com/quequitejerina)
+  - Python exercise contributor and reviewer
+- Franco Gribaudo - [@fgriba](https://github.com/fgriba)
+  - Java exercise contributor and reviewer
+- Cristian Buffa - [@cristianbuffa](https://github.com/cristianbuffa)
+  - NetCore exercise contributor and reviewer
+- Javier Valderrama - [@Jaxolotl](https://github.com/Jaxolotl)
+  - Course writer, JavaScript exercise contributor and reviewer
+
+#### Special thanks to out external reviewers!
+
+- Eloi Colella - [@ehx](https://github.com/ehx)
+  - NetCore reviewer
+- Ciro Grbavac- [@ciro599](https://github.com/ciro599)
+  - Python reviewer
+- Lucas Mari - [@lucasmari76](https://github.com/lucasmari76)
+  - Java reviewer
 
 ## Table of contents
 
