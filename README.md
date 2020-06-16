@@ -22,14 +22,16 @@ Hopefully your walk will be much easier than ours!
 - Javier Valderrama - [@Jaxolotl](https://github.com/Jaxolotl)
   - Course writer, JavaScript exercise contributor and reviewer
 
-#### Special thanks to out external reviewers!
+#### Special thanks to our external reviewers!
 
-- Eloi Colella - [@ehx](https://github.com/ehx)
-  - NetCore reviewer
-- Ciro Grbavac- [@ciro599](https://github.com/ciro599)
+- Eloy Colella - [@ehx](https://github.com/ehx)
   - Python reviewer
+- Ciro Grbavac- [@ciro599](https://github.com/ciro599)
+  - Java reviewer
 - Lucas Mari - [@lucasmari76](https://github.com/lucasmari76)
   - Java reviewer
+- Alejandro Freiberg - [@alejandrofreiberg](https://github.com/alejandrofreiberg)
+  - NetCore reviewer
 
 ## Table of contents
 
