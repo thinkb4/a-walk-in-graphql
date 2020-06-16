@@ -1,7 +1,7 @@
 {
-  "name": "js_05",
+  "name": "js_07",
   "version": "1.0.0",
-  "description": "Lesson 05 exercises - JavaScript",
+  "description": "Lesson 07 exercises - JavaScript",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Jaxolotl/a-walk-in-graphql.git"
@@ -26,7 +26,8 @@
     "mutation",
     "mutations",
     "interface",
-    "union"
+    "union",
+    "extending types"
   ],
   "author": "Javier Valderrama <jaxolotl@gmail.com>",
   "contributors": [
