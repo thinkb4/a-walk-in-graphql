@@ -221,22 +221,22 @@ There's no "a right answer" for that.
 
 In terms of best community trends there are different opinions:
 
-– Intentionally throw errors!
+– Intentionally throw errors!  
 – Do Not! ୧༼ಠ益ಠ༽୨
 
-– Format them!
+– Format them!  
 – Whatever! (◔_◔)
 
-– Make Errors part of your schema!
+– Make Errors part of your schema!  
 – Do Not! ୧༼ಠ益ಠ༽୨
 
-– Leverage your GraphQL server app error features!
+– Leverage your GraphQL server app error features!  
 – Do Not! ୧༼ಠ益ಠ༽୨
 
-– Be careful with `extension` field!
+– Be careful with `extension` field!  
 – Hell yeah! ᕦ( ͡° ͜ʖ ͡°)ᕤ
 
-– Disable `stacktrace` for production!
+– Disable `stacktrace` for production!  
 – Hell yeah! ᕦ( ͡° ͜ʖ ͡°)ᕤ
 
 Despite the last two assertions we all agree, unless the only thing you have is a fatal error you'll need to start thinking of **"errors"** in terms of **results**, which is true in the GraphQL mindset even though they might not be the results you're expecting for. You may think of them as **requested** and **unrequested** results and **make sure all the organization is aligned on how to organize and treat them**.
