@@ -71,7 +71,7 @@ Shocking? (◉ω◉)
 
  The `error` node is a list of error objects containing the following structure:
 
- ```json
+ ```json5
 
 {
   "error" : {
@@ -159,7 +159,7 @@ query Characters{
 
 **Response**
 
-```json
+```json5
 {
   "errors": [
     {
