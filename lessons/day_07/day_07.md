@@ -8,6 +8,243 @@
 
 ## Error
 
+If you're new to GraphQL you might find this section very surprising but believe us, you'll need to re-think **"what an error is"** to comfortably navigate GraphQL's waters.
+
+### TL;DR
+
+1. **One Graph** to rule them all.  
+_The spec. is the spec._
+2. **One Place** to find them all.  
+_`200 OK` & `error`_
+3. **One Object** to bring them all.  
+_`{ "error": {...}, "data": {...}`_
+4. and in your mind **bind them**  
+_"errors" as "unrequested results"_
+5. in the land of the **runtime** where the **implementation** lies.  
+_The runtime handles the rest._
+
+### One Graph to rule the all.
+
+As GraphQL is, by definition, something "in between", a **flaw** may come from:
+
+- the client,
+- within the GraphQL server
+- the services/persistence providers;
+
+GraphQL will treat them all in a consistent way (as defined by the spec.) but before digging deeper into the spec. let's organize them.
+
+#### By Severity (roughly)
+
+- Fatal
+  - The service is somehow unresponsive
+- Non Fatal
+  - A **fault** occurred but an "operable" response can still be provided.
+
+#### By Origin
+
+- Request
+  - Whoever is consuming it
+- Provider
+  - Whatever layer is providing a service to GraphQL (e.g. persistence layer)
+- Server
+  - Runtime
+
+#### By GraphQL Phase
+
+- [Parse](../day_01/day_01.md#1-parsing-the-incoming-request)
+  - Malformed GraphQL request
+- [Validation](../day_01/day_01.md#2-validation)
+  - Type checking error
+- [Execution](../day_01/day_01.md#3-execution)
+  - Resource not found,
+  - Bug
+
+And in the spec. the rules are quiet consistent, it'll try at any cost to propagate the error and continue operating whenever possible. If you want to see all the cases, one of the most educational ways is to browse the spec. and search for "error", you'll obtain about 170 different places related to the [type definitions](http://spec.graphql.org/June2018/#sec-Types), the [validation](http://spec.graphql.org/June2018/#sec-Validation), the [execution](http://spec.graphql.org/June2018/#sec-Execution), the [non-nullability cases](http://spec.graphql.org/June2018/#sec-Errors-and-Non-Nullability) and particularly how the [Response](http://spec.graphql.org/June2018/#sec-Response) should provided formatted and even [serialized](http://spec.graphql.org/June2018/#sec-Serialization-Format)!
+
+### `200 OK` & `error`
+
+Unless something goes really bad  with the server, you probably won't see other than a 200 OK HTTP status code.
+
+e.g. Do you remember, is Graphs all the way down? if you have a reference error inside a resolver's code, your server will run perfectly until that resolver is executed, then the reference error will be thrown, but the server won't fail, it won't stop executing, it'll simply propagate the error up and up until the response is being prepared, and there, an `error` node will be added to the JSON response.
+
+Shocking? (◉ω◉)
+
+ The `error` node is a list of error objects containing the following structure:
+
+ ```json
+
+{
+  "error" : {
+    "errors": [
+      {
+        "message": "String",
+        "locations": [{ "line": Number, "column": Number }],
+        "path":[...],
+        "extensions": {
+          "code": "String",
+          "exception": {
+            "stacktrace": [...]
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+Now let's break down the `errors` entry and the properties of each error in the list. In the [GraphQL spec June 2018 - 7.1.2 Errors](http://spec.graphql.org/June2018/#sec-Errors) section everything is described in great detail, check below some highlights.
+
+#### `errors` entry
+
+- non-empty list of errors
+- shouldn't be present in the response if no errors were found
+- if `data` entry is absent, then `errors` MUST be present
+- each **error** in the list is a **map** containing the following properties
+  - `message`
+    - **mandatory**
+    - A descriptive string of the error
+    - directed to developers
+  - `locations`
+    - **mandatory**
+    - list of locations
+    - each **location** is a `{ "line": Number, "column": Number }` where `Number` is a 1‐indexed positive integer
+  - `path`
+    - **mandatory**
+    - path **segments** from root to the identified field which experienced the error
+      - if segment represent a field, it should be a string containing the field name
+      - if segment represents a list index, it should be a 0‐indexed integer
+  - `extensions`
+    - **optional**
+    - implementation dependent
+    - unrestricted arbitrary content
+    - since **other entries to the error map are highly discouraged** (but not prohibited), this might be the RIGHT PLACE for engineers to add extra info if required
+- `data` and `errors` entries can **coexist** in the response
+
+### `data` & `error` are siblings
+
+You may have both a `data` and an `error` object in the Response body, containing expected data as well as 1 or more errors.
+
+Going back to our characters list example, let's say the `name` property is **nullable**  for `Istary` but **non-nullable** for `Hobbit`  and one of the records has a null value; this is what we get as response
+
+**TypeDef**
+
+```graphql
+interface Character {
+  id: ID
+  name: String
+  ....
+}
+
+type Hobbit implements Character {
+  id: ID
+  name: String!
+  ....
+}
+
+type Istari implements Character{
+  id: ID
+  name: String
+}
+```
+
+**Query**
+
+```graphql
+query Characters{
+  characters {
+    name
+  }
+}
+```
+
+**Response**
+
+```json
+{
+  "errors": [
+    {
+      "message": "Cannot return null for non-nullable field Hobbit.name.",
+      "locations": [
+        {
+          "line": 3,
+          "column": 5
+        }
+      ],
+      "path": [
+        "characters", // the query operation name
+        0, // the index of the record related to the list of characters returned
+        "name" // the field name
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+        "exception": {
+          "stacktrace": [.....] // a lot of stuff here
+        }
+      }
+    }
+  ],
+  "data": {
+    "characters": [
+      null, // <-- there you go, the first records is null due to the error but the rest can be delivered
+      { "name": "Sam" },
+      { "name": "Meriadoc" },
+      { "name": "Peregrin" },
+      { "name": "Arwen" },
+      { "name": "Elrond" },
+      { "name": "Celebrían" },
+      { "name": "Drogo" },
+      { "name": "Saradoc" },
+      { "name": "Esmeralda" },
+      { "name": "Gandalf" },
+      { "name": null }, // this Istari has now a null name, but it's fine for GraphQL because it's nullable
+      { "name": "Radagast" },
+      { "name": "Galadriel" }
+    ]
+  }
+}
+```
+
+### **"errors"** as **"unrequested results"**
+
+Let's stay put for a moment an analyse what just happened above.
+
+1. One of our records doesn't respect the contract for it's type
+2. An error is added to the response describing that particular fault
+3. Execution could be performed for the rest of the records and they were added to the `data` entry as expected
+4. should we consider the whole as an error?
+5. should we tell the user something about the fault? what? how? when?
+6. can/should the user do anything about it?
+
+And many other questions can derive from this behavior!  
+So what do we do about this?  
+There's no "a right answer" for that.  
+
+In terms of best community trends there are different opinions:
+
+– Intentionally throw errors!
+– Do Not! ୧༼ಠ益ಠ༽୨
+
+– Format them!
+– Whatever! (◔_◔)
+
+– Make Errors part of your schema!
+– Do Not! ୧༼ಠ益ಠ༽୨
+
+– Leverage your GraphQL server app error features!
+– Do Not! ୧༼ಠ益ಠ༽୨
+
+– Be careful with `extension` field!
+– Hell yeah! ᕦ( ͡° ͜ʖ ͡°)ᕤ
+
+– Disable `stacktrace` for production!
+– Hell yeah! ᕦ( ͡° ͜ʖ ͡°)ᕤ
+
+Despite the last two assertions we all agree, unless the only thing you have is a fatal error you'll need to start thinking of **"errors"** in terms of **results**, which is true in the GraphQL mindset even though they might not be the results you're expecting for. You may think of them as **requested** and **unrequested** results and **make sure all the organization is aligned on how to organize and treat them**.
+
+### The runtime handles the rest
+
+Everything that exceeds what GraphQL defines in the spec. will be handled by the runtime. It delegates other implementation details (custom handling) to the server applications, the language and the execution environment; and it'll determine the level of interaction you will have with the error handling system.
+
 ## Exercise
 
 For a given datasource ([abstracted as json here](datasource/data.json)) containing `n` rows of `skills` and `n` rows of `persons` we provided a sample implementation of a GraphQL server for each technology containing:
@@ -38,6 +275,22 @@ Select the exercise on your preferred technology:
 ## Learning resources
 
 - GraphQL Spec (June 2018)
+  - [Errors and Non-Nullability](http://spec.graphql.org/June2018/#sec-Errors-and-Non-Nullability)
+  - [Errors](http://spec.graphql.org/June2018/#sec-Errors)
 - Apollo Blog
+  - [Full Stack Error Handling with GraphQL and Apollo](https://www.apollographql.com/blog/full-stack-error-handling-with-graphql-apollo-5c12da407210)
 - Apollo GraphQL
+  - [Error Handling](https://www.apollographql.com/docs/apollo-server/data/errors/)
+  - [Apollo Link](https://www.apollographql.com/docs/link/)
+- YouTube
+  - [Err(or) on the side of awesome](https://youtu.be/w7FBfcD2o-0) by Christina Yu
+  - [200 OK! Error Handling in GraphQL](https://www.youtube.com/watch?v=A5-H6MtTvqk) by Sasha Solomon @ GraphQL Conf 2019
+  - [How to Format Errors in GraphQL](https://www.youtube.com/watch?v=7oLczJD6zZI)
+- HowToGraphQL
+  - Error Handling
+    - [Java](https://www.howtographql.com/graphql-java/7-error-handling/)
+    - [Python](https://www.howtographql.com/graphql-python/6-error-handling/)
+- GraphQL .NET
+  - [Error Handling](https://graphql-dotnet.github.io/docs/getting-started/errors/)
 - Other articles
+  - [The Definitive Guide to Handling GraphQL Errors](https://itnext.io/the-definitive-guide-to-handling-graphql-errors-e0c58b52b5e1) by Matt Krick
