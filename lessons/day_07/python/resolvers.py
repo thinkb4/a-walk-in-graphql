@@ -1,36 +1,11 @@
-from ariadne import QueryType, ObjectType, EnumType, MutationType
-from ariadne import InterfaceType, UnionType
+from ariadne import QueryType, ObjectType, EnumType, MutationType, \
+    InterfaceType, UnionType
 from random import randint
 from models import Skill, Person
 from data import session
 from datetime import datetime
 import uuid
 
-
-def create_persons(info, input):
-    friends = []
-    skills = []
-    if 'friends' in input:
-        person_ids = input.pop('friends')
-        friends = session.query(Person).filter(Person.id.in_(person_ids)).all()
-    if 'skills' in input:
-        skill_ids = input.pop('skills')
-        skills = session.query(Skill).filter(Skill.id.in_(skill_ids)).all()
-
-    person = Person(**input)
-    person.id = str(uuid.uuid4())
-    if 'Engineer' in str(info.return_type):
-        person.employeeId = str(uuid.uuid4())
-    for friend in friends:
-        person.friends.append(friend)
-    for skill in skills:
-        person.skills.append(skill)
-    try:
-        session.add(person)
-        session.commit()
-    except Exception:
-        session.rollback()
-    return person
 
 # Type definitions
 query = QueryType()
@@ -48,6 +23,32 @@ eye_color = EnumType(
     },
 )
 global_search = UnionType("GlobalSearch")
+
+
+def create_persons(info, input):
+    friends = []
+    skills = []
+    if 'friends' in input:
+        person_ids = input.pop('friends')
+        friends = session.query(Person).filter(Person.id.in_(person_ids)).all()
+    if 'skills' in input:
+        skill_ids = input.pop('skills')
+        skills = session.query(Skill).filter(Skill.id.in_(skill_ids)).all()
+
+    new_person = Person(**input)
+    new_person.id = str(uuid.uuid4())
+    if info.return_type.of_type.name == 'Engineer':
+        new_person.employeeId = str(uuid.uuid4())
+    for friend in friends:
+        new_person.friends.append(friend)
+    for skill in skills:
+        new_person.skills.append(skill)
+    try:
+        session.add(new_person)
+        session.commit()
+    except Exception:
+        session.rollback()
+    return new_person
 
 
 @person.type_resolver
@@ -109,22 +110,22 @@ def resolve_skills(_, info, input=None):
 
 @query.field("search")
 def resolve_search(_, info, input=None):
-    persons = session.query(Person).filter(Person.name.like('%' + input['name'] + '%')).all()
-    skills = session.query(Skill).filter(Skill.name.like('%' + input['name'] + '%')).all()
+    persons = session.query(Person).filter(Person.name.like(f'%{input["name"]}%')).all()
+    skills = session.query(Skill).filter(Skill.name.like(f'%{input["name"]}%')).all()
     return persons + skills
 
 
 # Mutations
 @mutation.field("createSkill")
 def resolve_create_skill(_, info, input):
-    skill = Skill(**input)
-    skill.id = str(uuid.uuid4())
+    new_skill = Skill(**input)
+    new_skill.id = str(uuid.uuid4())
     try:
-        session.add(skill)
+        session.add(new_skill)
         session.commit()
     except Exception:
         session.rollback()
-    return skill
+    return new_skill
 
 
 @mutation.field("createPerson")
