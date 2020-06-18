@@ -1,0 +1,145 @@
+Index: lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/PersonResolver.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/PersonResolver.java	(revision e6f11280d457bba8b8a393a21ea78f83c9c86e15)
++++ lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/PersonResolver.java	(date 1591878824618)
+@@ -5,7 +5,6 @@
+ import com.example.DemoGraphQL.model.Person;
+ import com.example.DemoGraphQL.model.Skill;
+ import com.example.DemoGraphQL.service.PersonService;
+-import graphql.kickstart.tools.GraphQLResolver;
+ import org.springframework.stereotype.Component;
+ 
+ import java.util.List;
+@@ -15,7 +14,7 @@
+  * Field-level resolver for Person class
+  */
+ @Component
+-public class PersonResolver implements GraphQLResolver<Person> {
++public abstract class PersonResolver<T extends Person> {
+ 
+     private final PersonService personService;
+ 
+@@ -23,15 +22,15 @@
+         this.personService = personService;
+     }
+ 
+-    public String fullName(Person person) {
++    public String fullName(T person) {
+         return person.getName() + " " + person.getSurname();
+     }
+ 
+-    public List<Person> friends(final Person person, final InputPerson input) {
++    public List<Person> friends(final T person, final InputPerson input) {
+         return this.personService.getFriends(person, Optional.ofNullable(input));
+     }
+ 
+-    public List<Skill> skills(final Person person, final InputSkill input) {
++    public List<Skill> skills(final T person, final InputSkill input) {
+         return this.personService.getSkills(person, Optional.ofNullable(input));
+     }
+ }
+Index: lessons/day_05/java/src/main/java/com/example/DemoGraphQL/DemoGraphQlApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_05/java/src/main/java/com/example/DemoGraphQL/DemoGraphQlApplication.java	(revision e6f11280d457bba8b8a393a21ea78f83c9c86e15)
++++ lessons/day_05/java/src/main/java/com/example/DemoGraphQL/DemoGraphQlApplication.java	(date 1591878879966)
+@@ -25,11 +25,11 @@
+      * "Contact" type is not being referenced from any resolver methods
+      * so you'll have to tell graphql-java-tools what type it is. There's no other way for it to figure out the java type.
+      */
+-//    @Bean
+-//    public SchemaParserDictionary schemaParserDictionary() {
+-//        return new SchemaParserDictionary()
+-//                .add(Contact.class);
+-//    }
++    @Bean
++    public SchemaParserDictionary schemaParserDictionary() {
++        return new SchemaParserDictionary()
++                .add(Contact.class);
++    }
+ 
+     /**
+      * A single source of truth is used for the course data structure. This bean's purpose is to feed the json datasource
+Index: lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/ContactResolver.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/ContactResolver.java	(date 1591878824586)
++++ lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/ContactResolver.java	(date 1591878824586)
+@@ -0,0 +1,18 @@
++package com.example.DemoGraphQL.resolver;
++
++import com.example.DemoGraphQL.model.Contact;
++import com.example.DemoGraphQL.service.PersonService;
++import graphql.kickstart.tools.GraphQLResolver;
++import org.springframework.stereotype.Component;
++
++/**
++ * Field-level resolver for Contact class
++ */
++@Component
++public class ContactResolver extends PersonResolver<Contact> implements GraphQLResolver<Contact> {
++
++    public ContactResolver(PersonService personService) {
++        super(personService);
++    }
++
++}
+Index: lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/CandidateResolver.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/CandidateResolver.java	(date 1591878824574)
++++ lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/CandidateResolver.java	(date 1591878824574)
+@@ -0,0 +1,18 @@
++package com.example.DemoGraphQL.resolver;
++
++import com.example.DemoGraphQL.model.Candidate;
++import com.example.DemoGraphQL.service.PersonService;
++import graphql.kickstart.tools.GraphQLResolver;
++import org.springframework.stereotype.Component;
++
++/**
++ * Field-level resolver for Candidate class
++ */
++@Component
++public class CandidateResolver extends PersonResolver<Candidate> implements GraphQLResolver<Candidate> {
++
++    public CandidateResolver(PersonService personService) {
++        super(personService);
++    }
++
++}
+Index: lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/EngineerResolver.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/EngineerResolver.java	(date 1591878824594)
++++ lessons/day_05/java/src/main/java/com/example/DemoGraphQL/resolver/EngineerResolver.java	(date 1591878824594)
+@@ -0,0 +1,18 @@
++package com.example.DemoGraphQL.resolver;
++
++import com.example.DemoGraphQL.model.Engineer;
++import com.example.DemoGraphQL.service.PersonService;
++import graphql.kickstart.tools.GraphQLResolver;
++import org.springframework.stereotype.Component;
++
++/**
++ * Field-level resolver for Engineer class
++ */
++@Component
++public class EngineerResolver extends PersonResolver<Engineer> implements GraphQLResolver<Engineer> {
++
++    public EngineerResolver(PersonService personService) {
++        super(personService);
++    }
++
++}

@@ -596,11 +596,14 @@ query {
 - add the **top-level** resolver for the new top-level query operation
 - add a **field-level** resolver for a virtual field if required
 
+### Technologies
+
 Select the exercise on your preferred technology:
 
 - [JavaScript](javascript/README.md)
 - [Java](java/README.md)
 - [Python](python/README.md)
+- [NetCore](netcore/README.md)
 
 ## Learning Resources
 

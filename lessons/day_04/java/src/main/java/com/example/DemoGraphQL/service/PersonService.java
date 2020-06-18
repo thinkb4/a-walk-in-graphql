@@ -1,19 +1,18 @@
 package com.example.DemoGraphQL.service;
 
 import com.example.DemoGraphQL.input.InputPerson;
+import com.example.DemoGraphQL.input.InputPersonCreate;
 import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.model.Person;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.repository.PersonRepository;
+import com.example.DemoGraphQL.repository.SkillRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -21,9 +20,11 @@ import java.util.stream.Collectors;
 public class PersonService {
 
     private final PersonRepository personRepository;
+    private final SkillRepository skillRepository;
 
-    public PersonService(final PersonRepository personRepository) {
+    public PersonService(final PersonRepository personRepository, final SkillRepository skillRepository) {
         this.personRepository = personRepository;
+        this.skillRepository = skillRepository;
     }
 
     public Person getRandomPerson() {
@@ -80,6 +81,27 @@ public class PersonService {
         return skills;
     }
 
+    public Person createPerson(Optional<InputPersonCreate> input) {
+        return input.map(v -> {
+            Person newPerson = new Person();
+            newPerson.setName(v.getName());
+            newPerson.setSurname(v.getSurname());
+            newPerson.setEmail(v.getEmail());
+            newPerson.setAge(v.getAge());
+            newPerson.setEyeColor(v.getEyeColor());
+            if (v.getFavSkill() != null) {
+                newPerson.setFavSkill(this.skillRepository.findById(v.getFavSkill()).orElse(null));
+            }
+            if (v.getSkills() != null) {
+                newPerson.setSkills(new HashSet<>(this.skillRepository.findAllById(v.getSkills())));
+            }
+            if (v.getFriends() != null) {
+                newPerson.setFriends(new HashSet<>(this.personRepository.findAllById(v.getFriends())));
+            }
+            return personRepository.save(newPerson);
+        }).orElse(null);
+    }
+
     private Optional<Person> findByInput(InputPerson input) {
         // Considering that depending on the search criteria more than one result can be obtained, we need to findAll limit to 1.
         return this.personRepository.findAll(prepareQueryByExample(input), PageRequest.of(0,1)).get().findFirst();
@@ -91,11 +113,14 @@ public class PersonService {
 
     private Example<Person> prepareQueryByExample(InputPerson input) {
         Person filterBy = new Person();
-        ExampleMatcher matcher = ExampleMatcher.matching();
         filterBy.setId(input.getId());
         filterBy.setAge(input.getAge());
         filterBy.setEyeColor(input.getEyeColor());
-        if (input.getFavSkill() != null) matcher.withMatcher("favSkill.id", match -> match.equals(input.getFavSkill()));
-        return Example.of(filterBy, matcher);
+        if (input.getFavSkill() != null) {
+            Skill tmpSkill = new Skill();
+            tmpSkill.setId(input.getFavSkill());
+            filterBy.setFavSkill(tmpSkill);
+        }
+        return Example.of(filterBy);
     }
 }

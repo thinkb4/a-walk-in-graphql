@@ -2,6 +2,7 @@ node_modules
 coverage
 live_demo.js
 *.log
+yarn.lock
 
 ### Java ###
 target/

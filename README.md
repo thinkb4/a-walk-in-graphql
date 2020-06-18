@@ -65,9 +65,13 @@ Hopefully your walk will be much easier than ours!
     - Union
     - Exercise
     - Learning resources
-- Day 6
-  - Extending Types
-    - Description
+- [Day 6](lessons/day_06/day_06.md)
+  - Extending SDL definitions
+    - Extend
+    - Scaling our Schema
+      - Principled GraphQL
+      - Schema Stitching
+      - Federation
     - Exercise
     - Learning resources
 - Day 7

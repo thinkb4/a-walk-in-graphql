@@ -1,6 +1,6 @@
 {
   "name": "a-walk-in-graphql",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A progressive learning path to grok GraphQL from 0 to X as a generic concept with the assistance of different language specific examples.",
   "repository": {
     "type": "git",
@@ -15,16 +15,33 @@
     "python",
     "apollo"
   ],
+  "author": "Javier Valderrama <jaxolotl@gmail.com>",
   "contributors": [
-    "Javier Valderrama <jaxolotl@gmail.com>",
-    "Ezequiel Alvarez",
-    "Ezequiel Tejerina",
-    "Franco Gribaudo"
+    "Ezequiel Alvarez <ezequielalvarez@gmail.com>",
+    "Ezequiel Tejerina <tejerinae@gmail.com>",
+    "Franco Gribaudo <francogribaudo@gmail.com>",
+    "Cristian Buffa <cristianbuffa@hotmail.com>"
   ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Jaxolotl/a-walk-in-graphql/issues"
   },
   "homepage": "https://github.com/Jaxolotl/a-walk-in-graphql#readme",
-  "private": true
+  "private": true,
+  "workspaces": [
+    "lessons/day_01/javascript",
+    "lessons/day_02/javascript",
+    "lessons/day_03/javascript",
+    "lessons/day_04/javascript",
+    "lessons/day_05/javascript",
+    "lessons/day_06/javascript"
+  ],
+  "scripts": {
+    "js_01": "yarn workspace lesson-01-javascript start",
+    "js_02": "yarn workspace lesson-02-javascript start",
+    "js_03": "yarn workspace lesson-03-javascript start",
+    "js_04": "yarn workspace lesson-04-javascript start",
+    "js_05": "yarn workspace lesson-05-javascript start",
+    "js_06": "yarn workspace lesson-06-javascript start"
+  }
 }
