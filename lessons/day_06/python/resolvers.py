@@ -1,5 +1,5 @@
-from ariadne import QueryType, ObjectType, EnumType, MutationType
-from ariadne import InterfaceType, UnionType
+from ariadne import QueryType, ObjectType, EnumType, MutationType, \
+    InterfaceType, UnionType
 from random import randint
 from models import Skill, Person
 from data import session
