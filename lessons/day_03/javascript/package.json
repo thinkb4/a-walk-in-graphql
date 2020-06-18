@@ -1,5 +1,5 @@
 {
-  "name": "lesson-03-javascript",
+  "name": "js_03",
   "version": "1.0.0",
   "description": "Lesson 03 exercises - JavaScript",
   "repository": {
@@ -38,7 +38,7 @@
   "homepage": "https://github.com/Jaxolotl/a-walk-in-graphql#readme",
   "private": true,
   "dependencies": {
-    "apollo-server": "~2.11.0",
+    "apollo-server": ">=2.14.2",
     "graphql-tag": "~2.10.3",
     "lowdb": "~1.0.0",
     "nanoid": "~2.1.11",
