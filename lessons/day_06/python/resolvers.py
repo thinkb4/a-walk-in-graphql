@@ -19,7 +19,7 @@ def create_persons(info, input):
 
     person = Person(**input)
     person.id = str(uuid.uuid4())
-    if 'Engineer' in str(info.return_type):
+    if info.return_type.of_type.name == 'Engineer':
         person.employeeId = str(uuid.uuid4())
     for friend in friends:
         person.friends.append(friend)
