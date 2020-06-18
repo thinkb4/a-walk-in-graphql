@@ -2,9 +2,8 @@ from ariadne import QueryType, ObjectType, EnumType, MutationType, \
     InterfaceType, UnionType
 from random import randint
 from models import Skill, Person
-from data import session
+from data import session, uuid
 from datetime import datetime
-import uuid
 
 
 # Type definitions
