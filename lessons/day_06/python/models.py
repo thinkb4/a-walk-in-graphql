@@ -46,3 +46,8 @@ class Person(Base):
     skills = relationship("Skill", secondary=person_skills, lazy='dynamic')
     favSkill = Column(String, ForeignKey('skills.id'))
     person_favSkill = relationship("Skill", uselist=False)
+    targetRole = Column(String)
+    targetGrade = Column(String)
+    employeeId = Column(String)
+    grade = Column(String)
+    role = Column(String)
