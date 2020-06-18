@@ -109,7 +109,7 @@ def resolve_skills(_, info, input=None):
 
 @query.field("search")
 def resolve_search(_, info, input=None):
-    persons = session.query(Person).filter(Person.name.like('%' + input['name'] + '%')).all()
+    persons = session.query(Person).filter(Person.name.like(f'%{input["name"]}%')).all()
     skills = session.query(Skill).filter(Skill.name.like('%' + input['name'] + '%')).all()
     return persons + skills
 
