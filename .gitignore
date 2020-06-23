@@ -19,3 +19,6 @@ target/
 venv/
 .vscode/
 __pycache__/
+
+### NetCore
+.vs
