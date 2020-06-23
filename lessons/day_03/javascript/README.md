@@ -6,11 +6,7 @@ Read the instructions on the [Day 3 exercise](../day_03.md#exercise) definition
 
 ### Run the server
 
-1. open a terminal
-2. go to the javascript exercise directory
-3. run `yarn` or `npm install` to install the dependencies if you didn't before
-4. run `yarn server` or `npm run server` to start the GraphQL server
-5. open your browser and type `http://localhost:4000/` to display the GraphQL playground so you can run the queries against the server
+ See [JavaScript setup and run server](../../../setup/javascript.md)
 
 ### The project
 

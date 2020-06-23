@@ -25,22 +25,22 @@ The SDL specifies a type for this case and states the following:
 >
 > Source: [GraphQL spec (June 2018) - Input and Output Types](http://spec.graphql.org/June2018/#sec-Input-and-Output-Types)
 
-Now imagine you want to always be able to be able to filter a certain Object Type by more than 1 field ... let's say 3
+Now imagine you want to always be able to filter a certain Object Type by more than 1 field ... let's say 3
 
 ```graphql
-type User {
+type Character {
   name: String
   surname: String
   age: Int
   homeland: String
   kind: String
-  friends (kind: String, homeland: String, skill: String): [User!]
-  progenitor (kind: String, homeland: String, skill: String): [User!]
+  friends (kind: String, homeland: String, skill: String): [Character!]
+  progenitor (kind: String, homeland: String, skill: String): [Character!]
   skill: String
 }
 
 type Query {
-  users (kind: String, homeland: String, skill: String): [User]
+  characters (kind: String, homeland: String, skill: String): [Character]
 }
 ```
 
@@ -49,35 +49,35 @@ type Query {
 This is one of the cases where Input Object Type shines.
 
 ```graphql
-input InputUser {
+input InputCharacter {
   homeland: String
   kind: String
   skill: String
 }
 
-type User {
+type Character {
   name: String
   surname: String
   age: Int
   homeland: String
   kind: String
-  friends (input: InputUser): [User!]
-  progenitor (input: InputUser): [User!]
+  friends (input: InputCharacter): [Character!]
+  progenitor (input: InputCharacter): [Character!]
   skill: String
 }
 
 type Query {
-  users (input: InputUser): [User]
+  characters (input: InputCharacter): [Character]
 }
 ```
 
-Note that using the name `input` for the argument and using the name `InputUser` for the type definition is completely arbitrary, you can use whatever the team agrees to use.
+Note that using the name `input` for the argument and using the name `InputCharacter` for the type definition is completely arbitrary, you can use whatever the team agrees to use.
 
 Here a <span id="sample-query-with-input-object">sample query</span> you could request against the server for the type definition above.
 
 ```graphql
 query {
-  users(
+  characters(
     input: { kind: "hobbit", homeland: "The Shire", skill: "the ringy thing" }
   ) {
     name
@@ -103,7 +103,7 @@ and here the response
 ```json
 {
   "data": {
-    "users": [
+    "characters": [
       {
         "name": "Frodo",
         "skill": "the ringy thing",
@@ -137,7 +137,7 @@ If you try to use an unknown field for the Input Object you'll have an error fro
 
 ```graphql
 query {
-  users(
+  characters(
     input: { kind: "hobbit", hairColor: "blond"}
   ) {
     name
@@ -149,7 +149,7 @@ query {
   "error": {
     "errors": [
       {
-        "message": "Field \"hairColor\" is not defined by type InputUser.",
+        "message": "Field \"hairColor\" is not defined by type InputCharacter.",
         "locations": [
           {
             "line": 2,
@@ -170,18 +170,18 @@ And, as any type validation, the server will cry if a field value doesn't match 
 You can define non-nullable fields on an Input Object (or the whole set as non-nullable)
 
 ```graphql
-input InputUser {
+input InputCharacter {
   homeland: String
   kind: String
   skill: String!
 }
 ```
 
-but it'll make it mandatory on every place you use it as input, otherwise it'll thrown an error `"Field InputUser.skill of required type String! was not provided."` ...  **Use it wisely**
+but it'll make it mandatory on every place you use it as input, otherwise it'll thrown an error `"Field InputCharacter.skill of required type String! was not provided."` ...  **Use it wisely**
 
 ### Extending Input Objects?
 
-Unfortunately you cannot do something like `input InputUser extends User` or `input InputUser2 extends InputUser1` ... you'll have to explicitly define it yourself. Nothing stops you from creating it dynamically with your preferred programming language, in that case it's suggested to generate a static output of your type definitions so you can leverage the development tool's static code analysis (local or remote).
+Unfortunately you cannot do something like `input InputCharacter extends Character` or `input InputCharacter2 extends InputCharacter1` ... you'll have to explicitly define it yourself. Nothing stops you from creating it dynamically with your preferred programming language, in that case it's suggested to generate a static output of your type definitions so you can leverage the development tool's static code analysis (local or remote).
 
 ### Nested Input Objects
 
@@ -193,20 +193,20 @@ input InputWhatever {
   b: Int
 }
 
-type User {
+type Character {
   name: String
 }
 
 ## This is VALID
-input InputUser {
+input InputCharacter {
   homeland: String
   whatever: InputWhatever
 }
 
 ## THIS IS NOT!!!
-input InputUser2 {
+input InputCharacter2 {
   homeland: String
-  user: User
+  character: Character
 }
 ```
 
@@ -245,7 +245,7 @@ enum Kind {
 On the [sample query defined here](#sample-query-with-input-object) we could pass any arbitrary value to the `kind` field (e.g `input: { kind: "whatever", homeland: "The Shire", skill: "the ringy thing" }`) without problems, the query can be performed and no errors will be thrown, probably returning no record. But, in the following example, we'll add an enum definition forcing the value to be one of the set (or null in this case) and throw an error if it's not.
 
 ```graphql
-input InputUser {
+input InputCharacter {
   homeland: String
   kind: Kind
   skill: String
@@ -257,14 +257,14 @@ enum Kind {
   HALF_ELVEN
 }
 
-type User {
+type Character {
   name: String
   surname: String
   age: Int
   homeland: String
   kind: Kind
-  friends (input: InputUser): [User!]
-  progenitor (input: InputUser): [User!]
+  friends (input: InputCharacter): [Character!]
+  progenitor (input: InputCharacter): [Character!]
   skill: String
 }
 ```
@@ -273,7 +273,7 @@ Our query should be as follow
 
 ```graphql
 query {
-  users(
+  characters(
     input: { kind: HOBBIT } ## instead of { kind: "hobbit" }
   ) {
     name
@@ -304,11 +304,11 @@ const resolvers = {
     HALF_ELVEN: 'half-elven'
   },
   Query: {
-    users(_, { input: { kind, homeland, skill } = {} }) {
+    characters(_, { input: { kind, homeland, skill } = {} }) {
       //... resolver's code
     }
   },
-  User: {
+  Character: {
     friends(obj, { input: { kind, homeland, skill } = {} }) {
       //... resolver's code
     },
@@ -447,11 +447,14 @@ query multipleSkills{
 
 ```
 
+#### Technologies
+
 Select the exercise on your preferred technology:
 
 - [JavaScript](javascript/README.md)
 - [Java](java/README.md)
 - [Python](python/README.md)
+- [NetCore](netcore/README.md)
 
 ## Learning resources
 

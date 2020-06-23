@@ -16,10 +16,10 @@ Imagine a scenario where the underlying persistence system returns a collection 
 Given the following request:
 
 ```txt
-<scheme>://<authority>/users/?age=40
+<scheme>://<authority>/characters/?age=40
 ```
 
-We expect a response with users being `40`, filtering out every other out.
+We expect a response with characters being `40`, filtering out every other out.
 
 How does GraphQL provide that functionality?
 
@@ -36,14 +36,14 @@ How does GraphQL provide that functionality?
 For the given typeDef
 
 ```graphql
-type User {
+type Character {
   name: String
   surname: String
   age: Int
 }
 
 type Query {
-  users: [User]
+  characters: [Character]
 }
 ```
 
@@ -51,7 +51,7 @@ type Query {
 
 ```graphql
 query {
-  users (age: 40) {
+  characters (age: 40) {
     name
     surname
     age ## just to make sure :P
@@ -59,7 +59,7 @@ query {
 }
 ```
 
-BOOM! 💥 `"Unknown argument "age" on field "users" of type "Query"."`
+BOOM! 💥 `"Unknown argument "age" on field "characters" of type "Query"."`
 
 That's GraphQL saying: **You can't pass no args if you ain't got no Type Def!**
 
@@ -67,7 +67,7 @@ Everything MUST be declared on your Type Definition.
 
 ```graphql
 type Query {
-  users (age: Int): [User]
+  characters (age: Int): [Character]
 }
 ```
 
@@ -76,8 +76,8 @@ Of course, passing the param along without handling it at resolver level won't d
 ```javascript
 const resolvers = {
   Query: {
-    users (obj, params, context, info) {
-      return context.db.findUser({ age: params.age })
+    characters (obj, params, context, info) {
+      return context.db.findCharacter({ age: params.age })
     }
   }
 }
@@ -105,24 +105,24 @@ So far, we've seen nothing worthy of the "legendary mighty awesomeness of argume
 
 What if we need to get a specific subset of records with a specific subset of related records like the following:
 
-> get all users names whose kind is "hobbit" and whose homeland is "The Shire" and their friends names whose kind is "half-elven" and the progenitor whose skill is "foresight".
+> get all characters names whose kind is "hobbit" and whose homeland is "The Shire" and their friends names whose kind is "half-elven" and the progenitor whose skill is "foresight".
 
 In a typical REST API we would do:
 
 ```txt
-> request: /users/?homeland=The%20Shire
+> request: /characters/?homeland=The%20Shire
 
 // for each result
-> request: /users/?id=<list of friends ids>&kind=half-elven
+> request: /characters/?id=<list of friends ids>&kind=half-elven
 
 // for each result
-> request: /users/?id=<list of progenitor ids>&skill=foresight
+> request: /characters/?id=<list of progenitor ids>&skill=foresight
 
 // connect all results on the client side
 
 ```
 
-And this is a silly example of querying the users endpoint with 3 different filters!!! Can you imagine a really complex relationship of data being asked to the server with multiple requests and handling those relationships on the client with a ton of garbage data and handling the business logic to orchestrate which method should be called in which order passing which params and validating all inputs?
+And this is a silly example of querying the characters endpoint with 3 different filters!!! Can you imagine a really complex relationship of data being asked to the server with multiple requests and handling those relationships on the client with a ton of garbage data and handling the business logic to orchestrate which method should be called in which order passing which params and validating all inputs?
 
 Sure, you could define an ad-hoc endpoint for that but throw scalability and maintainability overboard.
 
@@ -130,7 +130,7 @@ In GraphQL the <span id="nested-query-with-arguments">nested query with argument
 
 ```graphql
 query {
-  users (homeland: "The Shire") {
+  characters (homeland: "The Shire") {
     name
     friends (kind: "half-elven") {
       name
@@ -145,17 +145,17 @@ query {
 Now, let's see how the Type definition might go for the previous operation.
 
 ```graphql
-type User {
+type Character {
   name: String
   homeland: String
   kind: String
-  friends (kind: String): [User!]
-  progenitor (skill: String): [User!]
+  friends (kind: String): [Character!]
+  progenitor (skill: String): [Character!]
   skill: String
 }
 
 type Query {
-  users (homeland: String): [User]
+  characters (homeland: String): [Character]
 }
 ```
 
@@ -172,13 +172,13 @@ const resolvers = {
      * interested only on
      *  -> homeland property of the second arg (params)
      */
-    users(obj, { homeland }) {
+    characters(obj, { homeland }) {
       return context.db
         .addFilter({ homeland })
-        .fetchUsers();
+        .fetchCharacters();
     }
   },
-  User: {
+  Character: {
     /**
      * interested only on
      *  -> friends property of the first arg (obj)
@@ -189,7 +189,7 @@ const resolvers = {
       return context.db
         .addFilter({ friends })
         .addFilter({ kind })
-        .fetchUsers();
+        .fetchCharacters();
     },
     /**
      * interested only on
@@ -201,7 +201,7 @@ const resolvers = {
       return context.db
         .addFilter({ progenitor })
         .addFilter({ skill })
-        .fetchUsers();
+        .fetchCharacters();
     }
   }
 }
@@ -212,7 +212,7 @@ and the response might look like:
 ```json
 {
   "data": {
-    "users": [
+    "characters": [
       {
         "name": "Frodo",
         "friends": [
@@ -247,7 +247,7 @@ We defined:
 
 - 3 params
   - 1 for the top-level query
-    - `users`
+    - `characters`
       - `(homeland: String)`
   - 2 for the field-level queries
     - `friends`
@@ -259,7 +259,7 @@ and mirroring that, we defined
 
 - 3 resolvers
   - 1 for the top-level query
-    - `users`
+    - `characters`
       - `(obj, { homeland })`
   - 2 for the field-level queries
     - `friends`
@@ -280,14 +280,14 @@ Given the previous example, what if I want to define a default value for an argu
 There you go!
 
 ```graphql
-type User {
+type Character {
   name: String
   surname: String
   age: Int
   homeland: String
   kind: String
-  friends (kind: String): [User!]
-  progenitor (skill: String = "foresight"): [User!]
+  friends (kind: String): [Character!]
+  progenitor (skill: String = "foresight"): [Character!]
   skill: String
 }
 ```
@@ -297,14 +297,14 @@ type User {
 Here you have!
 
 ```graphql
-type User {
+type Character {
   name: String
   surname: String
   age: Int
   homeland: String
   kind: String
-  friends (kind: String!): [User!]
-  progenitor (skill: String = "foresight"): [User!]
+  friends (kind: String!): [Character!]
+  progenitor (skill: String = "foresight"): [Character!]
   skill: String
 }
 ```
@@ -319,7 +319,7 @@ Yup, if you go:
 
 ```graphql
 query {
-  users (homeland: "The Shire") {
+  characters (homeland: "The Shire") {
     name
     friends  (kind: 1){
       name
@@ -368,7 +368,7 @@ We could change our [nested query with arguments](#nested-query-with-arguments) 
 ```graphql
 # here's our document with a query operation using variables
 query ($homeland: String, $kind: String!, $skill: String!) {
-  users(homeland: $homeland) {
+  characters(homeland: $homeland) {
     name
     friends(kind: $kind) {
       name
@@ -555,11 +555,14 @@ query multipleSkills{
 
 ```
 
+#### Technologies
+
 Select the exercise on your preferred technology:
 
 - [JavaScript](javascript/README.md)
 - [Java](java/README.md)
 - [Python](python/README.md)
+- [NetCore](netcore/README.md)
 
 This exercise, hopefully, will generate more questions than answers depending on how deep you want to dig into reusability, scalability, performance and other topics. Here you have some extra considerations to investigate; they're beyond the scope of the exercise, but really worthy to be mentioned, of course they're NOT the absolute truth but they'll provide you some starting point to investigate further if you want.
 

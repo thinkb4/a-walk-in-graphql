@@ -1,0 +1,4 @@
+# ROOT OPERATIONS
+type Query {}
+
+type Mutation {}

@@ -1,11 +1,12 @@
 package com.example.DemoGraphQL.resolver;
 
-import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.SkillService;
+import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Field-level resolver for Skill class
@@ -22,11 +23,8 @@ public class SkillResolver implements GraphQLResolver<Skill> {
     /**
      * This is a resolver for "parent" entity field
      */
-    public Skill getParent(Skill skill) {
-        Skill parent = null;
-        if (skill.getParent() != null)
-            parent = skillService.getSkill(skill.getParent().getId()).get();
-        return parent;
+    public Optional<Skill> getParent(Skill skill) {
+        return (skill.getParent() != null) ? this.skillService.getSkill(Optional.ofNullable(skill.getParent().getId())) : null;
     }
 
     /**

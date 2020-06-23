@@ -15,17 +15,17 @@ public class Person {
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "SURNAME", nullable = false)
+    @Column(name = "SURNAME")
     private String surname;
 
-    @Column(name = "EMAIL", nullable = false)
+    @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "EYECOLOR", nullable = false)
+    @Column(name = "EYECOLOR")
     private String eyeColor;
 
-    @Column(name = "AGE", nullable = false)
-    private int age;
+    @Column(name = "AGE")
+    private Integer age;
 
     @ManyToMany
     @JoinTable(
@@ -52,7 +52,7 @@ public class Person {
     public Person() {
     }
 
-    public Person(String name, String surname, String email, String eyeColor, int age) {
+    public Person(String name, String surname, String email, String eyeColor, Integer age) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -100,11 +100,11 @@ public class Person {
         this.eyeColor = eyeColor;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

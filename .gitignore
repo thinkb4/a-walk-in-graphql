@@ -1,8 +1,8 @@
 node_modules
 coverage
 live_demo.js
-*.pyc
 *.log
+yarn.lock
 
 ### Java ###
 target/
@@ -14,8 +14,11 @@ target/
 *.iml
 *.ipr
 **/package-lock.json
+
+### Python ###
 venv/
 .vscode/
-###net
+__pycache__/
+
+### NetCore
 .vs
-/lessons/day_01.rar
