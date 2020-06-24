@@ -8,40 +8,50 @@ using System.Linq;
 
 namespace GraphQLNetCore.Data
 {
-    public class GraphQLContext : DbContext
-    {
-        public GraphQLContext(DbContextOptions<GraphQLContext> options) : base(options)
-        {
-            LoadFromJson();
-        }
+   public class GraphQLContext : DbContext
+   {
+      public GraphQLContext(DbContextOptions<GraphQLContext> options) : base(options)
+      {
+      }
 
-        public DbSet<Skill> Skill { get; set; }
-        public DbSet<Person> Person { get; set; }
+      public DbSet<Skill> Skill { get; set; }
+      public DbSet<Person> Person { get; set; }
 
-        public void LoadFromJson()
-        {
-            var dirInfo = new System.IO.DirectoryInfo(@".\");
-            try
+      public void LoadFromJson()
+      {
+         var dirInfo = new System.IO.DirectoryInfo(@".\");
+         try
+         {
+            var response = (JObject)JsonConvert.DeserializeObject(File.ReadAllText((dirInfo.Parent).Parent.Parent.FullName + @"\datasource\data.json"));
+            var persons = JsonConvert.DeserializeObject<List<PersonData>>(response["persons"].ToString());
+            var skills = JsonConvert.DeserializeObject<List<SkillData>>(response["skills"].ToString());
+
+            Skill.AddRange(skills.Select(SkillData.ToEntity));
+            SaveChanges();
+
+            foreach (var person in persons)
             {
-                var response = (JObject)JsonConvert.DeserializeObject(File.ReadAllText((dirInfo.Parent).Parent.Parent.FullName + @"\datasource\data.json"));
-                var persons  = JsonConvert.DeserializeObject<List<Person>>(response["persons"].ToString());
-                var skills = JsonConvert.DeserializeObject<List<Skill>>(response["skills"].ToString());
-                foreach (var person in persons)
-                {
-                    Person.Add(person);
-                    Person.Where(p => p.id == person.id).FirstOrDefault()?.skills?
-                        .AddRange(person.skills);
-                    Person.Where(p => p.id == person.id).FirstOrDefault()?.friends?
-                       .AddRange(person.friends);
-                    SaveChanges();
-                }
-                Skill.AddRange(skills);
-                SaveChanges();
+               var entity = PersonData.ToEntity(person);
+               entity.skills = Skill.Where(s => person.skills.Contains(s.id)).ToList();
+               entity.favSkill = Skill.Find(person.favSkill);
+               Person.Add(entity);
             }
-            catch (System.Exception)
+
+            SaveChanges();
+
+            foreach (var person in persons)
             {
+               var entity = Person.Find(person.id);
+               entity.friends = Person.Where(s => person.friends.Contains(s.id)).ToList();
             }
-        }
-    }
+            
+            SaveChanges();
+
+         }
+         catch (System.Exception)
+         {
+         }
+      }
+   }
 }
 
