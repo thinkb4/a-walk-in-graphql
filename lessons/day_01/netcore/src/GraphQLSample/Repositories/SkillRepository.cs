@@ -2,6 +2,7 @@
 using System.Linq;
 using GraphQLNetCore.Data;
 using GraphQLNetCore.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GraphQLNetCore.Repositories
@@ -19,7 +20,9 @@ namespace GraphQLNetCore.Repositories
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
-            return db.Skill.FirstOrDefault(s => s.id == id);
+            return db.Skill
+               .Include(x => x.parent)
+               .FirstOrDefault(s => s.id == id);
          }
       }
 
