@@ -10,28 +10,20 @@ namespace GraphQLNetCore.GraphQLTypes
         public RootQuery(ISkillRepository skillRepository)
         {
             _skillRepository = skillRepository;
-            Field<ListGraphType<SkillType>>("skills", resolve: context =>
-            {
+            Field<ListGraphType<SkillType>>("skills", resolve: context => _skillRepository.GetAll());
 
-                return _skillRepository.GetAll();
-            });
+            Field<SkillType>("randomSkill", resolve: context => _skillRepository.GetRandom());
 
-            Field<SkillType>("randomSkill", resolve: context =>
-            {
-
-                return _skillRepository.GetRandom();
-            });
-
-            Field<ListGraphType<SkillType>>("filteredSkills",
+            Field<SkillType>("filteredSkills",
                 arguments: new QueryArguments
                 {
-                   new  QueryArgument<StringGraphType> {  Name = "id"}
+                   new  QueryArgument<StringGraphType> {  Name = "id" }
                 },
                 resolve: context =>
                 {
                     //string name = context.GetArgument<string>("name");
                     string id = context.GetArgument<string>("id");
-                    return _skillRepository.GetAll().Where(_ => _.id == id).ToList();
+                    return _skillRepository.Get(id);
                 });
         }
     }
