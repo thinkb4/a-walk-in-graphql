@@ -6,9 +6,9 @@ namespace GraphQLNetCore.Repositories
    public interface IPersonRepository
    {
       List<Person> GetAll();
-      Person Get(string id);
-      List<Person> GetFriends(string id);
-      List<Skill> GetSkills(string id);
+      Person Get(int? id);
+      List<Person> GetFriends(int id);
+      List<Skill> GetSkills(int id);
       Person GetRandom();
    }
 }

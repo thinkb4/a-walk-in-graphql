@@ -32,8 +32,11 @@ namespace GraphQLNetCore.Data
             foreach (var person in persons)
             {
                var entity = PersonData.ToEntity(person);
-               entity.skills = Skill.Where(s => person.skills.Contains(s.id)).ToList();
-               entity.favSkill = Skill.Find(person.favSkill);
+               entity.skills = Skill.Where(s => person.skills.Contains(s.id.ToString())).ToList();
+               if (int.TryParse(person.favSkill, out int parsedValue))
+               {
+                  entity.favSkill = Skill.Find(parsedValue);
+               }
                Person.Add(entity);
             }
 
@@ -41,8 +44,8 @@ namespace GraphQLNetCore.Data
 
             foreach (var person in persons)
             {
-               var entity = Person.Find(person.id);
-               entity.friends = Person.Where(s => person.friends.Contains(s.id)).ToList();
+               var entity = Person.Find(int.Parse(person.id));
+               entity.friends = Person.Where(s => person.friends.Contains(s.id.ToString())).ToList();
             }
             
             SaveChanges();

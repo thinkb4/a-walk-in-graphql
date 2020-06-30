@@ -6,7 +6,7 @@ namespace GraphQLNetCore.Models
 {
    public class Person
    {
-      public string id { get; set; }
+      public int id { get; set; }
       public int age { get; set; }
       public string eyeColor { get; set; }
       public string name { get; set; }
@@ -15,7 +15,7 @@ namespace GraphQLNetCore.Models
       public List<Person> friends { get; set; }
       public List<Skill> skills { get; set; }
       public Skill favSkill { get; set; }
-      public string favSkillId { get; set; }
+      public int? favSkillId { get; set; }
    }
 
    public class PersonData
@@ -37,11 +37,11 @@ namespace GraphQLNetCore.Models
 
          return new Person()
          {
-            id = data.id,
+            id = int.Parse(data.id),
             age = data.age,
             eyeColor = data.eyeColor,
             email = data.email,
-            favSkillId = data.favSkill,
+            favSkillId = int.TryParse(data.favSkill, out int parsedValue) ? parsedValue : default(int?),
             name = data.name,
             surname = data.surname
          };

@@ -20,11 +20,11 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<SkillType>("filteredSkills",
              arguments: new QueryArguments
              {
-                   new  QueryArgument<StringGraphType> {  Name = "id" }
+                   new  QueryArgument<IntGraphType> {  Name = "id" }
              },
              resolve: context =>
              {
-                string id = context.GetArgument<string>("id");
+                var id = context.GetArgument<int>("id");
                 return _skillRepository.Get(id);
              });
 
@@ -35,11 +35,11 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<PersonType>("filteredPeople",
              arguments: new QueryArguments
              {
-                   new  QueryArgument<StringGraphType> {  Name = "id" }
+                   new  QueryArgument<IntGraphType> {  Name = "id" }
              },
              resolve: context =>
              {
-                string id = context.GetArgument<string>("id");
+                var id = context.GetArgument<int>("id");
                 return _personRepository.Get(id);
              });
       }
