@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Razor.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,9 +8,9 @@ namespace GraphQLNetCore.Models
 {
    public class Skill
    {
-      public string id { get; set; }
+      public int id { get; set; }
       public string name { get; set; }
-      public string parentId { get; set; }
+      public int? parentId { get; set; }
       public virtual Skill parent { get; set; }
    }
 
@@ -26,9 +27,9 @@ namespace GraphQLNetCore.Models
 
          return new Skill()
          {
-            id = data.id,
+            id = int.Parse(data.id),
             name = data.name,
-            parentId = data.parent
+            parentId = int.TryParse(data.parent, out int parsedValue) ? parsedValue : default(int?) 
          };
       }
    }

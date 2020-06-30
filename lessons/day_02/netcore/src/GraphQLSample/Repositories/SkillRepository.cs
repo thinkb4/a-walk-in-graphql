@@ -15,13 +15,17 @@ namespace GraphQLNetCore.Repositories
          _scopeFactory = scopeFactory;
       }
 
-      public Skill Get(string id)
+      public Skill Get(int? id)
       {
-         using (var scope = _scopeFactory.CreateScope())
-         using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
+         if (id.HasValue)
          {
-            return db.Skill.FirstOrDefault(s => s.id == id);
+            using (var scope = _scopeFactory.CreateScope())
+            using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
+            {
+               return db.Skill.FirstOrDefault(s => s.id == id);
+            }
          }
+         return null;
       }
 
       public List<Skill> GetAll()

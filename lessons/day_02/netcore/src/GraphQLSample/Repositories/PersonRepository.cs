@@ -15,13 +15,17 @@ namespace GraphQLNetCore.Repositories
          _scopeFactory = scopeFactory;
       }
 
-      public Person Get(string id)
+      public Person Get(int? id)
       {
-         using (var scope = _scopeFactory.CreateScope())
-         using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
+         if (id.HasValue)
          {
-            return db.Person.FirstOrDefault(s => s.id == id);
+            using (var scope = _scopeFactory.CreateScope())
+            using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
+            {
+               return db.Person.FirstOrDefault(s => s.id == id);
+            }
          }
+         return null;
       }
 
       public List<Person> GetAll()
@@ -33,7 +37,7 @@ namespace GraphQLNetCore.Repositories
          }
       }
 
-      public List<Person> GetFriends(string id)
+      public List<Person> GetFriends(int id)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
@@ -42,7 +46,7 @@ namespace GraphQLNetCore.Repositories
          }
       }
 
-      public List<Skill> GetSkills(string id)
+      public List<Skill> GetSkills(int id)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
