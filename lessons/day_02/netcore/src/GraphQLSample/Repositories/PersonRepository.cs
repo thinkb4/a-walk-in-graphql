@@ -37,21 +37,33 @@ namespace GraphQLNetCore.Repositories
          }
       }
 
-      public List<Person> GetFriends(int id)
+      public List<Person> GetFriends(int personId, int? id)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
-            return db.Person.Include(x => x.friends).FirstOrDefault(s => s.id == id)?.friends;
+            return db.Person
+                     .Include(x => x.friends)
+                     .FirstOrDefault(s => s.id == personId)
+                     ?.friends
+                     .Where(f => !id.HasValue || id.Value == f.id)
+                     .ToList()
+                     ;
          }
       }
 
-      public List<Skill> GetSkills(int id)
+      public List<Skill> GetSkills(int personId, int? id)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
-            return db.Person.Include(x => x.skills).FirstOrDefault(s => s.id == id)?.skills;
+            return db.Person
+                     .Include(x => x.skills)
+                     .FirstOrDefault(s => s.id == personId)
+                     ?.skills
+                     .Where(s => !id.HasValue || id.Value == s.id)
+                     .ToList()
+                     ;
          }
       }
 
