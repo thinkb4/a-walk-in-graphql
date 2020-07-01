@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, Skill, Person
+from pathlib import Path
 import json
 
 
@@ -11,7 +12,7 @@ session = Session()
 # Setup of in memory database, from data.json if tables doesn´t exist
 if not engine.dialect.has_table(engine.connect(), "skills"):
     Base.metadata.create_all(bind=engine)
-    data = json.load(open(Path.cwd()/'datasource/data.json'))
+    data = json.load(open(Path.cwd().parent / 'datasource/data.json'))
 
     skills = data['skills']
     for skill in skills:
