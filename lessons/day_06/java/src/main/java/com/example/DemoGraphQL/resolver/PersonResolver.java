@@ -27,10 +27,10 @@ public abstract class PersonResolver<T extends Person> {
     }
 
     public List<Person> friends(final T person, final InputPerson input) {
-        return this.personService.getFriends(person, Optional.ofNullable(input));
+        return this.personService.getFriends(person, input);
     }
 
     public List<Skill> skills(final T person, final InputSkill input) {
-        return this.personService.getSkills(person, Optional.ofNullable(input));
+        return this.personService.getSkills(person, input);
     }
 }
