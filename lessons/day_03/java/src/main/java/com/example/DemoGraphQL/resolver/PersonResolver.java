@@ -7,7 +7,6 @@ import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Field-level resolver for Person class
@@ -26,10 +25,10 @@ public class PersonResolver implements GraphQLResolver<Person> {
     }
 
     public List<Person> friends(final Person person, final Long friendId) {
-        return this.personService.getFriends(person, Optional.ofNullable(friendId));
+        return this.personService.getFriends(person, friendId);
     }
 
     public List<Skill> skills(final Person person, final Long skillId) {
-        return this.personService.getSkills(person, Optional.ofNullable(skillId));
+        return this.personService.getSkills(person, skillId);
     }
 }

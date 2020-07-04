@@ -24,7 +24,7 @@ public class SkillResolver implements GraphQLResolver<Skill> {
      * This is a resolver for "parent" entity field
      */
     public Optional<Skill> getParent(Skill skill) {
-        return (skill.getParent() != null) ? this.skillService.getSkill(Optional.ofNullable(skill.getParent().getId())) : null;
+        return (skill.getParent() != null) ? this.skillService.getSkill(skill.getParent().getId()) : null;
     }
 
     /**

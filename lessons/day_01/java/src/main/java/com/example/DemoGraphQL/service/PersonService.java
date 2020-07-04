@@ -24,9 +24,9 @@ public class PersonService {
         return givenList.get(rand.nextInt(givenList.size()));
     }
 
-    public List<Person> getPersons(Optional<Long> id) {
+    public List<Person> getPersons(Long id) {
         List<Person> persons = new ArrayList<>();
-        return id.map(v -> {
+        return Optional.ofNullable(id).map(v -> {
             this.personRepository.findById(v).ifPresent(persons::add);
             return persons;
         }).orElse(this.personRepository.findAll());
