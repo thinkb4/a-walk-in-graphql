@@ -33,8 +33,8 @@ public class PersonService {
     }
 
     public List<Person> getPersons(Long id) {
-        List<Person> persons = new ArrayList<>();
         return Optional.ofNullable(id).map(v -> {
+            List<Person> persons = new ArrayList<>();
             this.personRepository.findById(v).ifPresent(persons::add);
             return persons;
         }).orElse(this.personRepository.findAll());
@@ -49,8 +49,8 @@ public class PersonService {
     }
 
     public List<Person> getFriends(Person person, Long friendId) {
-        List<Person> friends = new ArrayList<>();
         return Optional.ofNullable(friendId).map(v -> {
+            List<Person> friends = new ArrayList<>();
             person.getFriends().stream()
                     .filter(myFriend -> myFriend.getId().equals(v))
                     .findFirst()
@@ -60,8 +60,8 @@ public class PersonService {
     }
 
     public List<Skill> getSkills(Person person, Long skillId) {
-        List<Skill> skills = new ArrayList<>();
         return Optional.ofNullable(skillId).map(v -> {
+            List<Skill> skills = new ArrayList<>();
             person.getSkills().stream()
                     .filter(mySkill -> mySkill.getId().equals(v))
                     .findFirst()

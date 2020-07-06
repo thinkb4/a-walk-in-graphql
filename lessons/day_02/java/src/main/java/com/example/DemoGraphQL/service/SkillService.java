@@ -29,8 +29,8 @@ public class SkillService {
     }
 
     public List<Skill> getSkills(Long id) {
-        List<Skill> skills = new ArrayList<>();
         return Optional.ofNullable(id).map(v -> {
+            List<Skill> skills = new ArrayList<>();
             this.skillRepository.findById(v).ifPresent(skills::add);
             return skills;
         }).orElse(this.skillRepository.findAll());

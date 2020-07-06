@@ -25,8 +25,8 @@ public class PersonService {
     }
 
     public List<Person> getPersons(Long id) {
-        List<Person> persons = new ArrayList<>();
         return Optional.ofNullable(id).map(v -> {
+            List<Person> persons = new ArrayList<>();
             this.personRepository.findById(v).ifPresent(persons::add);
             return persons;
         }).orElse(this.personRepository.findAll());
