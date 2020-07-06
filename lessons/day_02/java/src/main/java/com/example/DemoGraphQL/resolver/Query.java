@@ -8,7 +8,6 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Top-Level resolver for Query
@@ -33,7 +32,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     public List<Person> persons(final Long id) {
-        return this.personService.getPersons(Optional.ofNullable(id));
+        return this.personService.getPersons(id);
     }
 
 }

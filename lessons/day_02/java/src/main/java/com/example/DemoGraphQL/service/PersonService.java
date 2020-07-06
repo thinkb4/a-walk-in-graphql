@@ -19,31 +19,31 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-    public Optional<Person> getPerson(final long id) {
-        return this.personRepository.findById(id);
-    }
-
     public Person getRandomPerson() {
         List<Person> givenList = this.personRepository.findAll();
         Random rand = new Random();
         return givenList.get(rand.nextInt(givenList.size()));
     }
 
-    public List<Person> getPersons(Optional<Long> id) {
-        List<Person> persons = new ArrayList<>();
-        return id.map(v -> {
+    public List<Person> getPersons(Long id) {
+        return Optional.ofNullable(id).map(v -> {
+            List<Person> persons = new ArrayList<>();
             this.personRepository.findById(v).ifPresent(persons::add);
             return persons;
         }).orElse(this.personRepository.findAll());
     }
 
-    public Optional<Person> getPerson(Optional<Long> id) {
-        return id.map(v -> this.personRepository.findById(v)).orElse(null);
+    public Optional<Person> getPerson(Long id) {
+        Optional<Person> person = null;
+        if (id != null) {
+            person = this.personRepository.findById(id);
+        }
+        return person;
     }
 
-    public List<Person> getFriends(Person person, Optional<Long> friendId) {
-        List<Person> friends = new ArrayList<>();
-        return friendId.map(v -> {
+    public List<Person> getFriends(Person person, Long friendId) {
+        return Optional.ofNullable(friendId).map(v -> {
+            List<Person> friends = new ArrayList<>();
             person.getFriends().stream()
                     .filter(myFriend -> myFriend.getId().equals(v))
                     .findFirst()
@@ -52,9 +52,9 @@ public class PersonService {
         }).orElse(new ArrayList<>(person.getFriends()));
     }
 
-    public List<Skill> getSkills(Person person, Optional<Long> skillId) {
-        List<Skill> skills = new ArrayList<>();
-        return skillId.map(v -> {
+    public List<Skill> getSkills(Person person, Long skillId) {
+        return Optional.ofNullable(skillId).map(v -> {
+            List<Skill> skills = new ArrayList<>();
             person.getSkills().stream()
                     .filter(mySkill -> mySkill.getId().equals(v))
                     .findFirst()

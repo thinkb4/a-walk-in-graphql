@@ -35,18 +35,18 @@ public class Query implements GraphQLQueryResolver {
     }
 
     public Optional<Person> person(final InputPerson input) {
-        return this.personService.getPerson(Optional.ofNullable(input));
+        return this.personService.getPerson(input);
     }
 
     public List<Person> persons(final InputPerson input) {
-        return this.personService.getPersons(Optional.ofNullable(input));
+        return this.personService.getPersons(input);
     }
 
     public Optional<Skill> skill(final InputSkill input) {
-        return this.skillService.getSkill(Optional.ofNullable(input));
+        return this.skillService.getSkill(input);
     }
 
     public List<Skill> skills(final InputSkill input) {
-        return this.skillService.getSkills(Optional.ofNullable(input));
+        return this.skillService.getSkills(input);
     }
 }

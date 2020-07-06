@@ -10,8 +10,6 @@ import com.example.DemoGraphQL.service.SkillService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 /**
  * Top-Level resolver for Mutation
  */
@@ -27,18 +25,18 @@ public class Mutation implements GraphQLMutationResolver {
     }
 
     public Skill createSkill(final InputSkillCreate input) {
-        return this.skillService.createSkill(Optional.ofNullable(input));
+        return this.skillService.createSkill(input);
     }
 
     public Person createPerson(final InputPersonCreate input) {
-        return this.personService.createPerson(Optional.ofNullable(input));
+        return this.personService.createPerson(input);
     }
 
     public Candidate createCandidate(final InputCandidateCreate input) {
-        return (Candidate) this.personService.createCandidate(Optional.ofNullable(input));
+        return (Candidate) this.personService.createCandidate(input);
     }
 
     public Engineer createEngineer(final InputEngineerCreate input) {
-        return (Engineer) this.personService.createEngineer(Optional.ofNullable(input));
+        return (Engineer) this.personService.createEngineer(input);
     }
 }
