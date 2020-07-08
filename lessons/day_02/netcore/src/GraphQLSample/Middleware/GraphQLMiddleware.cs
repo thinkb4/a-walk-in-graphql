@@ -18,6 +18,7 @@ namespace GraphQLNetCore.Middleware
         private readonly string graphqlPath;
         private readonly RequestDelegate next;
         private readonly ISchema schema;
+        private readonly IDocumentExecuter executer;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="GraphQLMiddleware" /> class.
@@ -31,7 +32,7 @@ namespace GraphQLNetCore.Middleware
         /// <exception cref="ArgumentNullException">
         ///     Throws <see cref="ArgumentNullException" /> if <paramref name="next" /> or <paramref name="options" /> is null.
         /// </exception>
-        public GraphQLMiddleware(RequestDelegate next , IOptions<GraphQLOptions> options, ISchema _schema)
+        public GraphQLMiddleware(RequestDelegate next, IOptions<GraphQLOptions> options, ISchema _schema, IDocumentExecuter _executer)
         {
             if (next == null)
             {
@@ -45,11 +46,16 @@ namespace GraphQLNetCore.Middleware
             {
                 throw new ArgumentException("Schema is null");
             }
+            if (_executer == null)
+            {
+                throw new ArgumentException("Document Executer is null");
+            }
 
             this.next = next;
             var optionsValue = options.Value;
             graphqlPath = string.IsNullOrEmpty(optionsValue?.GraphQLPath) ? GraphQLOptions.DefaultGraphQLPath : optionsValue.GraphQLPath;
             schema = _schema;
+            executer = _executer;
         }
 
         /// <summary>
@@ -74,7 +80,7 @@ namespace GraphQLNetCore.Middleware
             if (ShouldRespondToRequest(context.Request))
             {
                 var executionResult = await ExecuteAsync(context.Request).ConfigureAwait(true);
-                await WriteResponseAsync(context.Response , executionResult).ConfigureAwait(true);
+                await WriteResponseAsync(context.Response, executionResult).ConfigureAwait(true);
                 return;
             }
 
@@ -90,17 +96,23 @@ namespace GraphQLNetCore.Middleware
                 requestBodyText = await streamReader.ReadToEndAsync().ConfigureAwait(true);
             }
             var graphqlRequest = JsonConvert.DeserializeObject<GraphQLRequest>(requestBodyText);
-            return await new DocumentExecuter().ExecuteAsync(schema, null, graphqlRequest.Query, graphqlRequest.OperationName, null).ConfigureAwait(true);
+            return await executer.ExecuteAsync(option =>
+            {
+                option.Schema = schema;
+                option.Query = graphqlRequest.Query;
+                option.OperationName = graphqlRequest.OperationName;
+            })
+            .ConfigureAwait(true);
         }
 
         private bool ShouldRespondToRequest(HttpRequest request)
         {
-            bool a = string.Equals(request.Method , "POST" , StringComparison.OrdinalIgnoreCase);
+            bool a = string.Equals(request.Method, "POST", StringComparison.OrdinalIgnoreCase);
             bool b = request.Path.Equals(graphqlPath);
             return a && b;
         }
 
-        private static Task WriteResponseAsync(HttpResponse response , ExecutionResult executionResult)
+        private static Task WriteResponseAsync(HttpResponse response, ExecutionResult executionResult)
         {
             response.ContentType = "application/json";
             response.StatusCode = (executionResult.Errors?.Count ?? 0) == 0 ? 200 : 400;
