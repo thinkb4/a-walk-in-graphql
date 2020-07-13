@@ -10,10 +10,10 @@ namespace GraphQLNetCore.GraphQLTypes
       {
          Field(_ => _.age);
          Field(_ => _.email);
-         Field(_ => _.eyeColor);
          Field(_ => _.id);
          Field(_ => _.name);
          Field(_ => _.surname);
+         Field<EyeColorType>("eyeColor");
          Field<StringGraphType>("fullName", resolve: context => $"{context.Source.name} {context.Source.surname}");
          Field<ListGraphType<SkillType>>("skills",
             arguments: new QueryArguments
