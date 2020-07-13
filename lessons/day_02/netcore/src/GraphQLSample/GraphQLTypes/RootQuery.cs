@@ -1,7 +1,5 @@
 ﻿using GraphQL.Types;
-using GraphQLNetCore.Models;
 using GraphQLNetCore.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,33 +15,9 @@ namespace GraphQLNetCore.GraphQLTypes
          _skillRepository = skillRepository;
          _personRepository = personRepository;
 
-         Field<ListGraphType<SkillType>>("skills",
-            arguments: new QueryArguments
-            {
-                   new  QueryArgument<IntGraphType> {  Name = "id" }
-            },
-            resolve: context =>
-            {
-               var id = context.GetArgument<int?>("id");
-               return id.HasValue
-                  ? AsList(_skillRepository.Get(id))
-                  : _skillRepository.GetAll();
-            });
-
          Field<SkillType>("randomSkill", resolve: context => _skillRepository.GetRandom());
 
-         Field<SkillType>("skill",
-             arguments: new QueryArguments
-             {
-                   new  QueryArgument<IntGraphType> {  Name = "id" }
-             },
-             resolve: context =>
-             {
-                var id = context.GetArgument<int?>("id");
-                return _skillRepository.Get(id);
-             });
-
-         Field<ListGraphType<PersonType>>("people",
+         Field<ListGraphType<PersonType>>("persons",
             arguments: new QueryArguments
             {
                new  QueryArgument<IntGraphType> {  Name = "id" }
@@ -57,17 +31,6 @@ namespace GraphQLNetCore.GraphQLTypes
             });
 
          Field<PersonType>("randomPerson", resolve: context => _personRepository.GetRandom());
-
-         Field<PersonType>("person",
-             arguments: new QueryArguments
-             {
-                   new  QueryArgument<IntGraphType> {  Name = "id" }
-             },
-             resolve: context =>
-             {
-                var id = context.GetArgument<int?>("id");
-                return _personRepository.Get(id);
-             });
       }
 
       private IEnumerable<T> AsList<T>(T item)

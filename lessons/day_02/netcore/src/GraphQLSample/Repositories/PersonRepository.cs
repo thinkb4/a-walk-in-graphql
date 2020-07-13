@@ -37,7 +37,7 @@ namespace GraphQLNetCore.Repositories
          }
       }
 
-      public List<Person> GetFriends(int personId, int? id)
+      public List<Person> GetFriends(int personId)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
@@ -46,13 +46,12 @@ namespace GraphQLNetCore.Repositories
                      .Include(x => x.friends)
                      .FirstOrDefault(s => s.id == personId)
                      ?.friends
-                     .Where(f => !id.HasValue || id.Value == f.id)
                      .ToList()
                      ;
          }
       }
 
-      public List<Skill> GetSkills(int personId, int? id)
+      public List<Skill> GetSkills(int personId)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
@@ -61,7 +60,6 @@ namespace GraphQLNetCore.Repositories
                      .Include(x => x.skills)
                      .FirstOrDefault(s => s.id == personId)
                      ?.skills
-                     .Where(s => !id.HasValue || id.Value == s.id)
                      .ToList()
                      ;
          }
