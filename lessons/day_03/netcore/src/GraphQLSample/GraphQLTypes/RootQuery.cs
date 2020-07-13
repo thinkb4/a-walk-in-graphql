@@ -1,7 +1,5 @@
 ﻿using GraphQL.Types;
-using GraphQLNetCore.Models;
 using GraphQLNetCore.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,7 +41,7 @@ namespace GraphQLNetCore.GraphQLTypes
                 return _skillRepository.Get(id);
              });
 
-         Field<ListGraphType<PersonType>>("people",
+         Field<ListGraphType<PersonType>>("persons",
             arguments: new QueryArguments
             {
                new  QueryArgument<IntGraphType> {  Name = "id" }

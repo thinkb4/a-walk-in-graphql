@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GraphQL.Types;
+﻿using GraphQL.Types;
 
 namespace GraphQLNetCore.Middleware
 {
-    /// <summary>
-    ///     Options for the <see cref="GraphQLMiddleware" />.
-    /// </summary>
-    public sealed class GraphQLOptions
+   /// <summary>
+   ///     Options for the <see cref="GraphQLMiddleware" />.
+   /// </summary>
+   public sealed class GraphQLOptions
     {
         /// <summary>
         ///     The default GraphQL path.
