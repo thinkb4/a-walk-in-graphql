@@ -7,7 +7,8 @@ namespace GraphQLNetCore.GraphQLTypes
    {
       public InputPersonType()
       {
-         Field(_ => _.id, nullable: true);
+         Name = "InputPerson";
+         Field(_ => _.id, nullable: true, type: typeof(IdGraphType));
          Field(_ => _.age, nullable: true);
          Field(_ => _.eyeColor, nullable: true, type: typeof(EyeColorType));
          Field(_ => _.favSkill, nullable: true);

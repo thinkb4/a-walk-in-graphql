@@ -15,10 +15,11 @@ namespace GraphQLNetCore.GraphQLTypes
          _skillRepository = skillRepository;
          _personRepository = personRepository;
 
-         Field<ListGraphType<SkillType>>("skills",
+         Name = "Query";
+         Field<ListGraphType<NonNullGraphType<SkillType>>>("skills",
             arguments: new QueryArguments
             {
-                   new  QueryArgument<IntGraphType> {  Name = "id" }
+                   new  QueryArgument<IdGraphType> {  Name = "id" }
             },
             resolve: context =>
             {
@@ -28,12 +29,12 @@ namespace GraphQLNetCore.GraphQLTypes
                   : _skillRepository.GetAll();
             });
 
-         Field<SkillType>("randomSkill", resolve: context => _skillRepository.GetRandom());
+         Field<NonNullGraphType<SkillType>>("randomSkill", resolve: context => _skillRepository.GetRandom());
 
          Field<SkillType>("skill",
              arguments: new QueryArguments
              {
-                   new  QueryArgument<IntGraphType> {  Name = "id" }
+                   new  QueryArgument<IdGraphType> {  Name = "id" }
              },
              resolve: context =>
              {
@@ -41,10 +42,10 @@ namespace GraphQLNetCore.GraphQLTypes
                 return _skillRepository.Get(id);
              });
 
-         Field<ListGraphType<PersonType>>("persons",
+         Field<ListGraphType<NonNullGraphType<PersonType>>>("persons",
             arguments: new QueryArguments
             {
-               new  QueryArgument<IntGraphType> {  Name = "id" }
+               new  QueryArgument<IdGraphType> {  Name = "id" }
             },
             resolve: context =>
             {
@@ -54,12 +55,12 @@ namespace GraphQLNetCore.GraphQLTypes
                   : _personRepository.GetAll();
             });
 
-         Field<PersonType>("randomPerson", resolve: context => _personRepository.GetRandom());
+         Field<NonNullGraphType<PersonType>>("randomPerson", resolve: context => _personRepository.GetRandom());
 
          Field<PersonType>("person",
              arguments: new QueryArguments
              {
-                   new  QueryArgument<IntGraphType> {  Name = "id" }
+                   new  QueryArgument<IdGraphType> {  Name = "id" }
              },
              resolve: context =>
              {

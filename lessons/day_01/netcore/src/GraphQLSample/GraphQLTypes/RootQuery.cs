@@ -11,7 +11,8 @@ namespace GraphQLNetCore.GraphQLTypes
       {
          _skillRepository = skillRepository;
 
-         Field<SkillType>("randomSkill", resolve: context => _skillRepository.GetRandom());
+         Name = "Query";
+         Field<NonNullGraphType<SkillType>>("randomSkill", resolve: context => _skillRepository.GetRandom());
       }
    }
 }

@@ -15,12 +15,13 @@ namespace GraphQLNetCore.GraphQLTypes
          _skillRepository = skillRepository;
          _personRepository = personRepository;
 
-         Field<SkillType>("randomSkill", resolve: context => _skillRepository.GetRandom());
+         Name = "Query";
+         Field<NonNullGraphType<SkillType>>("randomSkill", resolve: context => _skillRepository.GetRandom());
 
-         Field<ListGraphType<PersonType>>("persons",
+         Field<ListGraphType<NonNullGraphType<PersonType>>>("persons",
             arguments: new QueryArguments
             {
-               new  QueryArgument<IntGraphType> {  Name = "id" }
+               new  QueryArgument<IdGraphType> {  Name = "id" }
             },
             resolve: context =>
             {
@@ -30,7 +31,7 @@ namespace GraphQLNetCore.GraphQLTypes
                   : _personRepository.GetAll();
             });
 
-         Field<PersonType>("randomPerson", resolve: context => _personRepository.GetRandom());
+         Field<NonNullGraphType<PersonType>>("randomPerson", resolve: context => _personRepository.GetRandom());
       }
 
       private IEnumerable<T> AsList<T>(T item)

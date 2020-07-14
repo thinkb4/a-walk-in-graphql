@@ -16,7 +16,8 @@ namespace GraphQLNetCore.GraphQLTypes
          _skillRepository = skillRepository;
          _personRepository = personRepository;
 
-         Field<ListGraphType<SkillType>>("skills",
+         Name = "Query";
+         Field<ListGraphType<NonNullGraphType<SkillType>>>("skills",
             arguments: new QueryArguments
             {
                new  QueryArgument<InputSkillType> {  Name = "input" }
@@ -27,7 +28,7 @@ namespace GraphQLNetCore.GraphQLTypes
                return _skillRepository.GetAll(input);
             });
 
-         Field<SkillType>("randomSkill", resolve: context => _skillRepository.GetRandom());
+         Field<NonNullGraphType<SkillType>>("randomSkill", resolve: context => _skillRepository.GetRandom());
 
          Field<SkillType>("skill",
              arguments: new QueryArguments
@@ -40,7 +41,7 @@ namespace GraphQLNetCore.GraphQLTypes
                 return _skillRepository.Get(input);
              });
 
-         Field<ListGraphType<PersonType>>("persons",
+         Field<ListGraphType<NonNullGraphType<PersonType>>>("persons",
             arguments: new QueryArguments
             {
                new  QueryArgument<InputPersonType> {  Name = "input" }
@@ -51,7 +52,7 @@ namespace GraphQLNetCore.GraphQLTypes
                return _personRepository.GetAll(input);
             });
 
-         Field<PersonType>("randomPerson", resolve: context => _personRepository.GetRandom());
+         Field<NonNullGraphType<PersonType>>("randomPerson", resolve: context => _personRepository.GetRandom());
 
          Field<PersonType>("person",
              arguments: new QueryArguments
@@ -63,15 +64,6 @@ namespace GraphQLNetCore.GraphQLTypes
                 var input = context.GetArgument<InputPerson>("input");
                 return _personRepository.Get(input);
              });
-      }
-
-      private IEnumerable<T> AsList<T>(T item)
-         where T : class
-      {
-         return item == default
-            ? new List<T>()
-            : Enumerable.Repeat(item, 1)
-            ;
       }
    }
 }

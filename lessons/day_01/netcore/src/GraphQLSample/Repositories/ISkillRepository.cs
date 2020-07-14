@@ -4,7 +4,7 @@ namespace GraphQLNetCore.Repositories
 {
    public interface ISkillRepository
    {
-      Skill Get(string id);
+      Skill Get(int? id);
       Skill GetRandom();
    }
 }

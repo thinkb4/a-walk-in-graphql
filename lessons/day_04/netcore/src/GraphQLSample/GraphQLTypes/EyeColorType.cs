@@ -7,6 +7,7 @@ namespace GraphQLNetCore.GraphQLTypes
    {
       public EyeColorType()
       {
+         Name = "EyeColor";
       }
    }
 }

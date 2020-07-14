@@ -37,10 +37,8 @@ namespace GraphQLNetCore
 
          // add something like repository
          services.AddSingleton<ISkillRepository, SkillRepository>();
-         services.AddSingleton<IPersonRepository, PersonRepository>();
          services.AddSingleton<RootQuery>();
          services.AddSingleton<SkillType>();
-         services.AddSingleton<PersonType>();
          // add schema
          services.AddSingleton<ISchema, RootSchema>();
 
