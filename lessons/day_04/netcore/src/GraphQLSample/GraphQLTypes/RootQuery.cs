@@ -1,4 +1,5 @@
 ﻿using GraphQL.Types;
+using GraphQLNetCore.Models;
 using GraphQLNetCore.Repositories;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +19,13 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<ListGraphType<SkillType>>("skills",
             arguments: new QueryArguments
             {
-                   new  QueryArgument<IntGraphType> {  Name = "id" }
+                   new  QueryArgument<InputSkillType> {  Name = "input" }
             },
             resolve: context =>
             {
-               var id = context.GetArgument<int?>("id");
-               return id.HasValue
-                  ? AsList(_skillRepository.Get(id))
+               var input = context.GetArgument<InputSkill>("input");
+               return input != default
+                  ? AsList(_skillRepository.Get(input))
                   : _skillRepository.GetAll();
             });
 
@@ -33,12 +34,12 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<SkillType>("skill",
              arguments: new QueryArguments
              {
-                   new  QueryArgument<IntGraphType> {  Name = "id" }
+                   new  QueryArgument<InputSkillType> {  Name = "input" }
              },
              resolve: context =>
              {
-                var id = context.GetArgument<int?>("id");
-                return _skillRepository.Get(id);
+                var input = context.GetArgument<InputSkill>("input");
+                return _skillRepository.Get(input);
              });
 
          Field<ListGraphType<PersonType>>("persons",

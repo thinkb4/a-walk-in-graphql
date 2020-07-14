@@ -52,7 +52,7 @@ namespace GraphQLNetCore.Repositories
          }
       }
 
-      public List<Skill> GetSkills(int personId, int? id)
+      public List<Skill> GetSkills(int personId, InputSkill input)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
@@ -61,7 +61,7 @@ namespace GraphQLNetCore.Repositories
                      .Include(x => x.skills)
                      .FirstOrDefault(s => s.id == personId)
                      ?.skills
-                     .Where(s => !id.HasValue || id.Value == s.id)
+                     .Where(input?.Predicate ?? (_ => true))
                      .ToList()
                      ;
          }

@@ -2,7 +2,6 @@
 using System.Linq;
 using GraphQLNetCore.Data;
 using GraphQLNetCore.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GraphQLNetCore.Repositories
@@ -15,17 +14,13 @@ namespace GraphQLNetCore.Repositories
          _scopeFactory = scopeFactory;
       }
 
-      public Skill Get(int? id)
+      public Skill Get(InputSkill input)
       {
-         if (id.HasValue)
+         using (var scope = _scopeFactory.CreateScope())
+         using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
-            using (var scope = _scopeFactory.CreateScope())
-            using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
-            {
-               return db.Skill.FirstOrDefault(s => s.id == id);
-            }
+            return db.Skill.FirstOrDefault(input?.Predicate ?? (_ => false));
          }
-         return null;
       }
 
       public List<Skill> GetAll()

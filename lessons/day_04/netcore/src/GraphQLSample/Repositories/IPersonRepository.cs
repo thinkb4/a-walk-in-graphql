@@ -8,7 +8,7 @@ namespace GraphQLNetCore.Repositories
       List<Person> GetAll();
       Person Get(int? id);
       List<Person> GetFriends(int personId, int? id);
-      List<Skill> GetSkills(int personId, int? id);
+      List<Skill> GetSkills(int personId, InputSkill input);
       Person GetRandom();
    }
 }

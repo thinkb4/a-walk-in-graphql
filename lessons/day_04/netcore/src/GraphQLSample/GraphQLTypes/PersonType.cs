@@ -18,12 +18,12 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<ListGraphType<SkillType>>("skills",
             arguments: new QueryArguments
             {
-                   new  QueryArgument<IntGraphType> {  Name = "id" }
+                   new  QueryArgument<InputSkillType> {  Name = "input" }
             },
             resolve: context =>
             {
-               var id = context.GetArgument<int?>("id");
-               return personRepo.GetSkills(context.Source.id, id);
+               var input = context.GetArgument<InputSkill>("input");
+               return personRepo.GetSkills(context.Source.id, input);
             });
          Field<ListGraphType<PersonType>>("friends",
             arguments: new QueryArguments
@@ -35,7 +35,7 @@ namespace GraphQLNetCore.GraphQLTypes
                var id = context.GetArgument<int?>("id");
                return personRepo.GetFriends(context.Source.id, id);
             });
-         Field<SkillType>("favSkill", resolve: context => skillRepo.Get(context.Source.favSkillId));
+         Field<SkillType>("favSkill", resolve: context => skillRepo.Get(InputSkill.FromId(context.Source.favSkillId)));
       }
    }
 }

@@ -10,7 +10,7 @@ namespace GraphQLNetCore.GraphQLTypes
         {
             Field(_ => _.id);
             Field(_ => _.name);
-            Field<SkillType>("parent", resolve: context => repo.Get(context.Source.parentId));
+            Field<SkillType>("parent", resolve: context => repo.Get(InputSkill.FromId(context.Source.parentId)));
         }
     }
 }

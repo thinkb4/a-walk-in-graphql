@@ -40,6 +40,7 @@ namespace GraphQLNetCore
          services.AddSingleton<IPersonRepository, PersonRepository>();
          services.AddSingleton<RootQuery>();
          services.AddSingleton<SkillType>();
+         services.AddSingleton<InputSkillType>();
          services.AddSingleton<PersonType>();
          services.AddSingleton<EyeColorType>();
 
