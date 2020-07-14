@@ -19,14 +19,12 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<ListGraphType<SkillType>>("skills",
             arguments: new QueryArguments
             {
-                   new  QueryArgument<InputSkillType> {  Name = "input" }
+               new  QueryArgument<InputSkillType> {  Name = "input" }
             },
             resolve: context =>
             {
                var input = context.GetArgument<InputSkill>("input");
-               return input != default
-                  ? AsList(_skillRepository.Get(input))
-                  : _skillRepository.GetAll();
+               return _skillRepository.GetAll(input);
             });
 
          Field<SkillType>("randomSkill", resolve: context => _skillRepository.GetRandom());
@@ -34,7 +32,7 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<SkillType>("skill",
              arguments: new QueryArguments
              {
-                   new  QueryArgument<InputSkillType> {  Name = "input" }
+                new  QueryArgument<InputSkillType> {  Name = "input" }
              },
              resolve: context =>
              {
@@ -50,9 +48,7 @@ namespace GraphQLNetCore.GraphQLTypes
             resolve: context =>
             {
                var input = context.GetArgument<InputPerson>("input");
-               return input != default
-                  ? AsList(_personRepository.Get(input))
-                  : _personRepository.GetAll();
+               return _personRepository.GetAll(input);
             });
 
          Field<PersonType>("randomPerson", resolve: context => _personRepository.GetRandom());
@@ -60,7 +56,7 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<PersonType>("person",
              arguments: new QueryArguments
              {
-                   new  QueryArgument<InputPersonType> {  Name = "input" }
+                new  QueryArgument<InputPersonType> {  Name = "input" }
              },
              resolve: context =>
              {

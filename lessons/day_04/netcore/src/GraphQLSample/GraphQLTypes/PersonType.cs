@@ -18,7 +18,7 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<ListGraphType<SkillType>>("skills",
             arguments: new QueryArguments
             {
-                   new  QueryArgument<InputSkillType> {  Name = "input" }
+               new  QueryArgument<InputSkillType> {  Name = "input" }
             },
             resolve: context =>
             {
@@ -28,7 +28,7 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<ListGraphType<PersonType>>("friends",
             arguments: new QueryArguments
             {
-                   new  QueryArgument<InputPersonType> {  Name = "input" }
+               new  QueryArgument<InputPersonType> {  Name = "input" }
             },
             resolve: context =>
             {

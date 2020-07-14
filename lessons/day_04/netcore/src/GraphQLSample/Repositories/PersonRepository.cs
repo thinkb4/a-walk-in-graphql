@@ -24,12 +24,12 @@ namespace GraphQLNetCore.Repositories
          }
       }
 
-      public List<Person> GetAll()
+      public List<Person> GetAll(InputPerson input)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
-            return db.Person.ToList();
+            return db.Person.Where(input?.Predicate ?? (_ => true)).ToList();
          }
       }
 

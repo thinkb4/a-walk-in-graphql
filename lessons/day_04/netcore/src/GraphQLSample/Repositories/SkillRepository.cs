@@ -23,12 +23,12 @@ namespace GraphQLNetCore.Repositories
          }
       }
 
-      public List<Skill> GetAll()
+      public List<Skill> GetAll(InputSkill input)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
-            return db.Skill.ToList();
+            return db.Skill.Where(input?.Predicate ?? (_ => true)).ToList();
          }
       }
 
