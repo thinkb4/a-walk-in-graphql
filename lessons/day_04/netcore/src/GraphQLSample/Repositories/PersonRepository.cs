@@ -15,17 +15,13 @@ namespace GraphQLNetCore.Repositories
          _scopeFactory = scopeFactory;
       }
 
-      public Person Get(int? id)
+      public Person Get(InputPerson input)
       {
-         if (id.HasValue)
+         using (var scope = _scopeFactory.CreateScope())
+         using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
-            using (var scope = _scopeFactory.CreateScope())
-            using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
-            {
-               return db.Person.FirstOrDefault(s => s.id == id);
-            }
+            return db.Person.FirstOrDefault(input?.Predicate ?? (_ => false));
          }
-         return null;
       }
 
       public List<Person> GetAll()
@@ -37,7 +33,7 @@ namespace GraphQLNetCore.Repositories
          }
       }
 
-      public List<Person> GetFriends(int personId, int? id)
+      public List<Person> GetFriends(int personId, InputPerson input)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
@@ -46,7 +42,7 @@ namespace GraphQLNetCore.Repositories
                      .Include(x => x.friends)
                      .FirstOrDefault(s => s.id == personId)
                      ?.friends
-                     .Where(f => !id.HasValue || id.Value == f.id)
+                     .Where(input?.Predicate ?? (_ => true))
                      .ToList()
                      ;
          }

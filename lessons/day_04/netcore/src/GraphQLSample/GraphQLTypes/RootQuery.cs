@@ -45,13 +45,13 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<ListGraphType<PersonType>>("persons",
             arguments: new QueryArguments
             {
-               new  QueryArgument<IntGraphType> {  Name = "id" }
+               new  QueryArgument<InputPersonType> {  Name = "input" }
             },
             resolve: context =>
             {
-               var id = context.GetArgument<int?>("id");
-               return id.HasValue
-                  ? AsList(_personRepository.Get(id))
+               var input = context.GetArgument<InputPerson>("input");
+               return input != default
+                  ? AsList(_personRepository.Get(input))
                   : _personRepository.GetAll();
             });
 
@@ -60,12 +60,12 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<PersonType>("person",
              arguments: new QueryArguments
              {
-                   new  QueryArgument<IntGraphType> {  Name = "id" }
+                   new  QueryArgument<InputPersonType> {  Name = "input" }
              },
              resolve: context =>
              {
-                var id = context.GetArgument<int?>("id");
-                return _personRepository.Get(id);
+                var input = context.GetArgument<InputPerson>("input");
+                return _personRepository.Get(input);
              });
       }
 

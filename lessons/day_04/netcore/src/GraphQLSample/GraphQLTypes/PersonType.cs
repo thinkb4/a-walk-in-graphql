@@ -13,7 +13,7 @@ namespace GraphQLNetCore.GraphQLTypes
          Field(_ => _.id);
          Field(_ => _.name);
          Field(_ => _.surname);
-         Field<EyeColorType>("eyeColor");
+         Field(_ => _.eyeColor, nullable: true, type: typeof(EyeColorType));
          Field<StringGraphType>("fullName", resolve: context => $"{context.Source.name} {context.Source.surname}");
          Field<ListGraphType<SkillType>>("skills",
             arguments: new QueryArguments
@@ -28,12 +28,12 @@ namespace GraphQLNetCore.GraphQLTypes
          Field<ListGraphType<PersonType>>("friends",
             arguments: new QueryArguments
             {
-                   new  QueryArgument<IntGraphType> {  Name = "id" }
+                   new  QueryArgument<InputPersonType> {  Name = "input" }
             },
             resolve: context =>
             {
-               var id = context.GetArgument<int?>("id");
-               return personRepo.GetFriends(context.Source.id, id);
+               var input = context.GetArgument<InputPerson>("input");
+               return personRepo.GetFriends(context.Source.id, input);
             });
          Field<SkillType>("favSkill", resolve: context => skillRepo.Get(InputSkill.FromId(context.Source.favSkillId)));
       }
