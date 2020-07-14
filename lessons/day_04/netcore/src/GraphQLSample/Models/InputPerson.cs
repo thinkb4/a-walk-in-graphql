@@ -1,5 +1,4 @@
-﻿using GraphQL.Introspection;
-using System;
+﻿using System;
 
 namespace GraphQLNetCore.Models
 {
@@ -16,7 +15,7 @@ namespace GraphQLNetCore.Models
          (person) => (!id.HasValue || id.Value == person.id)
                   && (!age.HasValue || age.Value == person.age)
                   && (!eyeColor.HasValue || eyeColor.Value == person.eyeColor)
-                  && (!favSkill.HasValue || favSkill.Value == person.favSkill.id)
+                  && (!favSkill.HasValue || favSkill.Value == person.favSkillId)
                   ;
    }
 }
