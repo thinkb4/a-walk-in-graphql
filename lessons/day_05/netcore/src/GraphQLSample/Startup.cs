@@ -45,6 +45,7 @@ namespace GraphQLNetCore
          services.AddSingleton<InputSkillCreateType>();
          services.AddSingleton<PersonType>();
          services.AddSingleton<InputPersonType>();
+         services.AddSingleton<InputPersonCreateType>();
          services.AddSingleton<EyeColorType>();
 
          // add schema

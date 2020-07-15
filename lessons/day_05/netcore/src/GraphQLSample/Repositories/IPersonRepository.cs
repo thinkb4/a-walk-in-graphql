@@ -10,5 +10,6 @@ namespace GraphQLNetCore.Repositories
       List<Person> GetFriends(int personId, InputPerson input);
       List<Skill> GetSkills(int personId, InputSkill input);
       Person GetRandom();
+      Person CreatePerson(InputPersonCreate input);
    }
 }

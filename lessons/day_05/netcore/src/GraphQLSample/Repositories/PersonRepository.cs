@@ -73,5 +73,19 @@ namespace GraphQLNetCore.Repositories
             return db.Person.Skip(indexRandom).FirstOrDefault();
          }
       }
+
+      public Person CreatePerson(InputPersonCreate input)
+      {
+         using (var scope = _scopeFactory.CreateScope())
+         using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
+         {
+            var person = input.ToPerson();
+            person.friends = db.Person.Where(p => input.friends.Contains(p.id)).ToList();
+            person.skills = db.Skill.Where(s => input.skills.Contains(s.id)).ToList();
+            db.Person.Add(person);
+            db.SaveChanges();
+            return person;
+         }
+      }
    }
 }
