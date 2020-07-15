@@ -163,7 +163,7 @@ query {
 }
 ```
 
-And — as any type validation — the server will cry if a field value doesn't match the defined type.
+And —as any type validation— the server will cry if a field value doesn't match the defined type.
 
 ### Non-nullable fields
 
@@ -283,7 +283,7 @@ query {
 }
 ```
 
-A secondary — but not less important — advantage of enums is that now the value is not only validated against your typedef and it's auto-completed in your preferred dev tools, but it's also **abstracted**! Means the client is no longer dealing with actual values but with abstracted representations which is more secure and scalable.
+A secondary —but not less important— advantage of enums is that now the value is not only validated against your typedef and it's auto-completed in your preferred dev tools, but it's also **abstracted**! Means the client is no longer dealing with actual values but with abstracted representations which is more secure and scalable.
 
 ### Language specific support for enums and internal values
 

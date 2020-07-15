@@ -9,7 +9,7 @@
 ## Mutation
 
 What is `CRUD` without `CUD` huh?!!
-In a REST-full API you have specific HTTP Verbs (like `PUT`) to create and/or update a resource, in GraphQL — strictly talking — you don't. Queries and Mutations are more similar to `POST` and `GET` in the aspect that nothing stops you from producing data side-effects through a `query` or a `mutation` even though they are — respectively — designed to have significant differences on their behavior.
+In a REST-full API you have specific HTTP Verbs (like `PUT`) to create and/or update a resource, in GraphQL —strictly talking— you don't. Queries and Mutations are more similar to `POST` and `GET` in the aspect that nothing stops you from producing data side-effects through a `query` or a `mutation` even though they are —respectively— designed to have significant differences on their behavior.
 
 Let's compare them.
 
@@ -295,7 +295,7 @@ mutation createPerson(
 
 **NOTES:**
 
-1. There are many topics around mutation bests practices, optimizations, "do's and don'ts"; some are excellent, all of them way beyond the scope of this stage of the course (we might get there), some super detailed and precise, some fuzzy or inaccurate. Usually the rule of thumb for finding this kind of info is **"first the authors, then the SMEs (subject matter expert), then the official community, then the rest"**, e.g. Apollo has a huge community and a YouTube channel where actual Apollo engineers — and even the creators of GraphQL, like Lee Byron — do conferences and share tons of invaluable insights related to the technology itself and the engineering decisions you'll have to make on top and under GraphQL's layer.
+1. There are many topics around mutation bests practices, optimizations, "do's and don'ts"; some are excellent, all of them way beyond the scope of this stage of the course (we might get there), some super detailed and precise, some fuzzy or inaccurate. Usually the rule of thumb for finding this kind of info is **"first the authors, then the SMEs (subject matter expert), then the official community, then the rest"**, e.g. Apollo has a huge community and a YouTube channel where actual Apollo engineers —and even the creators of GraphQL, like Lee Byron— do conferences and share tons of invaluable insights related to the technology itself and the engineering decisions you'll have to make on top and under GraphQL's layer.
 2. Whenever you struggle finding the root cause of a problem whilst working with GraphQL step aside and ask you this question:  « *Is this a GraphQL problem?* » MOST of the time the answer is NO, it's about engineering and probably related to a non-graph state of mind; you might be still thinking in REST.
 
 #### Technologies

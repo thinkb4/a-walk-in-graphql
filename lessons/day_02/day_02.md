@@ -421,7 +421,7 @@ Can you imagine following a large application with hundreds/thousands of operati
 #### Security and transport overhead
 
 Last but not least, we're now reusing the same operation but we have to send it every single time, right? ... WRONG!
-Sending an operation is not only a communication overhead but is also a potential security issue!! At this point of the software engineering evolution stage we can't imagine sending an SQL query as-is on a request, is like you'd just explode if you see something like that! It turns out many applications are sending graphQL operations in a completely human readable way around the world (⊙＿⊙'). Ok, we might be over reacting but the truth is, if you don't take extra precautions, **an attacker could send down an expensive or malicious operation** (query or mutation) to degrade your performance, execute harmful actions, or — being naive — run an unexpected operation you don't really want anyone to perform.
+Sending an operation is not only a communication overhead but is also a potential security issue!! At this point of the software engineering evolution stage we can't imagine sending an SQL query as-is on a request, is like you'd just explode if you see something like that! It turns out many applications are sending graphQL operations in a completely human readable way around the world (⊙＿⊙'). Ok, we might be over reacting but the truth is, if you don't take extra precautions, **an attacker could send down an expensive or malicious operation** (query or mutation) to degrade your performance, execute harmful actions, or —being naive— run an unexpected operation you don't really want anyone to perform.
 
 How to solve that?
 
