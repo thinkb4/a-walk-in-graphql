@@ -73,13 +73,13 @@ def resolve_full_name(obj, info):
 
 
 @person.field("friends")
-def resolve_friends(obj, info, input=None):
-    return obj.friends.filter_by(**input).all() if input else obj.friends
+def resolve_friends(obj, info, input={}):
+    return obj.friends.filter_by(**input).all()
 
 
 @person.field("skills")
-def resolve_person_skills(obj, info, input=None):
-    return obj.skills.filter_by(**input).all() if input else obj.skills
+def resolve_person_skills(obj, info, input={}):
+    return obj.skills.filter_by(**input).all()
 
 
 @person.field("favSkill")
