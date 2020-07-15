@@ -4,7 +4,7 @@ from models import Base, Skill, Person
 import json
 
 
-engine = create_engine('sqlite:///data.db')
+engine = create_engine('sqlite://')
 Session = sessionmaker(bind=engine)
 session = Session()
 
