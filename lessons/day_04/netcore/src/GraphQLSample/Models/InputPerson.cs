@@ -9,7 +9,7 @@ namespace GraphQLNetCore.Models
       public EyeColor? eyeColor { get; set; }
       public int? favSkill { get; set; }
 
-      public static InputPerson FromId(int? id) => new InputPerson { id = id };
+      public static InputPerson FromId(int? id) => id.HasValue ? new InputPerson { id = id } : default;
 
       public Func<Person, bool> Predicate => 
          (person) => (!id.HasValue || id.Value == person.id)
