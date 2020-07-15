@@ -7,7 +7,7 @@ namespace GraphQLNetCore.Repositories
    {
       Skill Get(InputSkill input);
       List<Skill> GetAll(InputSkill input);
-      Skill AddSkill(Skill skill);
+      Skill CreateSkill(InputSkillCreate input);
       Skill GetRandom();
    }
 }

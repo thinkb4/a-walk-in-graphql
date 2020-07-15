@@ -32,11 +32,12 @@ namespace GraphQLNetCore.Repositories
          }
       }
 
-      public Skill AddSkill(Skill skill)
+      public Skill CreateSkill(InputSkillCreate input)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
+            var skill = input.ToSkill();
             db.Skill.Add(skill);
             db.SaveChanges();
             return skill;
