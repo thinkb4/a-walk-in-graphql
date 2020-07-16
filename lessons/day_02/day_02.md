@@ -19,7 +19,7 @@ Given the following request:
 <scheme>://<authority>/characters/?age=40
 ```
 
-We expect a response with characters being `40`, filtering out every other out.
+We expect a response with characters being `40`, filtering out the rest.
 
 How does GraphQL provide that functionality?
 
@@ -124,7 +124,7 @@ In a typical REST API we would do:
 
 And this is a silly example of querying the characters endpoint with 3 different filters!!! Can you imagine a really complex relationship of data being asked to the server with multiple requests and handling those relationships on the client with a ton of garbage data and handling the business logic to orchestrate which method should be called in which order passing which params and validating all inputs?
 
-Sure, you could define an ad-hoc endpoint for that but throw scalability and maintainability overboard.
+Sure, you could define an ad-hoc endpoint for that but throwing scalability and maintainability overboard in the process.
 
 In GraphQL the <span id="nested-query-with-arguments">nested query with arguments</span> would go:
 
@@ -164,12 +164,12 @@ and the resolvers would go:
 ```javascript
 
 // Note:
-// Filtering functions are made up names for explanatory purpose
+// Filtering functions names are made up for explanatory purpose
 
 const resolvers = {
   Query: {
     /**
-     * interested only on
+     * interested only in
      *  -> homeland property of the second arg (params)
      */
     characters(obj, { homeland }) {
@@ -180,7 +180,7 @@ const resolvers = {
   },
   Character: {
     /**
-     * interested only on
+     * interested only in
      *  -> friends property of the first arg (obj)
      * and
      *  -> kind property of the second arg (params)
@@ -192,7 +192,7 @@ const resolvers = {
         .fetchCharacters();
     },
     /**
-     * interested only on
+     * interested only in
      *  -> progenitor property of the first arg (obj)
      * and
      *  -> skill property of the second arg (params)
@@ -267,7 +267,7 @@ and mirroring that, we defined
     - `progenitor`
       - `({ progenitor }, { skill })`
 
-At this point you might realize a big part of the architecture is provided out-of-the-box but still, the burden of the persistence layer is in our hands???!! We still have to let GraphQL know how to retrieve the data? Potentially making the same 3 round trips to the DB??!!!
+At this point you might realize a big part of the architecture is provided out-of-the-box but still, the burden of the persistence layer is in our hands! We still have to let GraphQL know how to retrieve the data? Potentially making the same 3 round trips to the DB??!!!
 
 The answer is YUP! The implementation of the resolver's code is entirely up to you, GraphQL is about almost everything else.
 
@@ -340,16 +340,16 @@ In order to produce the right value for an argument it must go through a specifi
 
 ## Variables
 
-Ok, now we have seen the tip of the iceberg, some important subjects will surface related to the real world software industry.
+Ok, now that we've seen the tip of the iceberg, some important subjects will surface related to the real world software industry.
 
 - reusability
 - scalability
 - maintainability
 - security
 
-Using arguments the way we did on the [nested query with arguments](#nested-query-with-arguments) example is nice and simple but it doesn't capture any of the items listed above, particularly because it forces us to **hard-code the arguments values** every time and for other details we'll see [later today](#security-and-scalability).
+Using arguments the way we did on the [nested query with arguments](#nested-query-with-arguments) example is nice and simple but it doesn't capture any of the items listed above, particularly because it forces us to **hard-code the arguments values** every time and because of other topics we'll see [later today](#security-and-scalability).
 
-Sure thing, GraphQL won't stop you from creating string extrapolation functions to use a query template and replace some tokens with the params values, but despite the fact that it'll increase the maintenance surface and therefore the bug introduction surface, it'll lack of several benefits GraphQL provides out of the box and several benefits derived from the variables feature itself.
+Sure thing, GraphQL won't stop you from creating string interpolation functions to use a query template and replace some tokens with the params values, but despite the fact that it'll increase the maintenance surface and therefore the bug introduction surface, it'll lack of several benefits GraphQL provides out of the box and several benefits derived from the variables feature itself.
 
 So, what's this "variable" thing about?
 
@@ -390,7 +390,7 @@ and here how we factored out the variables dictionary (usually JSON) to be passe
 }
 ```
 
-Now we can use the same operation definition and only change the variables, GraphQL will perform all validations ([Type](http://spec.graphql.org/June2018/#sec-Variables-Are-Input-Types), [nullability](http://spec.graphql.org/June2018/#example-c5959), [uniqueness](http://spec.graphql.org/June2018/#sec-Variable-Uniqueness), ...), [variable value coercion](http://spec.graphql.org/June2018/#sec-Coercing-Variable-Values) and some more things.
+Now we can use the same operation definition and only change the variables. GraphQL will perform all validations ([Type](http://spec.graphql.org/June2018/#sec-Variables-Are-Input-Types), [nullability](http://spec.graphql.org/June2018/#example-c5959), [uniqueness](http://spec.graphql.org/June2018/#sec-Variable-Uniqueness), ...), [variable value coercion](http://spec.graphql.org/June2018/#sec-Coercing-Variable-Values) and some more things.
 
 Before going forward we'll stop here to consider some important differences between `variables` and `arguments`.
 
@@ -402,7 +402,7 @@ Until here we partially captured the **reusability** and **maintainability** ite
 
 ### Security and scalability
 
-Remember we mentioned about some extra benefits of defining your operations with variables instead of interpolate the strings yourself?
+Remember we mentioned about some extra benefits of defining your operations with variables instead of interpolating the strings yourself?
 
 Having your operations **statically defined** will dramatically impact on the following items:
 
@@ -416,17 +416,19 @@ You can use several tools during development to validate your code against the s
 
 #### Declarative vs Imperative approach
 
-Can you imagine following a large application with hundreds/thousands operations defined as interpolation statements? That's not only hard to follow, understand and maintain, it's also impossible to scale and certainly an invitation for all bugs in the universe to come forward and rejoice. Having all your operations described up-front
+Can you imagine following a large application with hundreds/thousands of operations defined as interpolation statements? That's not only hard to follow, understand and maintain, it's also impossible to scale and certainly an invitation for all bugs in the universe to come forward and rejoice. Having all your operations described up-front provides you a more predictable and safe engineering flow.
 
 #### Security and transport overhead
 
 Last but not least, we're now reusing the same operation but we have to send it every single time, right? ... WRONG!
-Sending an operation is not only a communication overhead but is also a potential security issue!! At this point of the software engineering evolution stage we can't imagine sending an SQL query as-is on a request, is like you'd just explode if you see something like that! It turns out many applications are sending graphQL operations in a completely human readable way around the world (⊙＿⊙'). Ok, we might be over reacting but the truth is, if you don't take extra precautions, **an attacker could send down an expensive or malicious operation** (query or mutation) to degrade your performance of perform harmful actions, or being naive, an unexpected operation you don't really want anyone performs.
+Sending an operation is not only a communication overhead but is also a potential security issue!! At this point of the software engineering evolution stage we can't imagine sending an SQL query as-is on a request, is like you'd just explode if you see something like that! It turns out many applications are sending graphQL operations in a completely human readable way around the world (⊙＿⊙'). Ok, we might be over reacting but the truth is, if you don't take extra precautions, **an attacker could send down an expensive or malicious operation** (query or mutation) to degrade your performance, execute harmful actions, or —being naive— run an unexpected operation you don't really want anyone to perform.
 
 How to solve that?
 
 The name is **Persisted queries** and they're way beyond the scope of this training but they're absolutely worthy to mention.
-**TL;DR**
+
+#### TL;DR
+
 Imagine a mechanism to define at development time a map to connect your operations to an identifier, this map is a contract between the client and the server so that you can perform a query defining the identifier and the variables, if the identifier is invalid so the operation will be; this way you perform only the allowed ops and also save a lot of traffic. There are several implementations of this concept, a simple [Google search](https://www.google.com/search?q=graphql+persisted+queries) will give you more info.
 
 ## Exercise

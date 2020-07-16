@@ -31,33 +31,32 @@ public class PersonService {
         return givenList.get(rand.nextInt(givenList.size()));
     }
 
-    public List<Person> getPersons(Optional<InputPerson> input) {
-        return input.map(v -> filterByInput(v)).orElse(this.personRepository.findAll());
+    public List<Person> getPersons(InputPerson input) {
+        return Optional.ofNullable(input).map(v -> filterByInput(v)).orElse(this.personRepository.findAll());
     }
 
-    public Optional<Person> getPerson(Optional<InputPerson> input) {
-        return input.map((InputPerson v) -> findByInput(v)).orElse(null);
+    public Optional<Person> getPerson(InputPerson input) {
+        return Optional.ofNullable(input).map((InputPerson v) -> findByInput(v)).orElse(null);
     }
 
-    public List<Person> getFriends(Person person, Optional<InputPerson> input) {
+    public List<Person> getFriends(Person person, InputPerson input) {
         List<Person> friends;
-        if (input.isPresent()) {
-            InputPerson inputPerson = input.get();
+        if (input != null) {
             List<Predicate<Person>> allPredicates = new ArrayList<>();
-            if (inputPerson.getId() != null) allPredicates.add(p -> p.getId().equals(inputPerson.getId()));
-            if (inputPerson.getAge() != null) allPredicates.add(p -> p.getAge().equals(inputPerson.getAge()));
-            if (inputPerson.getEyeColor() != null)
-                allPredicates.add(p -> p.getEyeColor().equals(inputPerson.getEyeColor()));
-            if (inputPerson.getFavSkill() != null)
-                allPredicates.add(p -> p.getFavSkill()!=null && p.getFavSkill().getId().equals(inputPerson.getFavSkill()));
-            if (inputPerson.getRole() != null)
-                allPredicates.add(p -> p instanceof Engineer && ((Engineer)p).getRole()!=null && ((Engineer)p).getRole().equals(inputPerson.getRole()));
-            if (inputPerson.getGrade() != null)
-                allPredicates.add(p -> p instanceof Engineer && ((Engineer)p).getGrade()!=null && ((Engineer)p).getGrade().equals(inputPerson.getGrade()));
-            if (inputPerson.getTargetRole() != null)
-                allPredicates.add(p -> p instanceof Candidate && ((Candidate)p).getTargetRole()!=null && ((Candidate)p).getTargetRole().equals(inputPerson.getTargetRole()));
-            if (inputPerson.getTargetGrade() != null)
-                allPredicates.add(p -> p instanceof Candidate && ((Candidate)p).getTargetGrade()!=null && ((Candidate)p).getTargetGrade().equals(inputPerson.getTargetGrade()));
+            if (input.getId() != null) allPredicates.add(p -> p.getId().equals(input.getId()));
+            if (input.getAge() != null) allPredicates.add(p -> p.getAge().equals(input.getAge()));
+            if (input.getEyeColor() != null)
+                allPredicates.add(p -> p.getEyeColor().equals(input.getEyeColor()));
+            if (input.getFavSkill() != null)
+                allPredicates.add(p -> p.getFavSkill()!=null && p.getFavSkill().getId().equals(input.getFavSkill()));
+            if (input.getRole() != null)
+                allPredicates.add(p -> p instanceof Engineer && ((Engineer)p).getRole()!=null && ((Engineer)p).getRole().equals(input.getRole()));
+            if (input.getGrade() != null)
+                allPredicates.add(p -> p instanceof Engineer && ((Engineer)p).getGrade()!=null && ((Engineer)p).getGrade().equals(input.getGrade()));
+            if (input.getTargetRole() != null)
+                allPredicates.add(p -> p instanceof Candidate && ((Candidate)p).getTargetRole()!=null && ((Candidate)p).getTargetRole().equals(input.getTargetRole()));
+            if (input.getTargetGrade() != null)
+                allPredicates.add(p -> p instanceof Candidate && ((Candidate)p).getTargetGrade()!=null && ((Candidate)p).getTargetGrade().equals(input.getTargetGrade()));
 
             //Composes several predicates into a single predicate, and then applies the composite predicate to a stream.
             Predicate<Person> compositePredicate = allPredicates.stream().reduce(w -> true, Predicate::and);
@@ -70,13 +69,12 @@ public class PersonService {
         return friends;
     }
 
-    public List<Skill> getSkills(Person person, Optional<InputSkill> input) {
+    public List<Skill> getSkills(Person person, InputSkill input) {
         List<Skill> skills;
-        if (input.isPresent()) {
-            InputSkill inputSkill = input.get();
+        if (input != null) {
             List<Predicate<Skill>> allPredicates = new ArrayList<>();
-            if (inputSkill.getId() != null) allPredicates.add(p -> p.getId().equals(inputSkill.getId()));
-            if (inputSkill.getName() != null) allPredicates.add(p -> p.getName().equals(inputSkill.getName()));
+            if (input.getId() != null) allPredicates.add(p -> p.getId().equals(input.getId()));
+            if (input.getName() != null) allPredicates.add(p -> p.getName().equals(input.getName()));
 
             // Composes several predicates into a single predicate, and then applies the composite predicate to a stream.
             Predicate<Skill> compositePredicate = allPredicates.stream().reduce(w -> true, Predicate::and);
@@ -89,9 +87,9 @@ public class PersonService {
         return skills;
     }
 
-    public Person createPerson(Optional<InputPersonCreate> input) {
-        return input.map(v -> {
-            Person newPerson = new Contact();
+    public Person createPerson(InputPersonCreate input) {
+        return Optional.ofNullable(input).map(v -> {
+            Person newPerson = new Person();
             newPerson.setName(v.getName());
             newPerson.setSurname(v.getSurname());
             newPerson.setEmail(v.getEmail());
@@ -111,8 +109,8 @@ public class PersonService {
     }
 
 
-    public Person createCandidate(Optional<InputCandidateCreate> input) {
-        return input.map(v -> {
+    public Person createCandidate(InputCandidateCreate input) {
+        return Optional.ofNullable(input).map(v -> {
             Candidate newCandidate = new Candidate();
             newCandidate.setName(v.getName());
             newCandidate.setSurname(v.getSurname());
@@ -134,8 +132,8 @@ public class PersonService {
         }).orElse(null);
     }
 
-    public Person createEngineer(Optional<InputEngineerCreate> input) {
-        return input.map(v -> {
+    public Person createEngineer(InputEngineerCreate input) {
+        return Optional.ofNullable(input).map(v -> {
             Engineer newEngineer = new Engineer();
             newEngineer.setEmployeeId(ThreadLocalRandom.current().nextLong(1,999));
             newEngineer.setName(v.getName());
@@ -158,9 +156,10 @@ public class PersonService {
         }).orElse(null);
     }
 
-    public List<Person> searchByName(Optional<String> searchTerm) {
+    public List<Person> searchByName(String searchTerm) {
         Person filterBy = new Person();
-        filterBy.setName(searchTerm.orElse(""));
+        String term = (searchTerm != null) ? searchTerm : "";
+        filterBy.setName(term);
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase()

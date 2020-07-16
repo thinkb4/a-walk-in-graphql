@@ -33,18 +33,18 @@ public class Query implements GraphQLQueryResolver {
     }
 
     public Optional<Person> person(final Long id) {
-        return this.personService.getPerson(Optional.ofNullable(id));
+        return this.personService.getPerson(id);
     }
 
     public List<Person> persons(final Long id) {
-        return this.personService.getPersons(Optional.ofNullable(id));
+        return this.personService.getPersons(id);
     }
 
     public Optional<Skill> skill(final Long id) {
-        return this.skillService.getSkill(Optional.ofNullable(id));
+        return this.skillService.getSkill(id);
     }
 
     public List<Skill> skills(final Long id) {
-        return this.skillService.getSkills(Optional.ofNullable(id));
+        return this.skillService.getSkills(id);
     }
 }

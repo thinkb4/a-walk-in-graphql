@@ -91,16 +91,16 @@ The brilliant thing of the validation phase is that, as a developer, you have to
 
 What?!!! 🤔
 
--- will it check if a field is defined on the Query Type?
--- yes
--- will it check if the field accepts a given argument?
--- yes
--- will it check if the type of the argument is defined on the Query Type?
--- yes
--- will it recursively do those verification down to the last leaf?
--- yes
--- will it ...
--- enough
+– will it check if a field is defined on the Query Type?  
+– yes  
+– will it check if the field accepts a given argument?  
+– yes  
+– will it check if the type of the argument is defined on the Query Type?  
+– yes  
+– will it recursively do those verification down to the last leaf?  
+– yes  
+– will it ...  
+– enough
 ❤️
 
 #### 3. Execution
@@ -125,14 +125,14 @@ The real power of your schema design relies on abstraction! You can create your 
 
 Since the query hierarchical structure is self-descriptive:
 
-1. Think about which data you're gonna need and which the relationships should look like.
+1. Think about which data you're gonna need and how the relationships should look like.
 2. Write a query
 3. Define your Type system
 4. Define your resolvers
 
 See this [Example of a query-driven schema](https://www.apollographql.com/docs/apollo-server/schema/schema/#example-of-a-query-driven-schema).
 
-That's a game changer, we now have.
+That's a game changer, now we have:
 
 1. An agnostic data storage layer that doesn't need to know or consider the client needs
 2. An abstraction layer able to easily define a data shape contract independently from how and where the data is stored, and adaptable to the client's needs
@@ -248,7 +248,7 @@ For more detailed descriptions:
 
 ### Resolver Chain
 
-Now another concept arises: **Resolver Chain**. To understand that let's go back to the **"It's Graphs All the Way Down"** and traverse our executable definition invoking resolvers (it's an intentional shallow example, for a deeply nested one take a loo [here](https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains))
+Now another concept arises: **Resolver Chain**. To understand that let's go back to the **"It's Graphs All the Way Down"** and traverse our executable definition invoking resolvers (it's an intentional shallow example, for a deeply nested one take a look [here](https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains))
 
 The hierarchical structure of the query will be replicated and the sibling resolvers will be invoked in parallel.
 
@@ -300,7 +300,7 @@ What happened here?
 
 Most of GraphQl server implementations will provide a **Default Resolver** to fallback whenever an explicit resolver hasn't been provided.
 
-Here's a sample code from [graphql-js](https://github.com/graphql/graphql-js/blob/master/src/execution/execute.js#L1181-L1199) repository
+Here's a sample code from [graphql-js](https://github.com/graphql/graphql-js/blob/master/src/execution/execute.js#L1203-L1221) repository
 
 ```javascript
 /**
@@ -347,7 +347,7 @@ query {
 
 Response
 
-```json
+```json5
 {
   "errors": [
     {
@@ -529,7 +529,7 @@ If we have Person `A`, `B`, `C`, `D` and all persons (but `A`) are friends of `A
 }
 ```
 
-I means that we didn't over fetch data from the client to GraphQL server, but we did from GraphQL to the persistence system because we had to ask for the `A` Person's data 4 times!! (`n` rountrips for the friends + `1` for the `A` Person)
+It means that we didn't over fetch data from the client to GraphQL server, but we did from GraphQL to the persistence system because we had to ask for the `A` Person's data 4 times!! (`n` rountrips for the friends + `1` for the `A` Person)
 
 This problem is usually tackled with **batched requests** or **caching** and even though there's nothing out of the box that automatically do that for you there's no need to re-invent the wheel, there are several options already available for you to include in your application, you might do it client-side, server-side, in-memory, HTTP caching and it'll depend on the tools available for your architecture.
 
@@ -545,6 +545,12 @@ The execution flow is [non-deterministic](https://en.wikipedia.org/wiki/Nondeter
 - Since resolvers can be asynchronous, the **resolution order** for each sibling node or an entire branch is **NOT GUARANTEED**
 
 So, **defining** your **resolvers** as **atomic** and **pure functions** is critical. Meaning **DON'T mutate the context object** on your resolvers, ever, or you'll get badly hurt rather sooner than later.
+
+> ...the resolution of fields other than top‐level mutation fields must always be **side effect‐free** and **idempotent**, **the execution order must not affect the result**...
+>
+> Source: GraphQL spec June 2018 [6.3.1 Normal and Serial Execution](https://spec.graphql.org/June2018/#sec-Normal-and-Serial-Execution).
+
+Patience, we'll go deeper into that on day 4 (Mutations).
 
 ## Exercise
 

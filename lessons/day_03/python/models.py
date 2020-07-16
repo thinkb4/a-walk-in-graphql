@@ -7,14 +7,14 @@ Base = declarative_base()
 
 person_friends = Table(
     'person_friends', Base.metadata,
-    Column('person_id', Integer, ForeignKey('persons.id'), primary_key=True),
-    Column('friend_id', Integer, ForeignKey('persons.id'), primary_key=True)
+    Column('person_id', String, ForeignKey('persons.id'), primary_key=True),
+    Column('friend_id', String, ForeignKey('persons.id'), primary_key=True)
 )
 
 person_skills = Table(
     'person_skills', Base.metadata,
-    Column('person_id', Integer, ForeignKey('persons.id'), primary_key=True),
-    Column('skill_id', Integer, ForeignKey('skills.id'), primary_key=True)
+    Column('person_id', String, ForeignKey('persons.id'), primary_key=True),
+    Column('skill_id', String, ForeignKey('skills.id'), primary_key=True)
 )
 
 

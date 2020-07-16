@@ -1,6 +1,6 @@
 {
   "name": "a-walk-in-graphql",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A progressive learning path to grok GraphQL from 0 to X as a generic concept with the assistance of different language specific examples.",
   "repository": {
     "type": "git",

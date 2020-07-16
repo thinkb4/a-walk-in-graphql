@@ -4,38 +4,50 @@
 
 ### Requirements
 
-* Net Core 3.1.3
-* DotNet Command (.NET Core CLI)
+- Net Core 3.1.3
+- DotNet Command (.NET Core CLI)
 
 #### Create Project
 
-* Execute: [source code path]>dotnet new webapi -n GraphQLNetCore --auth none
+Execute
+
+ ```bash
+ [source code path]
+ > dotnet new webapi -n GraphQLNetCore --auth none
+ ```
 
 #### Add Dependencies
 
-* Execute: [csproj's path created above]>
-    dotnet add package GraphQL -v 2.4.0
-    dotnet add package Microsoft.EntityFrameworkCore -v 3.1.3
-    dotnet add package Microsoft.EntityFrameworkCore.InMemory -v 3.1.3
-    dotnet add package GraphQL.Server.Ui.Playground -v 3.4.0
+Execute
+
+```bash
+[csproj's path created above]
+> dotnet add package GraphQL -v 2.4.0
+> dotnet add package Microsoft.EntityFrameworkCore -v 3.1.3
+> dotnet add package Microsoft.EntityFrameworkCore.InMemory -v 3.1.3
+> dotnet add package GraphQL.Server.Ui.Playground -v 3.4.0
+```
 
 #### Add Run Profile by edit [.\Property\launchSettings.json] file
 
-* Open IDE (VS 2019 ir VS Code) to add new item to collection profile:
-    "Playground": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "ui/playground",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:59370/"
-    }
+Open IDE (VS 2019 ir VS Code) to add new item to collection profile:
+
+```json
+"Playground": {
+  "commandName": "Project",
+  "launchBrowser": true,
+  "launchUrl": "ui/playground",
+  "environmentVariables": {
+    "ASPNETCORE_ENVIRONMENT": "Development"
+  },
+  "applicationUrl": "http://localhost:59370/"
+}
+ ```
 
 #### Add Run Profile by edit [.\appSettings.json] file
 
-* Open IDE (VS 2019 ir VS Code) to add new entry:
-  "GraphQLPath": "/graphql"
+- Open IDE (VS 2019 ir VS Code) to add new entry:
+  `"GraphQLPath": "/graphql"`
 
 ## Run Application
 
@@ -56,5 +68,5 @@ The VS is an excellent for run the playground.
 
 ## Learning Resources
 
-* [GrapQL official documentation](https://graphql.org/learn/)
-* [graphql-Net documentation](https://graphql-dotnet.github.io/docs/getting-started/introduction/)
+- [GraphQL official documentation](https://graphql.org/learn/)
+- [graphql-Net documentation](https://graphql-dotnet.github.io/docs/getting-started/introduction/)
