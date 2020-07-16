@@ -12,15 +12,15 @@ If you're new to GraphQL you might find this section very surprising —but beli
 
 ### TL;DR
 
-1. [**One Graph** to rule them all.](#1-one-graph-to-rule-the-all-the-spec)  
+1. [**One Graph** to rule them all.](#1-one-graph-to-rule-the-all--the-spec)  
 _The spec. is the spec._
-1. [**One Place** to find them all.](#2-one-place-to-find-them-all-200-ok-error)  
+2. [**One Place** to find them all.](#2-one-place-to-find-them-all--200-ok--error)  
 _`200 OK` & `error`_
-3. [**One Object** to bring them all.](#3-one-object-to-bring-them-all-data-error-are-siblings)  
+3. [**One Object** to bring them all.](#3-one-object-to-bring-them-all--data--error-are-siblings)  
 _`{ "error": {...}, "data": {...}}`_
-4. [and in your mind **bind them**](#4-and-in-your-mind-bind-them-errors-as-unrequested-results)  
+4. [and in your mind **bind them**](#4-and-in-your-mind-bind-them--errors-as-unrequested-results)  
 _"errors" as "unrequested results"_
-5. [in the land of the **runtime** where the **implementation** lies.](#5-in-the-land-of-the-runtime-where-the-implementation-lies-the-runtime-handles-the-rest)  
+5. [in the land of the **runtime** where the **implementation** lies.](#5-in-the-land-of-the-runtime-where-the-implementation-lies--the-runtime-handles-the-rest)  
 _The runtime handles the rest._
 
 ### 1. One Graph to rule the all — The Spec.
@@ -257,21 +257,116 @@ Everything that exceeds what GraphQL defines in the spec. will be handled by the
 
 ## Exercise
 
-For a given datasource ([abstracted as json here](datasource/data.json)) containing `n` rows of `skills` and `n` rows of `persons` we provided a sample implementation of a GraphQL server for each technology containing:
+Until now, we didn't care about several aspects outside of GraphQL's plate —like data consistency. An exaple?
 
-- a server app
-- a schema
-- a resolver map
-- an entity model
-- a db abstraction
+If you run the following mutation:
 
-The code contains the solution for previous exercises so you can have a starting point example.
+```graphql
+mutation createSkill($name: String!, $parent: ID) {
+  createSkill(input: { name: $name, parent: $parent }) {
+    id
+    name
+    parent {
+      name
+    }
+  }
+}
+```
+
+with the following variables:
+
+```json
+{
+  "name": "BLAH",
+  "parent": 8000
+}
+```
+
+and there's no record with `ID` 8000, you may have different outcomes.  
+Here some of them:
+
+1. before/during insertion
+  a. the persistence layer **complains** and returns an error
+  b. the persistence layer **doesn't complain** but you do by checking it imperatively
+  c. the insertion's performed "correctly" by silently ignoring the inconsistency
+2. during query —after insertion—
+  a. you complain about the missing record
+  b. you silently ignore the inconsistency
+
+If we take 1.c and 2.b together with the current schema
+
+```graphql
+# INPUTS
+
+input InputSkill {
+  id: ID
+  name: String
+}
+
+input InputSkillCreate {
+  name: String!
+  parent: ID
+}
+
+# OBJECT TYPES
+
+type Skill {
+  id: ID
+  parent: Skill
+  name: String!
+  now: String! @deprecated(reason: "This is just an example of a virtual field.")
+}
+
+# ROOT OPERATIONS
+
+extend type Query {
+  randomSkill: Skill!
+  skill (input: InputSkill): Skill
+  skills (input: InputSkill): [Skill!]
+}
+
+extend type Mutation {
+  createSkill (input: InputSkillCreate): Skill!
+}
+```
+
+you'll obtain this response:
+
+```json
+{
+  "data": {
+    "createSkill": {
+      "id": "<WHATEVER THE NEW ID IS>",
+      "name": "BLAH",
+      "parent": null
+    }
+  }
+}
+```
+
+The invalid parent id was persisted —or not, GraphQL doesn't care— and the parent's record couldn't be retrieved during the subsequent query, but neither an error was thrown nor an invalid type was provided —since `parent` is nullable— and therefore the `data` node came along with no `error` sibling.
+
+- Is this an error?
+- who should take the responsibility for the inconsistency?
+- when, where, how should we handle this situation?
+
+Clearly the first one is an easy one to answer, OF COURSE IT IS! but, what about the rest? Well, that will depend on many factors but they're all related to engineering practices and not to GraphQL strictly speaking.
 
 ### Exercise requirements
 
-#### Schema
+All the mutations provided on the previous days intentionally LACK of this kind of verification.
+Since this practice hasn't "A RIGHT SOLUTION", we propose you to —given the specific technology you're working with, and your criteria– explore, propose and implement 3 solutions.
 
-#### Operations list
+1. A defensive one (must fail BEFORE insertion)
+2. A reactive one (must fail DURING insertion)
+3. An informative one (must include the error DURING QUERY)
+
+Then take notes regarding the pros and cons of each approach and share it with your team mates.
+
+> IMPORTANT:
+> On the learning resources section there are several incredibly useful videos and links; take a look at them before putting your hands on the exercise.
+>
+> **Adding new types for this exercise is allowed but changing the current types is not.**
 
 #### Technologies
 
