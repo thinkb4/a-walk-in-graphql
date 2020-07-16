@@ -355,7 +355,7 @@ Clearly the first one is an easy one to answer, OF COURSE IT IS! but, what about
 ### Exercise requirements
 
 All the mutations provided on the previous days intentionally LACK of this kind of verification.
-Since this practice hasn't "A RIGHT SOLUTION", we propose you to —given the specific technology you're working with, and your criteria– explore, propose and implement 3 solutions.
+Since this practice hasn't "A RIGHT SOLUTION", we propose you to review the current code and —*given the specific technology you're working with, and your criteria*— explore, propose and implement 3 solutions.
 
 1. A defensive one (must fail BEFORE insertion)
 2. A reactive one (must fail DURING insertion)
