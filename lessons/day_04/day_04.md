@@ -9,7 +9,7 @@
 ## Mutation
 
 What is `CRUD` without `CUD` huh?!!
-In a REST-full API you have specific HTTP Verbs (like `PUT`) to create and/or update a resource, in GraphQL, strictly talking, you don't. Queries and Mutations are more similar to `POST` and `GET` in the aspect that nothing stops you from producing data side-effects through a `query` or a `mutation` even though they are, respectively, designed to have significant differences on their behavior.
+In a REST-full API you have specific HTTP Verbs (like `PUT`) to create and/or update a resource, in GraphQL —strictly talking— you don't. Queries and Mutations are more similar to `POST` and `GET` in the aspect that nothing stops you from producing data side-effects through a `query` or a `mutation` even though they are —respectively— designed to have significant differences on their behavior.
 
 Let's compare them.
 
@@ -63,7 +63,7 @@ A valid GraphQL executor can resolve the query in whatever order it considers op
 - Run ExecuteField() for `buckLanders` or `shireLanders` normally, which during CompleteValue() will execute the `{ id name }` sub‐selection set normally.
 - Run ExecuteField() for the remaining field (`buckLanders` or `shireLanders`), which during CompleteValue() will execute the `{ id name }` sub‐selection set normally.
 
-Even though the execution order cannot be determined a priori, the response can, and it'll reflect the lexical order of the query (as shown below). This response will be returned once all operations are completed.
+Even though the execution order cannot be determined a priori, the response can be, and it'll reflect the lexical order of the query (as shown below). This response will be returned once all operations are completed.
 
 ```json
 {
@@ -183,7 +183,7 @@ A correct executor must generate the following result for that selection set:
 }
 ```
 
-Obviously the execution order is critical even in such a silly example. All **ShireLanders** where moved to **Buckland** first, then all **BuckLanders** were moved to **The Shire** and they had one of beer each at the Green Dragon back and forth. If the execution order wasn't predictable and respected, the owner wouldn't know beforehand if the minimum available stock should be 11 or 10 for this operation but that's another story ... is it? ... nope, that's exactly the point.
+Obviously the execution order is critical even in such a silly example. All **ShireLanders** where moved to **Buckland** first, then all **BuckLanders** were moved to **The Shire** and they had one beer each at the Green Dragon back and forth. If the execution order wasn't predictable and respected, the owner wouldn't know beforehand if the minimum available stock should be 11 or 10 for this operation, but that's another story ... is it? ... nope, that's exactly the point.
 
 So far so good? Now, if you were attentive you might have noticed the following:
 
@@ -295,8 +295,8 @@ mutation createPerson(
 
 **NOTES:**
 
-1. There are many topics around mutation bests practices, optimizations, "do's and don'ts"; some are excellent, all of them way beyond the scope of this stage of the course (we might get there), some super detailed and precise, some fuzzy or inaccurate. Usually the rule of thumb for finding that kind of info is **"first the authors, then the SMEs (subject matter expert), then the official community, then the rest"**, e.g. Apollo has a huge community and a YouTube channel where actual Apollo engineers and even the creators of GraphQL, like Lee Byron, do conferences and share tons of invaluable insights related to the technology itself and the engineering decisions you'll have to make on top and under GraphQL's layer.
-2. Whenever you struggle finding the root cause of a problem whilst working with GraphQL step aside and make you this question:  « *Is this a GraphQL problem?* » MOST of the time the answer is NO, it's about engineering and probably related to a non-graph mental state (you might be still thinking it in REST)
+1. There are many topics around mutation bests practices, optimizations, "do's and don'ts"; some are excellent, all of them way beyond the scope of this stage of the course (we might get there), some super detailed and precise, some fuzzy or inaccurate. Usually the rule of thumb for finding this kind of info is **"first the authors, then the SMEs (subject matter expert), then the official community, then the rest"**, e.g. Apollo has a huge community and a YouTube channel where actual Apollo engineers —and even the creators of GraphQL, like Lee Byron— do conferences and share tons of invaluable insights related to the technology itself and the engineering decisions you'll have to make on top and under GraphQL's layer.
+2. Whenever you struggle finding the root cause of a problem whilst working with GraphQL step aside and ask you this question:  « *Is this a GraphQL problem?* » MOST of the time the answer is NO, it's about engineering and probably related to a non-graph state of mind; you might be still thinking in REST.
 
 #### Technologies
 

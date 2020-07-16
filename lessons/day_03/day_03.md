@@ -9,7 +9,7 @@
 
 ## Input Object
 
-Simple operation arguments are relatively simple to define and control and scale as we saw on [Day 02](../day_02/day_02.md#arguments) but what if we need to pass along more than a simple Scalar?
+Simple operation arguments are relatively easy to define and control and scale as we saw on [Day 02](../day_02/day_02.md#arguments) but what if we need to pass along more than a simple Scalar?
 
 What if we need to:
 
@@ -44,7 +44,7 @@ type Query {
 }
 ```
 
-**(⊙＿⊙')**  that's absurd!! And we're talking about 14 lines of type definitions!!! Can you imagine scale and maintain this on a real world application?
+**(⊙＿⊙')**  that's absurd!! And we're talking about 14 lines of type definitions!!! Can you imagine scaling and maintaining this on a real world application?
 
 This is one of the cases where Input Object Type shines.
 
@@ -133,7 +133,7 @@ and here the response
 
 ### Fields validation
 
-If you try to use an unknown field for the Input Object you'll have an error from the server (and a working from your preferred dev tool if you have one)
+If you try to use an unknown field for the Input Object you'll have an error from the server (and a warning from your preferred dev tool if you have one)
 
 ```graphql
 query {
@@ -163,7 +163,7 @@ query {
 }
 ```
 
-And, as any type validation, the server will cry if a field value doesn't match with the defined type.
+And —as any type validation— the server will cry if a field value doesn't match the defined type.
 
 ### Non-nullable fields
 
@@ -177,7 +177,7 @@ input InputCharacter {
 }
 ```
 
-but it'll make it mandatory on every place you use it as input, otherwise it'll thrown an error `"Field InputCharacter.skill of required type String! was not provided."` ...  **Use it wisely**
+but it'll make it mandatory on every place you use it as input, otherwise it'll throw an error like this: `"Field InputCharacter.skill of required type String! was not provided."` ...  **Use it wisely**
 
 ### Extending Input Objects?
 
@@ -215,7 +215,7 @@ Because "*Object, Interface, and Union types can only be used as output types.*"
 
 ### A note on reusing Input Objects
 
-Input Objects are perfect for reuse, but it's in your hands to determinate if, when and how to reuse them. It's perfectly fine to define an Input Object without reusing it!!
+Input Objects are perfect for reuse, but it's in your hands to determine "if, when and how" to reuse them. It's perfectly fine to define an Input Object without reusing it!!
 
 - Operations of the same type may evolve differently, reusing the same input might become a stick in the wheel.
 - Avoid reusing the same Input Object for different operation types (query, mutation). They're likely to have different requirements for non-nullable fields
@@ -242,7 +242,7 @@ enum Kind {
 
 ```
 
-On the [sample query defined here](#sample-query-with-input-object) we could pass any arbitrary value to the `kind` field (e.g `input: { kind: "whatever", homeland: "The Shire", skill: "the ringy thing" }`) without problems, the query can be performed and no errors will be thrown, probably returning no record. But, in the following example, we'll add an enum definition forcing the value to be one of the set (or null in this case) and throw an error if it's not.
+On the [sample query defined here](#sample-query-with-input-object) we could pass any arbitrary value to the `kind` field (e.g `input: { kind: "whatever", homeland: "The Shire", skill: "the ringy thing" }`) without problems, the query can be performed and no errors will be thrown, probably returning no records. But, in the following example, we'll add an enum definition forcing the value to be one of the set (or null in this case) and throw an error if it's not.
 
 ```graphql
 input InputCharacter {
@@ -283,11 +283,11 @@ query {
 }
 ```
 
-A secondary, but not less important advantage of enums is that now the value is not only validated against your typedef and it's auto-completed in your preferred dev tools, but it's also **abstracted**!! Means the client is no longer dealing with actual values but with abstracted representations which is more secure and scalable.
+A secondary —but not less important— advantage of enums is that now the value is not only validated against your typedef and it's auto-completed in your preferred dev tools, but it's also **abstracted**! Means the client is no longer dealing with actual values but with abstracted representations which is more secure and scalable.
 
 ### Language specific support for enums and internal values
 
-The language specific implementation of enums will affect how you will have to handle the discrepancies on your side and sometimes a backend forces a different value for an enum internally than in the public API.
+The language specific implementation of enums will affect how you will have to handle the discrepancies on your side, and sometimes a backend forces a different value for an enum internally as opposite to the one in the public API.
 
 In our example we have that discrepancy because the backend representation (internal representation) of the `kind` field is `half-elven` which doesn't correspond to a valid name, so we used `HALF_ELVEN`.
 
