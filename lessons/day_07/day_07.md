@@ -257,7 +257,7 @@ Everything that exceeds what GraphQL defines in the spec. will be handled by the
 
 ## Exercise
 
-Until now, we didn't care about several aspects outside of GraphQL's plate —like data consistency. An exaple?
+Until now, we didn't care about several aspects outside of GraphQL's plate —like data consistency. An example?
 
 If you run the following mutation:
 
@@ -286,14 +286,14 @@ and there's no record with `ID` 8000, you may have different outcomes.
 Here some of them:
 
 1. before/during insertion
-  a. the persistence layer **complains** and returns an error
-  b. the persistence layer **doesn't complain** but you do by checking it imperatively
-  c. the insertion's performed "correctly" by silently ignoring the inconsistency
+   1. the persistence layer **complains** and returns an error
+   2. the persistence layer **doesn't complain** but you do by checking it imperatively
+   3. the insertion's performed "correctly" by silently ignoring the inconsistency
 2. during query —after insertion—
-  a. you complain about the missing record
-  b. you silently ignore the inconsistency
+   1. you complain about the missing record
+   2. you silently ignore the inconsistency
 
-If we take 1.c and 2.b together with the current schema
+If we take 1.3 and 2.2 together with the current schema
 
 ```graphql
 # INPUTS
@@ -354,8 +354,9 @@ Clearly the first one is an easy one to answer, OF COURSE IT IS! but, what about
 
 ### Exercise requirements
 
-All the mutations provided on the previous days intentionally LACK of this kind of verification.
-Since this practice hasn't "A RIGHT SOLUTION", we propose you to review the current code and —*given the specific technology you're working with, and your criteria*— explore, propose and implement 3 solutions.
+All the mutations provided on the previous days intentionally LACK or DIVERGE on this kind of verification depending on their specific stack.  
+
+Since this practice hasn't "A RIGHT SOLUTION", we propose you to review the current code and —*given the specific technology you're working with, and your criteria*— explore, propose and implement 3 solutions for the `createSkill` mutation —you can work on other mutations too if you want, that'll depend on your time—
 
 1. A defensive one (must fail BEFORE insertion)
 2. A reactive one (must fail DURING insertion)
