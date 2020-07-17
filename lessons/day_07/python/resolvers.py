@@ -4,7 +4,7 @@ from random import randint
 from models import Skill, Person
 from data import session
 from datetime import datetime
-import uuid
+from uuid import uuid4
 
 
 # Type definitions
@@ -36,11 +36,11 @@ def create_persons(info, input):
         skills = session.query(Skill).filter(Skill.id.in_(skill_ids)).all()
 
     new_person = Person(**input)
-    new_person.id = str(uuid.uuid4())
+    new_person.id = str(uuid4())
     new_person.friends = friends
     new_person.skills = skills
     if info.return_type.of_type.name == 'Engineer':
-        new_person.employeeId = str(uuid.uuid4())
+        new_person.employeeId = str(uuid4())
     try:
         session.add(new_person)
         session.commit()
@@ -117,7 +117,7 @@ def resolve_search(_, info, input):
 @mutation.field("createSkill")
 def resolve_create_skill(_, info, input):
     new_skill = Skill(**input)
-    new_skill.id = str(uuid.uuid4())
+    new_skill.id = str(uuid4())
     try:
         session.add(new_skill)
         session.commit()

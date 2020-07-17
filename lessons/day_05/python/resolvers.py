@@ -3,7 +3,7 @@ from random import randint
 from models import Skill, Person
 from data import session
 from datetime import datetime
-import uuid
+from uuid import uuid4
 
 
 query = QueryType()
@@ -62,7 +62,7 @@ def resolve_skills(_, info, input={}):
 @mutation.field("createSkill")
 def resolve_create_skill(_, info, input):
     skill = Skill(**input)
-    skill.id = str(uuid.uuid4())
+    skill.id = str(uuid4())
     try:
         session.add(skill)
         session.commit()
@@ -83,7 +83,7 @@ def resolve_create_person(_, info, input):
         skills = session.query(Skill).filter(Skill.id.in_(skill_ids)).all()
 
     person = Person(**input)
-    person.id = str(uuid.uuid4())
+    person.id = str(uuid4())
     person.friends = friends
     person.skills = skills
     try:
