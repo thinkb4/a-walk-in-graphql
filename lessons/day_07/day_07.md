@@ -12,11 +12,11 @@ If you're new to GraphQL you might find this section very surprising —but beli
 
 ### TL;DR
 
-1. [**One Graph** to rule them all.](#1-one-graph-to-rule-the-all--the-spec)  
+1. [**One Graph** to rule them all](#1-one-graph-to-rule-the-all--the-spec)  
 _The spec. is the spec._
-2. [**One Place** to find them all.](#2-one-place-to-find-them-all--200-ok--error)  
+2. [**One Place** to find them](#2-one-place-to-find-them--200-ok--error)  
 _`200 OK` & `error`_
-3. [**One Object** to bring them all.](#3-one-object-to-bring-them-all--data--error-are-siblings)  
+3. [**One Object** to bring them all](#3-one-object-to-bring-them-all--data--error-are-siblings)  
 _`{ "error": {...}, "data": {...}}`_
 4. [and in your mind **bind them**](#4-and-in-your-mind-bind-them--errors-as-unrequested-results)  
 _"errors" as "unrequested results"_
@@ -64,7 +64,7 @@ And in the spec. the rules are quiet consistent:
 
 If you want to see all the cases, one of the most educational ways is to browse the spec. and search for "error", you'll obtain about 170 different places related to the [type definitions](http://spec.graphql.org/June2018/#sec-Types), the [validation](http://spec.graphql.org/June2018/#sec-Validation), the [execution](http://spec.graphql.org/June2018/#sec-Execution), the [non-nullability cases](http://spec.graphql.org/June2018/#sec-Errors-and-Non-Nullability) and particularly how the [Response](http://spec.graphql.org/June2018/#sec-Response) should be provided, formatted and even [serialized](http://spec.graphql.org/June2018/#sec-Serialization-Format)!
 
-### 2. One Place to find them all — `200 OK` & `error`
+### 2. One Place to find them — `200 OK` & `error`
 
 Unless something goes really bad  with the server, you probably won't see other than a 200 OK HTTP status code.
 
