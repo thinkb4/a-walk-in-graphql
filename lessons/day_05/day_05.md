@@ -405,7 +405,7 @@ query UnionInterfaceTypes {
 }
 ```
 
-So far so go?  Let's make it a little harder.
+So far so good?  Let's make it a little harder.
 
 Ready?
 
@@ -652,7 +652,7 @@ This is a long one, keep it simple and put all your attention on the GraphQL asp
 
 - Add a `Grade` enum with some values of your choice (e.g. `TRAINEE`, `JUNIOR`, `SENIOR`)
 - Add a `Role` enum with some values of your choice (e.g. `DEVELOPER`, `SDET`, `TEAM_LEAD`)
-- Change `Person` type to an `Interface` (####)
+- Change `Person` type to an `Interface`
 - Add an `Employee` `Interface` with a non-nullable `employeeId` property of type `ID`
 - Add a `Contact` type implementing `Person` interface with no extra properties
 - Add a `Candidate` type implementing `Person` interface with 2 extra properties

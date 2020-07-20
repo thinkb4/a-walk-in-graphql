@@ -74,11 +74,11 @@ E.g. you cannot do something like `type MyType extends MyOtherType`, you just `e
 Now that we know the syntax, the rules and the cost ... gimme the benefits dude!!!!
 
 **You may say:**
-– hey! I could use `extend` instead of dealing with `interface` complexity
-– well, sort of, if you don't want the implementation contract of the interface, but maybe you didn't want an `interface` at all from the beginning.
+— hey! I could use `extend` instead of dealing with `interface` complexity  
+— well, sort of, if you don't want the implementation contract of the interface, but maybe you didn't want an `interface` at all from the beginning.
 
-– hey! I may extend the Operation Type Definitions in order to organize it more clearly on my file adding the queries, mutations and subscriptions close the related Object Types they're dealing with!
-– Now we're on the good track!!!
+— hey! I may extend the Operation Type Definitions in order to organize it more clearly on my file adding the queries, mutations and subscriptions close to the related Object Types they're dealing with!  
+— Now we're on the good track!!!
 
 Let's go back to our previous example:
 
@@ -520,7 +520,7 @@ This exercise might require additional instructions depending on the technology,
 
 #### Schema
 
-- Identify and separate the SDL document into 4 documents in a per-type bases
+- Identify and separate the SDL document into 4 documents in a per-type basis
 - Here a completely arbitrary example (you can experiment different setups if you want)
   - globalSearch.gql
   - person.gql
