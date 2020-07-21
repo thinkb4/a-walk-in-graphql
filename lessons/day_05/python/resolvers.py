@@ -3,7 +3,7 @@ from random import randint
 from models import Skill, Person
 from data import session
 from datetime import datetime
-import uuid
+from uuid import uuid4
 
 
 query = QueryType()
@@ -44,8 +44,8 @@ def resolve_person(_, info, input=None):
 
 
 @query.field("persons")
-def resolve_persons(_, info, input=None):
-    return session.query(Person).filter_by(**input).all() if input else session.query(Person).all()
+def resolve_persons(_, info, input={}):
+    return session.query(Person).filter_by(**input).all()
 
 
 @query.field("skill")
@@ -54,15 +54,15 @@ def resolve_skill(_, info, input=None):
 
 
 @query.field("skills")
-def resolve_skills(_, info, input=None):
-    return session.query(Skill).filter_by(**input).all() if input else session.query(Skill).all()
+def resolve_skills(_, info, input={}):
+    return session.query(Skill).filter_by(**input).all()
 
 
 # Mutations
 @mutation.field("createSkill")
 def resolve_create_skill(_, info, input):
     skill = Skill(**input)
-    skill.id = str(uuid.uuid4())
+    skill.id = str(uuid4())
     try:
         session.add(skill)
         session.commit()
@@ -83,11 +83,9 @@ def resolve_create_person(_, info, input):
         skills = session.query(Skill).filter(Skill.id.in_(skill_ids)).all()
 
     person = Person(**input)
-    person.id = str(uuid.uuid4())
-    for friend in friends:
-        person.friends.append(friend)
-    for skill in skills:
-        person.skills.append(skill)
+    person.id = str(uuid4())
+    person.friends = friends
+    person.skills = skills
     try:
         session.add(person)
         session.commit()
@@ -113,13 +111,13 @@ def resolve_full_name(obj, info):
 
 
 @person.field("friends")
-def resolve_friends(obj, info, input=None):
-    return obj.friends.filter_by(**input).all() if input else obj.friends
+def resolve_friends(obj, info, input={}):
+    return obj.friends.filter_by(**input).all()
 
 
 @person.field("skills")
-def resolve_person_skills(obj, info, input=None):
-    return obj.skills.filter_by(**input).all() if input else obj.skills
+def resolve_person_skills(obj, info, input={}):
+    return obj.skills.filter_by(**input).all()
 
 
 @person.field("favSkill")

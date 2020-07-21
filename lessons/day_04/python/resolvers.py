@@ -42,8 +42,8 @@ def resolve_person(_, info, input=None):
 
 
 @query.field("persons")
-def resolve_persons(_, info, input=None):
-    return session.query(Person).filter_by(**input).all() if input else session.query(Person).all()
+def resolve_persons(_, info, input={}):
+    return session.query(Person).filter_by(**input).all()
 
 
 @query.field("skill")
@@ -52,8 +52,8 @@ def resolve_skill(_, info, input=None):
 
 
 @query.field("skills")
-def resolve_skills(_, info, input=None):
-    return session.query(Skill).filter_by(**input).all() if input else session.query(Skill).all()
+def resolve_skills(_, info, input={}):
+    return session.query(Skill).filter_by(**input).all()
 
 
 # Field level resolvers
@@ -73,13 +73,13 @@ def resolve_full_name(obj, info):
 
 
 @person.field("friends")
-def resolve_friends(obj, info, input=None):
-    return obj.friends.filter_by(**input).all() if input else obj.friends
+def resolve_friends(obj, info, input={}):
+    return obj.friends.filter_by(**input).all()
 
 
 @person.field("skills")
-def resolve_person_skills(obj, info, input=None):
-    return obj.skills.filter_by(**input).all() if input else obj.skills
+def resolve_person_skills(obj, info, input={}):
+    return obj.skills.filter_by(**input).all()
 
 
 @person.field("favSkill")

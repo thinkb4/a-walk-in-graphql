@@ -31,10 +31,8 @@ if not engine.dialect.has_table(engine.connect(), "skills"):
             skills = session.query(Skill).filter(Skill.id.in_(skill_ids)).all()
 
         new_person = Person(**person)
-        for friend in friends:
-            new_person.friends.append(friend)
-        for skill in skills:
-            new_person.skills.append(skill)
+        new_person.friends = friends
+        new_person.skills = skills
         try:
             session.add(new_person)
             session.commit()
