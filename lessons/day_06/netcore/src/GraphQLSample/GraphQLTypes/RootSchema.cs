@@ -1,5 +1,6 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+using GraphQLNetCore.GraphQLTypes.Output;
 
 namespace GraphQLNetCore.GraphQLTypes
 {
@@ -9,6 +10,8 @@ namespace GraphQLNetCore.GraphQLTypes
       {
          Query = query;
          Mutation = mutation;
+
+         RegisterType<ContactType>();
       }
    }
 }

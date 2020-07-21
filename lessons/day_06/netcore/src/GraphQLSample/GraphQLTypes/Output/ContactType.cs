@@ -6,11 +6,14 @@ using GraphQLNetCore.Repositories;
 
 namespace GraphQLNetCore.GraphQLTypes.Output
 {
-   public class PersonType : ObjectGraphType<Person>
+   public class ContactType : ObjectGraphType<Contact>
    {
-      public PersonType(IPersonRepository personRepo, ISkillRepository skillRepo)
+      public ContactType(IPersonRepository personRepo, ISkillRepository skillRepo)
       {
-         Name = nameof(Person);
+         Interface<PersonInterface>();
+         IsTypeOf = obj => obj is Contact;
+
+         Name = nameof(Contact);
          Field(_ => _.Age);
          Field(_ => _.Email);
          Field(_ => _.Id, type: typeof(IdGraphType));
@@ -29,7 +32,7 @@ namespace GraphQLNetCore.GraphQLTypes.Output
                var input = context.GetArgument<InputSkill>("input");
                return personRepo.GetSkills(context.Source.Id, input);
             });
-         Field<ListGraphType<NonNullGraphType<PersonType>>>(
+         Field<ListGraphType<NonNullGraphType<PersonInterface>>>(
             nameof(Person.Friends),
             arguments: new QueryArguments
             {

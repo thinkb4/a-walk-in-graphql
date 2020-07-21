@@ -17,7 +17,7 @@ namespace GraphQLNetCore.Models.Input
 
       internal Person ToPerson()
       {
-         return new Person() {
+         return new Contact() {
             Age = Age ?? 0,
             Email = Email ?? string.Empty,
             EyeColor = EyeColor ?? Enums.EyeColor.BLUE,

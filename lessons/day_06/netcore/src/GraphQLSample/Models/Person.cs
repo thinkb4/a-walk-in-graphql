@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GraphQLNetCore.Models
 {
-   public class Person
+   public abstract class Person
    {
       public int Id { get; set; }
       public int Age { get; set; }

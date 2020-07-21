@@ -20,7 +20,7 @@ namespace GraphQLNetCore.Models.Data
          if (data == default)
             return default;
 
-         return new Person()
+         return new Contact()
          {
             Id = int.Parse(data.id),
             Age = data.age,

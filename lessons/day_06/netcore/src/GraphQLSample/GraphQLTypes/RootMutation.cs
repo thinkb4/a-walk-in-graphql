@@ -27,7 +27,7 @@ namespace GraphQLNetCore.GraphQLTypes
                return _skillRepository.CreateSkill(input);
             });
 
-         Field<NonNullGraphType<PersonType>>("createPerson",
+         Field<NonNullGraphType<PersonInterface>>("createPerson",
             arguments: new QueryArguments
             {
                new  QueryArgument<NonNullGraphType<InputPersonCreateType>> {  Name = "input" }

@@ -40,7 +40,7 @@ namespace GraphQLNetCore.GraphQLTypes
                 return _skillRepository.Get(input);
              });
 
-         Field<ListGraphType<NonNullGraphType<PersonType>>>("persons",
+         Field<ListGraphType<NonNullGraphType<PersonInterface>>>("persons",
             arguments: new QueryArguments
             {
                new  QueryArgument<InputPersonType> {  Name = "input" }
@@ -51,9 +51,9 @@ namespace GraphQLNetCore.GraphQLTypes
                return _personRepository.GetAll(input);
             });
 
-         Field<NonNullGraphType<PersonType>>("randomPerson", resolve: context => _personRepository.GetRandom());
+         Field<NonNullGraphType<PersonInterface>>("randomPerson", resolve: context => _personRepository.GetRandom());
 
-         Field<PersonType>("person",
+         Field<PersonInterface>("person",
              arguments: new QueryArguments
              {
                 new  QueryArgument<InputPersonType> {  Name = "input" }
