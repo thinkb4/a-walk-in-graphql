@@ -49,6 +49,7 @@ namespace GraphQLNetCore
          services.AddSingleton<EmployeeInterface>();
          services.AddSingleton<ContactType>();
          services.AddSingleton<CandidateType>();
+         services.AddSingleton<EngineerType>();
          services.AddSingleton<InputPersonType>();
          services.AddSingleton<InputPersonCreateType>();
          services.AddSingleton<EyeColorType>();

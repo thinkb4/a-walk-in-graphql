@@ -13,6 +13,7 @@ namespace GraphQLNetCore.GraphQLTypes
 
          RegisterType<ContactType>();
          RegisterType<CandidateType>();
+         RegisterType<EngineerType>();
       }
    }
 }
