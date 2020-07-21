@@ -1,5 +1,6 @@
 ﻿using GraphQL.Types;
-using GraphQLNetCore.Models;
+using GraphQLNetCore.GraphQLTypes.Enums;
+using GraphQLNetCore.Models.Input;
 
 namespace GraphQLNetCore.GraphQLTypes
 {
@@ -7,11 +8,11 @@ namespace GraphQLNetCore.GraphQLTypes
    {
       public InputPersonType()
       {
-         Name = "InputPerson";
-         Field(_ => _.id, nullable: true, type: typeof(IdGraphType));
-         Field(_ => _.age, nullable: true);
-         Field(_ => _.eyeColor, nullable: true, type: typeof(EyeColorType));
-         Field(_ => _.favSkill, nullable: true);
+         Name = nameof(InputPerson);
+         Field(_ => _.Id, nullable: true, type: typeof(IdGraphType));
+         Field(_ => _.Age, nullable: true);
+         Field(_ => _.EyeColor, nullable: true, type: typeof(EyeColorType));
+         Field(_ => _.FavSkill, nullable: true);
       }
    }
 }

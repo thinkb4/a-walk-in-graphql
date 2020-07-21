@@ -1,4 +1,5 @@
 ﻿using GraphQLNetCore.Models;
+using GraphQLNetCore.Models.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.IO;
@@ -29,10 +30,10 @@ namespace GraphQLNetCore.Data
                 foreach (var person in fileData.persons)
                 {
                     var entity = PersonData.ToEntity(person);
-                    entity.skills = Skill.Where(s => person.skills.Contains(s.id.ToString())).ToList();
+                    entity.Skills = Skill.Where(s => person.skills.Contains(s.Id.ToString())).ToList();
                     if (int.TryParse(person.favSkill, out int parsedValue))
                     {
-                        entity.favSkill = Skill.Find(parsedValue);
+                        entity.FavSkill = Skill.Find(parsedValue);
                     }
                     Person.Add(entity);
                 }
@@ -42,7 +43,7 @@ namespace GraphQLNetCore.Data
                 foreach (var person in fileData.persons)
                 {
                     var entity = Person.Find(int.Parse(person.id));
-                    entity.friends = Person.Where(s => person.friends.Contains(s.id.ToString())).ToList();
+                    entity.Friends = Person.Where(s => person.friends.Contains(s.Id.ToString())).ToList();
                 }
 
                 SaveChanges();

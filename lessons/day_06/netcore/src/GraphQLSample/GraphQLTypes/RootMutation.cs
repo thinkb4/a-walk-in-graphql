@@ -1,5 +1,6 @@
 ﻿using GraphQL.Types;
-using GraphQLNetCore.Models;
+using GraphQLNetCore.GraphQLTypes.Output;
+using GraphQLNetCore.Models.Input;
 using GraphQLNetCore.Repositories;
 
 namespace GraphQLNetCore.GraphQLTypes

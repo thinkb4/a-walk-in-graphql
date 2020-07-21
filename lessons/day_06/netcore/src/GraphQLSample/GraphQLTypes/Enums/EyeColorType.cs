@@ -1,13 +1,13 @@
 ﻿using GraphQL.Types;
-using GraphQLNetCore.Models;
+using GraphQLNetCore.Models.Enums;
 
-namespace GraphQLNetCore.GraphQLTypes
+namespace GraphQLNetCore.GraphQLTypes.Enums
 {
    public class EyeColorType : EnumerationGraphType<EyeColor>
    {
       public EyeColorType()
       {
-         Name = "EyeColor";
+         Name = nameof(EyeColor);
       }
    }
 }

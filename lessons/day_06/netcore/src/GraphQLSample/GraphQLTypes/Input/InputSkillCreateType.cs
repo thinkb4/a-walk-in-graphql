@@ -1,5 +1,5 @@
 ﻿using GraphQL.Types;
-using GraphQLNetCore.Models;
+using GraphQLNetCore.Models.Input;
 
 namespace GraphQLNetCore.GraphQLTypes
 {
@@ -7,9 +7,9 @@ namespace GraphQLNetCore.GraphQLTypes
    {
       public InputSkillCreateType()
       {
-         Name = "InputSkillCreate";
-         Field(_ => _.name);
-         Field(_ => _.parent, nullable: true, type: typeof(IdGraphType));
+         Name = nameof(InputSkillCreate);
+         Field(_ => _.Name);
+         Field(_ => _.Parent, nullable: true, type: typeof(IdGraphType));
       }
    }
 }

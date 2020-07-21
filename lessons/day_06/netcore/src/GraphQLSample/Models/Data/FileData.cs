@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GraphQLNetCore.Models
+namespace GraphQLNetCore.Models.Data
 {
     public class FileData
     {

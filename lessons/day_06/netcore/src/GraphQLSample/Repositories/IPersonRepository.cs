@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GraphQLNetCore.Models;
+using GraphQLNetCore.Models.Input;
 
 namespace GraphQLNetCore.Repositories
 {

@@ -3,6 +3,8 @@ using GraphQL.Http;
 using GraphQL.Types;
 using GraphQLNetCore.Data;
 using GraphQLNetCore.GraphQLTypes;
+using GraphQLNetCore.GraphQLTypes.Enums;
+using GraphQLNetCore.GraphQLTypes.Output;
 using GraphQLNetCore.Middleware;
 using GraphQLNetCore.Repositories;
 using Microsoft.AspNetCore.Builder;
