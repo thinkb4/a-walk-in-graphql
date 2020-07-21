@@ -12,6 +12,7 @@ namespace GraphQLNetCore.GraphQLTypes
          Mutation = mutation;
 
          RegisterType<ContactType>();
+         RegisterType<CandidateType>();
       }
    }
 }
