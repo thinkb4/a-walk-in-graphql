@@ -2,9 +2,11 @@ package com.example.DemoGraphQL.resolver;
 
 import com.example.DemoGraphQL.input.InputPerson;
 import com.example.DemoGraphQL.input.InputSkill;
+import com.example.DemoGraphQL.model.Engineer;
 import com.example.DemoGraphQL.model.Person;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.PersonService;
+import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.Optional;
  * Field-level resolver for Person class
  */
 @Component
-public abstract class PersonResolver<T extends Person> {
+public abstract class PersonResolver<T extends Person> implements GraphQLResolver<T> {
 
     private final PersonService personService;
 
