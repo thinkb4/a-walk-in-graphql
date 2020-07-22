@@ -19,6 +19,8 @@ namespace GraphQLNetCore.Data
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
          modelBuilder.Entity<Contact>();
+         modelBuilder.Entity<Candidate>();
+         modelBuilder.Entity<Engineer>();
          base.OnModelCreating(modelBuilder);
       }
 
