@@ -50,10 +50,12 @@ namespace GraphQLNetCore
          services.AddSingleton<ContactType>();
          services.AddSingleton<CandidateType>();
          services.AddSingleton<EngineerType>();
+         services.AddSingleton<GlobalSearchType>();
          services.AddSingleton<InputPersonType>();
          services.AddSingleton<InputPersonCreateType>();
          services.AddSingleton<InputCandidateCreateType>();
          services.AddSingleton<InputEngineerCreateType>();
+         services.AddSingleton<InputGlobalSearchType>();
          services.AddSingleton<EyeColorType>();
          services.AddSingleton<GradeType>();
          services.AddSingleton<RoleType>();

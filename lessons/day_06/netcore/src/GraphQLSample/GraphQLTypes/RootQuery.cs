@@ -2,6 +2,7 @@
 using GraphQLNetCore.GraphQLTypes.Output;
 using GraphQLNetCore.Models.Input;
 using GraphQLNetCore.Repositories;
+using System.Linq;
 
 namespace GraphQLNetCore.GraphQLTypes
 {
@@ -63,6 +64,19 @@ namespace GraphQLNetCore.GraphQLTypes
                 var input = context.GetArgument<InputPerson>("input");
                 return _personRepository.Get(input);
              });
+
+         Field<ListGraphType<NonNullGraphType<GlobalSearchType>>>("search",
+            arguments: new QueryArguments
+            {
+                new  QueryArgument<InputGlobalSearchType> {  Name = "input" }
+            },
+            resolve: context =>
+            {
+               var input = context.GetArgument<InputGlobalSearch>("input");
+               var skills = _skillRepository.GetAll(new InputSkill { Name = input.Name });
+               var persons = _personRepository.GetAll(new InputPerson { Name = input.Name });
+               return persons.AsEnumerable<object>().Union(skills);
+            });
       }
    }
 }
