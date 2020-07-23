@@ -2,15 +2,15 @@
 {
    public class InputSkillCreate
    {
-      public string name { get; set; }
+      public string Name { get; set; }
 
-      public int? parent { get; set; }
+      public int? Parent { get; set; }
 
       internal Skill ToSkill()
       {
          return new Skill { 
-            name = name,
-            parentId = parent
+            Name = Name,
+            ParentId = Parent
          };
       }
    }

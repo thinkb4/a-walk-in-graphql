@@ -5,24 +5,24 @@ namespace GraphQLNetCore.Models
 {
    public class InputPersonCreate
    {
-      public string name { get; set; }
-      public string surname { get; set; }
-      public string email { get; set; }
-      public int? age { get; set; }
-      public EyeColor? eyeColor { get; set; }
-      public List<int> friends { get; set; }
-      public List<int> skills { get; set; }
-      public int? favSkill { get; set; }
+      public string Name { get; set; }
+      public string Surname { get; set; }
+      public string Email { get; set; }
+      public int? Age { get; set; }
+      public EyeColor? EyeColor { get; set; }
+      public List<int> Friends { get; set; }
+      public List<int> Skills { get; set; }
+      public int? FavSkill { get; set; }
 
       internal Person ToPerson()
       {
          return new Person() {
-            age = age ?? 0,
-            email = email ?? String.Empty,
-            eyeColor = eyeColor ?? EyeColor.BLUE,
-            favSkillId = favSkill,
-            name = name,
-            surname = surname ?? String.Empty
+            Age = Age ?? 0,
+            Email = Email ?? string.Empty,
+            EyeColor = EyeColor ?? Models.EyeColor.BLUE,
+            FavSkillId = FavSkill,
+            Name = Name,
+            Surname = Surname ?? string.Empty
          };
       }
    }
