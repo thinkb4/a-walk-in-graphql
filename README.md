@@ -17,8 +17,8 @@ Hopefully your walk will be much easier than ours!
   - Python exercise contributor and reviewer
 - Franco Gribaudo - [@fgriba](https://github.com/fgriba)
   - Java exercise contributor and reviewer
-- Cristian Buffa - [@cristianbuffa](https://github.com/cristianbuffa)
-  - NetCore exercise contributor and reviewer
+- Cristian Buffa - [@cristianbuffa](https://github.com/cristianbuffa) & José Ignacio Aguilera - [@jiaguilera](https://github.com/jiaguilera)
+  - NetCore exercise contributors and reviewers
 - Javier Valderrama - [@Jaxolotl](https://github.com/Jaxolotl)
   - Course writer, JavaScript exercise contributor and reviewer
 

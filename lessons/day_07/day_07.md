@@ -6,24 +6,22 @@
 - Exercise
 - Learning resources
 
-## Error
-
 If you're new to GraphQL you might find this section very surprising —but believe us— you'll need to re-think **"what an error is"** to comfortably navigate GraphQL's waters.
 
 ### TL;DR
 
-1. [**One Graph** to rule them all](#1-one-graph-to-rule-the-all--the-spec)  
+1. [**One Graph** to rule them all](#1-one-graph-to-rule-the-all--them-spec)  
 _The spec. is the spec._
-2. [**One Place** to find them](#2-one-place-to-find-them--200-ok--error)  
-_`200 OK` & `error`_
-3. [**One Object** to bring them all](#3-one-object-to-bring-them-all--data--error-are-siblings)  
-_`{ "error": {...}, "data": {...}}`_
+2. [**One Place** to find them](#2-one-place-to-find-them--200-ok--errors)  
+_`200 OK` & `errors`_
+3. [**One Object** to bring them all](#3-one-object-to-bring-them-all--data--errors-are-siblings)  
+_`{ "errors": [...], "data": {...}}`_
 4. [and in your mind **bind them**](#4-and-in-your-mind-bind-them--errors-as-unrequested-results)  
 _"errors" as "unrequested results"_
 5. [in the land of the **runtime** where the **implementation** lies.](#5-in-the-land-of-the-runtime-where-the-implementation-lies--the-runtime-handles-the-rest)  
 _The runtime handles the rest._
 
-### 1. One Graph to rule the all — The Spec.
+### 1. One Graph to rule them all — The Spec.
 
 As GraphQL is —technically— something "in between", a **flaw** may come from:
 
@@ -62,37 +60,35 @@ GraphQL will treat them all in a consistent way —as defined by the spec.— bu
 And in the spec. the rules are quiet consistent:  
 > It'll try —at any cost— to propagate the error and continue operating whenever possible.  
 
-If you want to see all the cases, one of the most educational ways is to browse the spec. and search for "error", you'll obtain about 170 different places related to the [type definitions](http://spec.graphql.org/June2018/#sec-Types), the [validation](http://spec.graphql.org/June2018/#sec-Validation), the [execution](http://spec.graphql.org/June2018/#sec-Execution), the [non-nullability cases](http://spec.graphql.org/June2018/#sec-Errors-and-Non-Nullability) and particularly how the [Response](http://spec.graphql.org/June2018/#sec-Response) should be provided, formatted and even [serialized](http://spec.graphql.org/June2018/#sec-Serialization-Format)!
+If you want to see all the cases, one of the most educational ways is to browse the spec. and search for "errors", you'll obtain about 170 different places related to the [type definitions](http://spec.graphql.org/June2018/#sec-Types), the [validation](http://spec.graphql.org/June2018/#sec-Validation), the [execution](http://spec.graphql.org/June2018/#sec-Execution), the [non-nullability cases](http://spec.graphql.org/June2018/#sec-Errors-and-Non-Nullability) and particularly how the [Response](http://spec.graphql.org/June2018/#sec-Response) should be provided, formatted and even [serialized](http://spec.graphql.org/June2018/#sec-Serialization-Format)!
 
-### 2. One Place to find them — `200 OK` & `error`
+### 2. One Place to find them — `200 OK` & `errors`
 
 Unless something goes really bad  with the server, you probably won't see other than a 200 OK HTTP status code.
 
 Do you remember, "It's Graphs **All the Way Down**" sentence?  
-If you have a reference error inside a resolver's code, your server will run perfectly until that resolver is executed, then the reference error will be thrown, but the server won't fail, it won't stop executing, it'll simply propagate the error up and up until the response is being prepared, and there, an `error` node will be added to the JSON response.
+If you have a reference error inside a resolver's code, your server will run perfectly until that resolver is executed, then the reference error will be thrown, but the server won't fail, it won't stop executing, it'll simply propagate the error up and up until the response is being prepared, and there, an `errors` node will be added to the JSON response.
 
 Shocking? (◉ω◉)
 
- The `error` node is a list of error objects containing the following structure:
+ The `errors` node is a list of error objects containing the following structure:
 
  ```json5
 
 {
-  "error" : {
-    "errors": [
-      {
-        "message": "String",
-        "locations": [{ "line": Number, "column": Number }],
-        "path":[...],
-        "extensions": {
-          "code": "String",
-          "exception": {
-            "stacktrace": [...]
-          }
+  "errors": [
+    {
+      "message": "String",
+      "locations": [{ "line": Number, "column": Number }],
+      "path":[...],
+      "extensions": {
+        "code": "String",
+        "exception": {
+          "stacktrace": [...]
         }
       }
-    ]
-  }
+    }
+  ]
 }
 
 ```
@@ -105,6 +101,7 @@ In the [GraphQL spec June 2018 - 7.1.2 Errors](http://spec.graphql.org/June2018/
 - is a non-empty list of errors
 - shouldn't be present in the response if no errors were found
 - if `data` entry is absent, then `errors` MUST be present
+- `data` and `errors` entries can **coexist** in the response
 - each **error** in the list is a **map** containing the following properties
   - `message`
     - **mandatory**
@@ -117,18 +114,39 @@ In the [GraphQL spec June 2018 - 7.1.2 Errors](http://spec.graphql.org/June2018/
   - `path`
     - **mandatory**
     - path **segments** from root to the identified field which experienced the error
-      - if a segment represent a field, it should be a string containing the field name
+      - if a segment represents a field, it should be a string containing the field name
       - if a segment represents an index of a list, it should be a 0‐indexed integer
   - `extensions`
     - **optional**
     - implementation dependent
     - unrestricted arbitrary content
-    - since **adding other entries to the error map are highly discouraged** —but not prohibited— this might be the RIGHT PLACE for engineers to add extra info whenever required
-- `data` and `errors` entries can **coexist** in the response
+    - since **adding other entries to the errors map are highly discouraged** —but not prohibited— this might be the RIGHT PLACE for engineers to add extra info whenever required **(see example below)**
 
-### 3. One Object to bring them all — `data` & `error` are siblings
+```json
+{
+  "errors": [
+    {
+      "message": "Name for character with ID 1002 could not be fetched.",
+      "locations": [ { "line": 6, "column": 7 } ],
+      "path": [ "hero", "heroFriends", 1, "name" ],
+      "extensions": {
+        "code": "CAN_NOT_FETCH_BY_ID",
+        "timestamp": "Fri Feb 9 14:33:09 UTC 2018"
+      }
+    }
+  ]
+}
+```
 
-You may have both a `data` and an `error` properties in the Response body, containing expected data as well as 1 or more errors.
+> GraphQL services may provide an additional entry to errors with key `extensions`. This entry, if set, must have a map as its value. **This entry is reserved for implementors to add additional information to errors however they see fit, and there are no additional restrictions on its contents**.
+>
+> GraphQL services should not provide any additional entries to the error format since they could conflict with additional entries that may be added in future versions of this specification.
+>
+> Source: [GraphQL spec June 2018 - Example nº187](https://spec.graphql.org/June2018/#example-fce18)
+
+### 3. One Object to bring them all — `data` & `errors` are siblings
+
+You may have both a `data` and an `errors` properties in the Response body, containing expected data as well as 1 or more errors.
 
 Going back to our characters list example, let's say the `name` property is **nullable**  for `Istary` but **non-nullable** for `Hobbit`  and one of the records has a null value; this is what we get as a response:
 
@@ -214,7 +232,7 @@ query Characters{
 
 Let's stay put for a moment and analyse what just happened above.
 
-1. One of our records doesn't respect the contract for it's type
+1. One of our records doesn't respect the contract for its type
 2. An error is added to the response describing that particular fault
 3. The execution could be performed for the rest of the records and they were added to the `data` entry as expected
 
@@ -226,10 +244,10 @@ So:
 
 ... and many other questions can derive from this behavior!  
 
-So what do we do about this?  
+So, what do we do about this?  
 There's no "the right answer" for that.  
 
-In terms of best practices' community trends there are different opinions:
+In terms of community trends related to best practices there are different opinions:
 
 — Intentionally throw errors!  
 — Do Not! ୧༼ಠ益ಠ༽୨
@@ -249,7 +267,9 @@ In terms of best practices' community trends there are different opinions:
 — Disable `stacktrace` for production! _(should be the default behaviour of your server app in production mode, but still...)_  
 — Hell yeah! ᕦ( ͡° ͜ʖ ͡°)ᕤ
 
-Despite the last two assertions we all agree, unless the only thing you have is a fatal error you'll need to start thinking of **"errors"** in terms of **results**, which is true in the GraphQL mindset even though they might not be the results you're expecting for. You may think of them as **requested** and **unrequested** results and **make sure all the organization is aligned on how to organize and treat them**.
+Unless the only thing you have is a fatal error, you'll need to start thinking of **"errors"** as **results** —which is true in the GraphQL mindset— even though they might not be the results you're expecting for.  
+
+You can think of them as **requested results** —the `data` node— and **unrequested results** —the `errors` node— and **make sure all the organization is aligned on how to organize and treat them**.
 
 ### 5. In the land of the **runtime** where the implementation lies — The runtime handles the rest
 
@@ -344,7 +364,7 @@ you'll obtain this response:
 }
 ```
 
-The invalid parent id was persisted —or not, GraphQL doesn't care— and the parent's record couldn't be retrieved during the subsequent query, but neither an error was thrown nor an invalid type was provided —since `parent` is nullable— and therefore the `data` node came along with no `error` sibling.
+The invalid parent id was persisted —or not, GraphQL doesn't care— and the parent's record couldn't be retrieved during the subsequent query, but neither an error was thrown nor an invalid type was provided —since `parent` is nullable— and therefore the `data` node came along with no `errors` sibling.
 
 - Is this an error?
 - who should take the responsibility for the inconsistency?
