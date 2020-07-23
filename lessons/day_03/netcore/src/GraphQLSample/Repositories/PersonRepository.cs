@@ -22,7 +22,7 @@ namespace GraphQLNetCore.Repositories
             using (var scope = _scopeFactory.CreateScope())
             using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
             {
-               return db.Person.FirstOrDefault(s => s.id == id);
+               return db.Person.FirstOrDefault(s => s.Id == id);
             }
          }
          return null;
@@ -43,10 +43,10 @@ namespace GraphQLNetCore.Repositories
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
             return db.Person
-                     .Include(x => x.friends)
-                     .FirstOrDefault(s => s.id == personId)
-                     ?.friends
-                     .Where(f => !id.HasValue || id.Value == f.id)
+                     .Include(x => x.Friends)
+                     .FirstOrDefault(s => s.Id == personId)
+                     ?.Friends
+                     .Where(f => !id.HasValue || id.Value == f.Id)
                      .ToList()
                      ;
          }
@@ -58,10 +58,10 @@ namespace GraphQLNetCore.Repositories
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
             return db.Person
-                     .Include(x => x.skills)
-                     .FirstOrDefault(s => s.id == personId)
-                     ?.skills
-                     .Where(s => !id.HasValue || id.Value == s.id)
+                     .Include(x => x.Skills)
+                     .FirstOrDefault(s => s.Id == personId)
+                     ?.Skills
+                     .Where(s => !id.HasValue || id.Value == s.Id)
                      .ToList()
                      ;
          }
