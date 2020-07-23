@@ -1,10 +1,11 @@
-﻿using GraphQLNetCore.Models.Enums;
+﻿using GraphQLNetCore.Models.Abstractions;
+using GraphQLNetCore.Models.Enums;
 using System;
 using System.Collections.Generic;
 
 namespace GraphQLNetCore.Models.Input
 {
-   public class InputPersonCreate
+   public class InputPersonCreate : IInputPersonCreate<Contact>
    {
       public string Name { get; set; }
       public string Surname { get; set; }
@@ -15,7 +16,7 @@ namespace GraphQLNetCore.Models.Input
       public List<int> Skills { get; set; }
       public int? FavSkill { get; set; }
 
-      internal Contact ToPerson()
+      public Contact ToPerson()
       {
          return new Contact() {
             Age = Age ?? 0,

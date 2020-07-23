@@ -1,9 +1,10 @@
-﻿using GraphQLNetCore.Models.Enums;
+﻿using GraphQLNetCore.Models.Abstractions;
+using GraphQLNetCore.Models.Enums;
 using System.Collections.Generic;
 
 namespace GraphQLNetCore.Models.Input
 {
-   public class InputEngineerCreate
+   public class InputEngineerCreate : IInputPersonCreate<Engineer>
    {
       public string Name { get; set; }
       public string Surname { get; set; }
@@ -17,7 +18,7 @@ namespace GraphQLNetCore.Models.Input
       public Role Role { get; set; }
       public Grade Grade { get; set; }
 
-      internal Engineer ToPerson()
+      public Engineer ToPerson()
       {
          return new Engineer() {
             Age = Age,

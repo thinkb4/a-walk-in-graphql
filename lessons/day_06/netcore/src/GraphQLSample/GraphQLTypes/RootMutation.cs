@@ -46,7 +46,7 @@ namespace GraphQLNetCore.GraphQLTypes
            resolve: context =>
            {
               var input = context.GetArgument<InputCandidateCreate>("input");
-              return _personRepository.CreateCandidate(input);
+              return _personRepository.CreatePerson(input);
            });
 
          Field<NonNullGraphType<EngineerType>>("createEngineer",
@@ -57,7 +57,7 @@ namespace GraphQLNetCore.GraphQLTypes
             resolve: context =>
             {
                var input = context.GetArgument<InputEngineerCreate>("input");
-               return _personRepository.CreateEngineer(input);
+               return _personRepository.CreatePerson(input);
             });
       }
    }

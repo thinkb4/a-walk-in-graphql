@@ -1,9 +1,10 @@
-﻿using GraphQLNetCore.Models.Enums;
+﻿using GraphQLNetCore.Models.Abstractions;
+using GraphQLNetCore.Models.Enums;
 using System.Collections.Generic;
 
 namespace GraphQLNetCore.Models.Input
 {
-   public class InputCandidateCreate
+   public class InputCandidateCreate : IInputPersonCreate<Candidate>
    {
       public string Name { get; set; }
       public string Surname { get; set; }
@@ -16,7 +17,7 @@ namespace GraphQLNetCore.Models.Input
       public Role TargetRole { get; set; }
       public Grade TargetGrade { get; set; }
 
-      internal Candidate ToPerson()
+      public Candidate ToPerson()
       {
          return new Candidate() {
             Age = Age,
