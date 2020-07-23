@@ -16,7 +16,7 @@ namespace GraphQLNetCore.GraphQLTypes
          Field(_ => _.Name);
          Field(_ => _.Surname);
          Field<StringGraphType>("fullName", resolve: context => $"{context.Source.Name} {context.Source.Surname}");
-         Field<ListGraphType<NonNullGraphType<SkillType>>>("skills",
+         Field<ListGraphType<NonNullGraphType<SkillType>>>(nameof(Person.Skills),
             arguments: new QueryArguments
             {
                    new  QueryArgument<IdGraphType> {  Name = "id" }
@@ -26,7 +26,7 @@ namespace GraphQLNetCore.GraphQLTypes
                var id = context.GetArgument<int?>("id");
                return personRepo.GetSkills(context.Source.Id, id);
             });
-         Field<ListGraphType<NonNullGraphType<PersonType>>>("friends",
+         Field<ListGraphType<NonNullGraphType<PersonType>>>(nameof(Person.Friends),
             arguments: new QueryArguments
             {
                    new  QueryArgument<IdGraphType> {  Name = "id" }
@@ -36,7 +36,7 @@ namespace GraphQLNetCore.GraphQLTypes
                var id = context.GetArgument<int?>("id");
                return personRepo.GetFriends(context.Source.Id, id);
             });
-         Field<SkillType>("favSkill", resolve: context => skillRepo.Get(context.Source.FavSkillId));
+         Field<SkillType>(nameof(Person.FavSkill), resolve: context => skillRepo.Get(context.Source.FavSkillId));
       }
    }
 }

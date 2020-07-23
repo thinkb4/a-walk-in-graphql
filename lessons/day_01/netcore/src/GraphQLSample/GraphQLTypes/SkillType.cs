@@ -11,7 +11,7 @@ namespace GraphQLNetCore.GraphQLTypes
          Name = nameof(Skill);
          Field(_ => _.Id, type: typeof(IdGraphType));
          Field(_ => _.Name);
-         Field<SkillType>("parent", resolve: context => repo.Get(context.Source.ParentId));
+         Field<SkillType>(nameof(Skill.Parent), resolve: context => repo.Get(context.Source.ParentId));
       }
    }
 }
