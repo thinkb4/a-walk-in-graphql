@@ -22,7 +22,7 @@ namespace GraphQLNetCore.Repositories
             using (var scope = _scopeFactory.CreateScope())
             using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
             {
-               return db.Person.FirstOrDefault(s => s.id == id);
+               return db.Person.FirstOrDefault(s => s.Id == id);
             }
          }
          return null;
@@ -43,9 +43,9 @@ namespace GraphQLNetCore.Repositories
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
             return db.Person
-                     .Include(x => x.friends)
-                     .FirstOrDefault(s => s.id == personId)
-                     ?.friends
+                     .Include(x => x.Friends)
+                     .FirstOrDefault(s => s.Id == personId)
+                     ?.Friends
                      .ToList()
                      ;
          }
@@ -57,9 +57,9 @@ namespace GraphQLNetCore.Repositories
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
             return db.Person
-                     .Include(x => x.skills)
-                     .FirstOrDefault(s => s.id == personId)
-                     ?.skills
+                     .Include(x => x.Skills)
+                     .FirstOrDefault(s => s.Id == personId)
+                     ?.Skills
                      .ToList()
                      ;
          }

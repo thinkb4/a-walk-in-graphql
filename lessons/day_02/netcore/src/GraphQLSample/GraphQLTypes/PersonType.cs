@@ -8,17 +8,17 @@ namespace GraphQLNetCore.GraphQLTypes
    {
       public PersonType(IPersonRepository personRepo, ISkillRepository skillRepo)
       {
-         Name = "Person";
-         Field(_ => _.age);
-         Field(_ => _.email);
-         Field(_ => _.eyeColor);
-         Field(_ => _.id, type: typeof(IdGraphType));
-         Field(_ => _.name);
-         Field(_ => _.surname);
-         Field<StringGraphType>("fullName", resolve: context => $"{context.Source.name} {context.Source.surname}");
-         Field<ListGraphType<NonNullGraphType<SkillType>>>("skills", resolve: context => personRepo.GetSkills(context.Source.id));
-         Field<ListGraphType<NonNullGraphType<PersonType>>>("friends", resolve: context => personRepo.GetFriends(context.Source.id));
-         Field<SkillType>("favSkill", resolve: context => skillRepo.Get(context.Source.favSkillId));
+         Name = nameof(Person);
+         Field(_ => _.Age);
+         Field(_ => _.Email);
+         Field(_ => _.EyeColor);
+         Field(_ => _.Id, type: typeof(IdGraphType));
+         Field(_ => _.Name);
+         Field(_ => _.Surname);
+         Field<StringGraphType>("fullName", resolve: context => $"{context.Source.Name} {context.Source.Surname}");
+         Field<ListGraphType<NonNullGraphType<SkillType>>>("skills", resolve: context => personRepo.GetSkills(context.Source.Id));
+         Field<ListGraphType<NonNullGraphType<PersonType>>>("friends", resolve: context => personRepo.GetFriends(context.Source.Id));
+         Field<SkillType>("favSkill", resolve: context => skillRepo.Get(context.Source.FavSkillId));
       }
    }
 }
