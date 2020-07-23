@@ -2,10 +2,10 @@
 {
    public class Skill
    {
-      public int id { get; set; }
-      public string name { get; set; }
-      public int? parentId { get; set; }
-      public virtual Skill parent { get; set; }
+      public int Id { get; set; }
+      public string Name { get; set; }
+      public int? ParentId { get; set; }
+      public virtual Skill Parent { get; set; }
    }
 
    public class SkillData
@@ -21,9 +21,9 @@
 
          return new Skill()
          {
-            id = int.Parse(data.id),
-            name = data.name,
-            parentId = int.TryParse(data.parent, out int parsedValue) ? parsedValue : default(int?)
+            Id = int.Parse(data.id),
+            Name = data.name,
+            ParentId = int.TryParse(data.parent, out int parsedValue) ? parsedValue : default(int?)
          };
       }
    }
