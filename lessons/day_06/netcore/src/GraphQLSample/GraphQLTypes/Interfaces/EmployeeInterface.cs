@@ -8,7 +8,7 @@ namespace GraphQLNetCore.GraphQLTypes.Output
       public EmployeeInterface()
       {
          Name = nameof(IEmployee).Substring(1);
-         Field(_ => _.EmployeeId);
+         Field(_ => _.EmployeeId, type: typeof(NonNullGraphType<IdGraphType>));
       }
    }
 }
