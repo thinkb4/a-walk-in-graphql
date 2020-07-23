@@ -39,9 +39,9 @@ namespace GraphQLNetCore.Repositories
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
             return db.Person
-                     .Include(x => x.friends)
-                     .FirstOrDefault(s => s.id == personId)
-                     ?.friends
+                     .Include(x => x.Friends)
+                     .FirstOrDefault(s => s.Id == personId)
+                     ?.Friends
                      .Where(input?.Predicate ?? (_ => true))
                      .ToList()
                      ;
@@ -54,9 +54,9 @@ namespace GraphQLNetCore.Repositories
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
             return db.Person
-                     .Include(x => x.skills)
-                     .FirstOrDefault(s => s.id == personId)
-                     ?.skills
+                     .Include(x => x.Skills)
+                     .FirstOrDefault(s => s.Id == personId)
+                     ?.Skills
                      .Where(input?.Predicate ?? (_ => true))
                      .ToList()
                      ;

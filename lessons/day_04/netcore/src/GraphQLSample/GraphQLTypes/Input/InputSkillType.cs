@@ -7,9 +7,9 @@ namespace GraphQLNetCore.GraphQLTypes
    {
       public InputSkillType()
       {
-         Name = "InputSkill";
-         Field(_ => _.id, nullable: true, type: typeof(IdGraphType));
-         Field(_ => _.name, nullable: true);
+         Name = nameof(InputSkill);
+         Field(_ => _.Id, nullable: true, type: typeof(IdGraphType));
+         Field(_ => _.Name, nullable: true);
       }
    }
 }

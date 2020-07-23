@@ -8,10 +8,10 @@ namespace GraphQLNetCore.GraphQLTypes
    {
       public SkillType(ISkillRepository repo)
       {
-         Name = "Skill";
-         Field(_ => _.id, type: typeof(IdGraphType));
-         Field(_ => _.name);
-         Field<SkillType>("parent", resolve: context => repo.Get(InputSkill.FromId(context.Source.parentId)));
+         Name = nameof(Skill);
+         Field(_ => _.Id, type: typeof(IdGraphType));
+         Field(_ => _.Name);
+         Field<SkillType>("parent", resolve: context => repo.Get(InputSkill.FromId(context.Source.ParentId)));
       }
    }
 }

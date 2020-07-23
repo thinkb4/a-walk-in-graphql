@@ -8,14 +8,14 @@ namespace GraphQLNetCore.GraphQLTypes
    {
       public PersonType(IPersonRepository personRepo, ISkillRepository skillRepo)
       {
-         Name = "Person";
-         Field(_ => _.age);
-         Field(_ => _.email);
-         Field(_ => _.id, type: typeof(IdGraphType));
-         Field(_ => _.name);
-         Field(_ => _.surname);
-         Field(_ => _.eyeColor, nullable: true, type: typeof(EyeColorType));
-         Field<StringGraphType>("fullName", resolve: context => $"{context.Source.name} {context.Source.surname}");
+         Name = nameof(Person);
+         Field(_ => _.Age);
+         Field(_ => _.Email);
+         Field(_ => _.Id, type: typeof(IdGraphType));
+         Field(_ => _.Name);
+         Field(_ => _.Surname);
+         Field(_ => _.EyeColor, nullable: true, type: typeof(EyeColorType));
+         Field<StringGraphType>("fullName", resolve: context => $"{context.Source.Name} {context.Source.Surname}");
          Field<ListGraphType<NonNullGraphType<SkillType>>>("skills",
             arguments: new QueryArguments
             {
@@ -24,7 +24,7 @@ namespace GraphQLNetCore.GraphQLTypes
             resolve: context =>
             {
                var input = context.GetArgument<InputSkill>("input");
-               return personRepo.GetSkills(context.Source.id, input);
+               return personRepo.GetSkills(context.Source.Id, input);
             });
          Field<ListGraphType<NonNullGraphType<PersonType>>>("friends",
             arguments: new QueryArguments
@@ -34,9 +34,9 @@ namespace GraphQLNetCore.GraphQLTypes
             resolve: context =>
             {
                var input = context.GetArgument<InputPerson>("input");
-               return personRepo.GetFriends(context.Source.id, input);
+               return personRepo.GetFriends(context.Source.Id, input);
             });
-         Field<SkillType>("favSkill", resolve: context => skillRepo.Get(InputSkill.FromId(context.Source.favSkillId)));
+         Field<SkillType>("favSkill", resolve: context => skillRepo.Get(InputSkill.FromId(context.Source.FavSkillId)));
       }
    }
 }

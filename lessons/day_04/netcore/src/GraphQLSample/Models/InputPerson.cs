@@ -4,18 +4,18 @@ namespace GraphQLNetCore.Models
 {
    public class InputPerson
    {
-      public int? id { get; set; }
-      public int? age { get; set; }
-      public EyeColor? eyeColor { get; set; }
-      public int? favSkill { get; set; }
+      public int? Id { get; set; }
+      public int? Age { get; set; }
+      public EyeColor? EyeColor { get; set; }
+      public int? FavSkill { get; set; }
 
-      public static InputPerson FromId(int? id) => id.HasValue ? new InputPerson { id = id } : default;
+      public static InputPerson FromId(int? id) => id.HasValue ? new InputPerson { Id = id } : default;
 
       public Func<Person, bool> Predicate => 
-         (person) => (!id.HasValue || id.Value == person.id)
-                  && (!age.HasValue || age.Value == person.age)
-                  && (!eyeColor.HasValue || eyeColor.Value == person.eyeColor)
-                  && (!favSkill.HasValue || favSkill.Value == person.favSkillId)
+         (person) => (!Id.HasValue || Id.Value == person.Id)
+                  && (!Age.HasValue || Age.Value == person.Age)
+                  && (!EyeColor.HasValue || EyeColor.Value == person.EyeColor)
+                  && (!FavSkill.HasValue || FavSkill.Value == person.FavSkillId)
                   ;
    }
 }
