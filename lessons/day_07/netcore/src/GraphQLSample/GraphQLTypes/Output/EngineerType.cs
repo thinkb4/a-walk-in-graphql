@@ -1,4 +1,5 @@
-﻿using GraphQL.Types;
+﻿using GraphQL;
+using GraphQL.Types;
 using GraphQLNetCore.GraphQLTypes.Enums;
 using GraphQLNetCore.Models;
 using GraphQLNetCore.Models.Input;
@@ -20,7 +21,7 @@ namespace GraphQLNetCore.GraphQLTypes.Output
          Field(_ => _.Id, type: typeof(IdGraphType));
          Field(_ => _.Name);
          Field(_ => _.Surname);
-         Field(_ => _.EmployeeId);
+         Field(_ => _.EmployeeId, type: typeof(NonNullGraphType<IdGraphType>));
          Field(_ => _.Grade, type: typeof(GradeType));
          Field(_ => _.Role, type: typeof(RoleType));
          Field(_ => _.EyeColor, nullable: true, type: typeof(EyeColorType));

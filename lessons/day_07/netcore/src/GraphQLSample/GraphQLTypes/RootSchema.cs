@@ -1,4 +1,4 @@
-﻿using GraphQL;
+﻿using System;
 using GraphQL.Types;
 using GraphQLNetCore.GraphQLTypes.Output;
 
@@ -6,7 +6,7 @@ namespace GraphQLNetCore.GraphQLTypes
 {
    public class RootSchema : Schema
    {
-      public RootSchema(IDependencyResolver resolver, RootQuery query, RootMutation mutation) : base(resolver)
+      public RootSchema(IServiceProvider service, RootQuery query, RootMutation mutation) : base(service)
       {
          Query = query;
          Mutation = mutation;

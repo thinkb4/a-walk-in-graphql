@@ -1,4 +1,5 @@
-﻿using GraphQL.Types;
+﻿using GraphQL;
+using GraphQL.Types;
 using GraphQLNetCore.GraphQLTypes.Enums;
 using GraphQLNetCore.Models;
 using GraphQLNetCore.Models.Input;

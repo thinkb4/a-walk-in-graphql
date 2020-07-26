@@ -1,5 +1,5 @@
 using GraphQL;
-using GraphQL.Http;
+using GraphQL.SystemTextJson;
 using GraphQL.Types;
 using GraphQLNetCore.Data;
 using GraphQLNetCore.GraphQLTypes;
@@ -35,7 +35,6 @@ namespace GraphQLNetCore
 
          services.AddSingleton<IDocumentExecuter, DocumentExecuter>(); //
          services.AddSingleton<IDocumentWriter, DocumentWriter>(); //
-         services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
 
          // add something like repository
          services.AddSingleton<ISkillRepository, SkillRepository>();

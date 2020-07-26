@@ -1,4 +1,5 @@
-﻿using GraphQL.Types;
+﻿using GraphQL;
+using GraphQL.Types;
 using GraphQLNetCore.GraphQLTypes.Output;
 using GraphQLNetCore.Models.Input;
 using GraphQLNetCore.Repositories;
