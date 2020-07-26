@@ -1,38 +1,18 @@
-﻿using System.Linq;
-using GraphQL.Types;
+﻿using GraphQL.Types;
 using GraphQLNetCore.Repositories;
 
 namespace GraphQLNetCore.GraphQLTypes
 {
-    public class RootQuery:ObjectGraphType
-    {
-        private readonly ISkillRepository _skillRepository;
-        public RootQuery(ISkillRepository skillRepository)
-        {
-            _skillRepository = skillRepository;
-            Field<ListGraphType<SkillType>>("skills", resolve: context =>
-            {
+   public class RootQuery : ObjectGraphType
+   {
+      private readonly ISkillRepository _skillRepository;
 
-                return _skillRepository.GetAll();
-            });
+      public RootQuery(ISkillRepository skillRepository)
+      {
+         _skillRepository = skillRepository;
 
-            Field<SkillType>("randomSkill", resolve: context =>
-            {
-
-                return _skillRepository.GetRandom();
-            });
-
-            Field<ListGraphType<SkillType>>("filteredSkills",
-                arguments: new QueryArguments
-                {
-                   new  QueryArgument<StringGraphType> {  Name = "id"}
-                },
-                resolve: context =>
-                {
-                    //string name = context.GetArgument<string>("name");
-                    string id = context.GetArgument<string>("id");
-                    return _skillRepository.GetAll().Where(_ => _.id == id).ToList();
-                });
-        }
-    }
+         Name = "Query";
+         Field<NonNullGraphType<SkillType>>("randomSkill", resolve: context => _skillRepository.GetRandom());
+      }
+   }
 }
