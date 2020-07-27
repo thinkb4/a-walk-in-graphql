@@ -2,9 +2,7 @@ using GraphQL;
 using GraphQL.SystemTextJson;
 using GraphQL.Types;
 using GraphQLNetCore.Data;
-using GraphQLNetCore.GraphQLTypes;
-using GraphQLNetCore.GraphQLTypes.Enums;
-using GraphQLNetCore.GraphQLTypes.Output;
+using GraphQLNetCore.Resolvers;
 using GraphQLNetCore.Middleware;
 using GraphQLNetCore.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -15,11 +13,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 
 namespace GraphQLNetCore
 {
 
-   public class Startup
+    public class Startup
    {
       public Startup(IConfiguration configuration)
       {
@@ -39,28 +38,27 @@ namespace GraphQLNetCore
          // add something like repository
          services.AddSingleton<ISkillRepository, SkillRepository>();
          services.AddSingleton<IPersonRepository, PersonRepository>();
-         services.AddSingleton<RootQuery>();
-         services.AddSingleton<RootMutation>();
-         services.AddSingleton<SkillType>();
-         services.AddSingleton<InputSkillType>();
-         services.AddSingleton<InputSkillCreateType>();
-         services.AddSingleton<PersonInterface>();
-         services.AddSingleton<EmployeeInterface>();
-         services.AddSingleton<ContactType>();
-         services.AddSingleton<CandidateType>();
-         services.AddSingleton<EngineerType>();
-         services.AddSingleton<GlobalSearchType>();
-         services.AddSingleton<InputPersonType>();
-         services.AddSingleton<InputPersonCreateType>();
-         services.AddSingleton<InputCandidateCreateType>();
-         services.AddSingleton<InputEngineerCreateType>();
-         services.AddSingleton<InputGlobalSearchType>();
-         services.AddSingleton<EyeColorType>();
-         services.AddSingleton<GradeType>();
-         services.AddSingleton<RoleType>();
+         services.AddSingleton<Query>();
+         services.AddSingleton<Mutation>();
+         services.AddSingleton<SkillResolver>();
+         services.AddSingleton<ContactResolver>();
+         services.AddSingleton<CandidateResolver>();
+         services.AddSingleton<EngineerResolver>();
 
          // add schema
-         services.AddSingleton<ISchema, RootSchema>();
+         services.AddSingleton<ISchema>(provider => 
+            Schema.For(File.ReadAllText("schema.gql"), config => {
+               config.Types.Include<Query>();
+               config.Types.Include<Mutation>();
+               config.Types.Include<SkillResolver>();
+               config.Types.Include<ContactResolver>();
+               config.Types.Include<CandidateResolver>();
+               config.Types.Include<EngineerResolver>();
+               config.ServiceProvider = new FuncServiceProvider(
+                  type => provider.GetService(type) ?? Activator.CreateInstance(type)
+                  );
+            })
+         );
 
          // add infrastructure stuff
          services.AddHttpContextAccessor();

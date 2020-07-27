@@ -1,9 +1,8 @@
-﻿using GraphQL.Introspection;
-using System;
+﻿using System;
 
 namespace GraphQLNetCore.Models.Input
 {
-   public class InputSkill
+    public class InputSkill
    {
       public int? Id { get; set; }
       public string Name { get; set; }
