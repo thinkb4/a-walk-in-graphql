@@ -15,25 +15,12 @@ namespace GraphQLNetCore.Repositories
          _scopeFactory = scopeFactory;
       }
 
-      public Person Get(int? id)
-      {
-         if (id.HasValue)
-         {
-            using (var scope = _scopeFactory.CreateScope())
-            using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
-            {
-               return db.Person.FirstOrDefault(s => s.Id == id);
-            }
-         }
-         return null;
-      }
-
-      public List<Person> GetAll()
+      public List<Person> GetAll(int? id)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
-            return db.Person.ToList();
+            return db.Person.Where(p => !id.HasValue || p.Id == id).ToList();
          }
       }
 
