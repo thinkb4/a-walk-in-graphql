@@ -7,49 +7,26 @@ using System.Linq;
 namespace GraphQLNetCore.Resolvers
 {
     public class Query
-   {
-      private readonly ISkillRepository _skillRepository;
-      private readonly IPersonRepository _personRepository;
-      public Query(ISkillRepository skillRepository, IPersonRepository personRepository)
-      {
-         _skillRepository = skillRepository;
-         _personRepository = personRepository;
-      }
+    {
+        private readonly ISkillRepository _skills;
+        private readonly IPersonRepository _persons;
+        public Query(ISkillRepository skills, IPersonRepository persons)
+        {
+            _skills = skills;
+            _persons = persons;
+        }
 
-      public List<Skill> Skills(InputSkill input)
-      {
-         return _skillRepository.GetAll(input);
-      }
-
-      public Skill RandomSkill(ISkillRepository skillRepository)
-      {
-         return _skillRepository.GetRandom();
-      }
-
-      public Skill Skill(InputSkill input)
-      {
-         return _skillRepository.Get(input);
-      }
-
-      public List<Person> Persons(InputPerson input)
-      {
-         return _personRepository.GetAll(input);
-      }
-
-      public Person RandomPerson()
-      {
-         return _personRepository.GetRandom();
-      }
-
-      public Person Person(InputPerson input)
-      {
-         return _personRepository.Get(input);
-      }
-
-      public IEnumerable<object> Search(InputGlobalSearch input) {
-         var skills = _skillRepository.GetAll(new InputSkill { Name = input.Name });
-         var persons = _personRepository.GetAll(new InputPerson { Name = input.Name });
-         return persons.AsEnumerable<object>().Union(skills);
-      }
-   }
+        public List<Skill> Skills(InputSkill input) => _skills.GetAll(input);
+        public Skill RandomSkill() => _skills.GetRandom();
+        public Skill Skill(InputSkill input) => _skills.Get(input);
+        public List<Person> Persons(InputPerson input) => _persons.GetAll(input);
+        public Person RandomPerson => _persons.GetRandom();
+        public Person Person(InputPerson input) => _persons.Get(input);
+        public IEnumerable<object> Search(InputGlobalSearch input)
+        {
+            var skills = _skills.GetAll(new InputSkill { Name = input.Name });
+            var persons = _persons.GetAll(new InputPerson { Name = input.Name });
+            return persons.AsEnumerable<object>().Union(skills);
+        }
+    }
 }

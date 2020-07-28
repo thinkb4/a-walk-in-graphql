@@ -15,8 +15,8 @@ namespace GraphQLNetCore.Resolvers
         {
             this._repo = repo;
         }
-        
-        public DateTime Now() => DateTime.Now; 
+
+        public DateTime Now() => DateTime.Now;
         public Skill Parent(Skill skill) => _repo.Get(InputSkill.FromId(skill.ParentId));
     }
 }

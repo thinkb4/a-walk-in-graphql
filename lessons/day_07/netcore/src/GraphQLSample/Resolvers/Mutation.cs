@@ -5,34 +5,19 @@ using GraphQLNetCore.Repositories;
 namespace GraphQLNetCore.Resolvers
 {
     public class Mutation
-   {
-      private readonly ISkillRepository _skillRepository;
-      private readonly IPersonRepository _personRepository;
+    {
+        private readonly ISkillRepository _skills;
+        private readonly IPersonRepository _persons;
 
-      public Mutation(ISkillRepository skillRepository, IPersonRepository personRepository)
-      {
-         _skillRepository = skillRepository;
-         _personRepository = personRepository;
-      }
+        public Mutation(ISkillRepository skills, IPersonRepository person)
+        {
+            _skills = skills;
+            _persons = person;
+        }
 
-      public Skill CreateSkill(InputSkillCreate input) 
-      {
-         return _skillRepository.CreateSkill(input);
-      }
-
-      public Person CreatePerson(InputPersonCreate input) 
-      {
-         return _personRepository.CreatePerson(input);
-      }
-
-      public Person CreateCandidate(InputCandidateCreate input) 
-      {
-         return _personRepository.CreatePerson(input);
-      }
-
-      public Person CreateEngineer(InputEngineerCreate input) 
-      {
-         return _personRepository.CreatePerson(input);
-      }
-   }
+        public Skill CreateSkill(InputSkillCreate input) => _skills.CreateSkill(input);
+        public Person CreatePerson(InputPersonCreate input) => _persons.CreatePerson(input);
+        public Person CreateCandidate(InputCandidateCreate input) => _persons.CreatePerson(input);
+        public Person CreateEngineer(InputEngineerCreate input) => _persons.CreatePerson(input);
+    }
 }
