@@ -1,9 +1,9 @@
-﻿using System;
+﻿using GraphQLNetCore.Models.Enums;
 using System.Collections.Generic;
 
-namespace GraphQLNetCore.Models
+namespace GraphQLNetCore.Models.Input
 {
-   public class InputPersonCreate
+    public class InputPersonCreate
    {
       public string Name { get; set; }
       public string Surname { get; set; }
@@ -14,12 +14,12 @@ namespace GraphQLNetCore.Models
       public List<int> Skills { get; set; }
       public int? FavSkill { get; set; }
 
-      internal Person ToPerson()
+      public Person ToPerson()
       {
          return new Person() {
             Age = Age ?? 0,
             Email = Email ?? string.Empty,
-            EyeColor = EyeColor ?? Models.EyeColor.BLUE,
+            EyeColor = EyeColor,
             FavSkillId = FavSkill,
             Name = Name,
             Surname = Surname ?? string.Empty

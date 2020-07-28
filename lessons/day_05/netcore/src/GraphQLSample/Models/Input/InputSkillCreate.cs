@@ -1,4 +1,4 @@
-﻿namespace GraphQLNetCore.Models
+﻿namespace GraphQLNetCore.Models.Input
 {
    public class InputSkillCreate
    {

@@ -2,6 +2,7 @@
 using System.Linq;
 using GraphQLNetCore.Data;
 using GraphQLNetCore.Models;
+using GraphQLNetCore.Models.Input;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GraphQLNetCore.Repositories
