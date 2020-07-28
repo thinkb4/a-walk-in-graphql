@@ -28,26 +28,14 @@ namespace GraphQLNetCore.Repositories
          return null;
       }
 
-      public List<Skill> GetAll()
+      public List<Skill> GetAll(int? id)
       {
          using (var scope = _scopeFactory.CreateScope())
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
-            return db.Skill.ToList();
+            return db.Skill.Where(s => !id.HasValue || s.Id == id).ToList();
          }
       }
-
-      public Skill AddSkill(Skill skill)
-      {
-         using (var scope = _scopeFactory.CreateScope())
-         using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
-         {
-            db.Skill.Add(skill);
-            db.SaveChanges();
-            return skill;
-         }
-      }
-
       public Skill GetRandom()
       {
          var rng = new System.Random();
