@@ -19,6 +19,7 @@ enum Role {
   TEAM_LEAD
 }
 
+
 # INPUTS
 
 input InputPersonCreate {
@@ -64,20 +65,6 @@ input InputEngineerCreate {
   grade: Grade!
 }
 
-input InputSkill {
-  id: ID
-  name: String
-}
-
-input InputSkillCreate {
-  name: String!
-  parent: ID
-}
-
-input InputGlobalSearch {
-  name: String!
-}
-
 input InputPerson {
   id: ID
   age: Int
@@ -88,6 +75,7 @@ input InputPerson {
   role: Role
   grade: Grade
 }
+
 
 # INTERFACES
 
@@ -108,22 +96,7 @@ interface Employee {
   employeeId: ID!
 }
 
-# UNIONS
-
-union GlobalSearch = 
-  | Skill
-  | Engineer
-  | Candidate
-  | Contact
-
 # OBJECT TYPES
-
-type Skill {
-  id: ID
-  parent: Skill
-  name: String!
-  now: String! @deprecated(reason: "This is just an example of a virtual field.")
-}
 
 type Contact implements Person {
   # Person props
@@ -186,19 +159,15 @@ type Engineer implements Person Employee {
 
 # ROOT OPERATIONS
 
-type Query {
-  randomSkill: Skill!
+extend type Query {
   randomPerson: Person!
-  skill (input: InputSkill): Skill
   person (input: InputPerson): Person
-  skills (input: InputSkill): [Skill!]
   persons (input: InputPerson): [Person!]
-  search (input: InputGlobalSearch): [GlobalSearch!]
 }
 
-type Mutation {
-  createSkill (input: InputSkillCreate): Skill!
+extend type Mutation {
   createPerson (input: InputPersonCreate): Person!
   createCandidate (input: InputCandidateCreate): Candidate!
   createEngineer (input: InputEngineerCreate): Engineer!
 }
+
