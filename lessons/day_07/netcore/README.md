@@ -1,8 +1,8 @@
 # [A walk in GraphQL](/README.md)
 
-## Day 6 exercise - NetCore
+## Day 7 exercise - NetCore
 
-Read the instructions on the [Day 6 exercise](../day_06.md#exercise) definition
+Read the instructions on the [Day 7 exercise](../day_07.md#exercise) definition
 
 ### Run the server
 
