@@ -1,4 +1,5 @@
-﻿using GraphQL;
+﻿using System;
+using GraphQL;
 using GraphQLNetCore.Models;
 using GraphQLNetCore.Models.Input;
 using GraphQLNetCore.Repositories;
@@ -15,6 +16,7 @@ namespace GraphQLNetCore.Resolvers
             this._repo = repo;
         }
         
+        public DateTime Now() => DateTime.Now; 
         public Skill Parent(Skill skill) => _repo.Get(InputSkill.FromId(skill.ParentId));
     }
 }
