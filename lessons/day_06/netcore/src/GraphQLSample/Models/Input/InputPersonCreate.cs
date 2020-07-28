@@ -1,11 +1,10 @@
 ﻿using GraphQLNetCore.Models.Abstractions;
 using GraphQLNetCore.Models.Enums;
-using System;
 using System.Collections.Generic;
 
 namespace GraphQLNetCore.Models.Input
 {
-   public class InputPersonCreate : IInputPersonCreate<Contact>
+    public class InputPersonCreate : IInputPersonCreate<Contact>
    {
       public string Name { get; set; }
       public string Surname { get; set; }

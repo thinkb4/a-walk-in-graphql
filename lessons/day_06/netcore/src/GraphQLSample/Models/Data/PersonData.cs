@@ -1,5 +1,6 @@
 ﻿using GraphQLNetCore.Models.Enums;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace GraphQLNetCore.Models.Data
 {
@@ -7,6 +8,8 @@ namespace GraphQLNetCore.Models.Data
    {
       public string id { get; set; }
       public int age { get; set; }
+      
+      [JsonConverter(typeof(JsonStringEnumConverter))]
       public EyeColor eyeColor { get; set; }
       public string name { get; set; }
       public string surname { get; set; }
