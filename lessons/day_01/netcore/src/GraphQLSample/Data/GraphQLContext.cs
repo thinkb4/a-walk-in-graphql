@@ -1,6 +1,7 @@
 ﻿using GraphQLNetCore.Models;
+using GraphQLNetCore.Models.Data;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.IO;
 using System.Linq;
 
@@ -21,7 +22,7 @@ namespace GraphQLNetCore.Data
          try
          {
             var fileContent = File.ReadAllText(dirInfo.FullName);
-            var fileData = JsonConvert.DeserializeObject<FileData>(fileContent);
+            var fileData = JsonSerializer.Deserialize<FileData>(fileContent);
 
             Skill.AddRange(fileData.skills.Select(SkillData.ToEntity));
             SaveChanges();

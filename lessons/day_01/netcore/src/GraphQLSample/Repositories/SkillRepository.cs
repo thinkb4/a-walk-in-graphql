@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GraphQLNetCore.Repositories
 {
-   public class SkillRepository : ISkillRepository
+    public class SkillRepository : ISkillRepository
    {
       private readonly IServiceScopeFactory _scopeFactory;
       public SkillRepository(IServiceScopeFactory scopeFactory)
@@ -25,7 +25,7 @@ namespace GraphQLNetCore.Repositories
          }
          return null;
       }
-
+      
       public Skill GetRandom()
       {
          var rng = new System.Random();
@@ -36,6 +36,5 @@ namespace GraphQLNetCore.Repositories
             return db.Skill.Skip(indexRandom).FirstOrDefault();
          }
       }
-
    }
 }
