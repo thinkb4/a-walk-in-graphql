@@ -2,6 +2,7 @@
 using System.Linq;
 using GraphQLNetCore.Data;
 using GraphQLNetCore.Models;
+using GraphQLNetCore.Models.Input;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GraphQLNetCore.Repositories
@@ -29,17 +30,6 @@ namespace GraphQLNetCore.Repositories
          using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
          {
             return db.Skill.Where(input?.Predicate ?? (_ => true)).ToList();
-         }
-      }
-
-      public Skill AddSkill(Skill skill)
-      {
-         using (var scope = _scopeFactory.CreateScope())
-         using (var db = scope.ServiceProvider.GetRequiredService<GraphQLContext>())
-         {
-            db.Skill.Add(skill);
-            db.SaveChanges();
-            return skill;
          }
       }
 
