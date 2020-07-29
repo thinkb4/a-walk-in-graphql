@@ -1,13 +1,21 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker
 from models import Base, Skill, Person
 from pathlib import Path
 import json
+from sqlalchemy.engine import Engine
 
 
 engine = create_engine('sqlite://')
 Session = sessionmaker(bind=engine)
 session = Session()
+
+# This is only for proper functioning with FK in SQLite
+@event.listens_for(engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
 
 # Setup of in memory database, from data.json if tables doesn´t exist
 if not engine.dialect.has_table(engine.connect(), "skills"):
