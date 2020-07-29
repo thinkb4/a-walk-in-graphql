@@ -12,7 +12,6 @@ query = QueryType()
 mutation = MutationType()
 person = InterfaceType("Person")
 skill = ObjectType("Skill")
-# person = ObjectType("Person")
 eye_color = EnumType(
     "EyeColor",
     {
@@ -41,11 +40,8 @@ def create_persons(info, input):
     new_person.skills = skills
     if info.return_type.of_type.name == 'Engineer':
         new_person.employeeId = str(uuid4())
-    try:
-        session.add(new_person)
-        session.commit()
-    except Exception:
-        session.rollback()
+    session.add(new_person)
+    session.commit()
     return new_person
 
 
@@ -68,7 +64,6 @@ def resolve_global_search_type(obj, *_):
         if obj.targetGrade:
             return "Candidate"
         return "Contact"
-    return None
 
 
 # Top level resolvers
@@ -114,16 +109,30 @@ def resolve_search(_, info, input):
 
 
 # Mutations
+# # Reactive
 @mutation.field("createSkill")
 def resolve_create_skill(_, info, input):
     new_skill = Skill(**input)
     new_skill.id = str(uuid4())
-    try:
-        session.add(new_skill)
-        session.commit()
-    except Exception:
-        session.rollback()
+    session.add(new_skill)
+    session.commit()
     return new_skill
+
+
+# # Defensive
+# @mutation.field("createSkill")
+# def resolve_create_skill(_, info, input):
+#     input_parent_skill = input.pop('parent')
+#     new_skill = Skill(**input)
+#     parent_skill = session.query(Skill).filter_by(id=input_parent_skill).first()
+#     if not parent_skill:
+#         raise Exception(f'The Skill with id {input_parent_skill} doesn´t exists')
+#     else:
+#         new_skill.parent = parent_skill.id
+#     new_skill.id = str(uuid4())
+#     session.add(new_skill)
+#     session.commit()
+#     return new_skill
 
 
 @mutation.field("createPerson")
@@ -149,7 +158,10 @@ def resolve_now(_, info):
 
 @skill.field("parent")
 def resolve_parent(obj, info):
-    return obj.parent_skill
+    if obj.parent and obj.parent_skill:
+        return obj.parent_skill
+    else:
+        raise Exception("Parent Skill doesn´t exists")
 
 
 @person.field("fullName")
