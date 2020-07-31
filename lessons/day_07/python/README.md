@@ -8,8 +8,9 @@ Read the instructions on the [Day 4 exercise](../day_04.md#exercise) definition
 
 **This patch contains an example of the code applied to createSkill, in order to reach the 3 different strategies for error handling.**
 
-* Apply the following "hint" git patch: ".../a-walk-in-graphql/lessons/day_07/python/errors_handling.patch".
-From command line: `git apply error_handling.patch`
+* Apply the following "hint" git patch: [error_handling.patch](error_handling.patch).
+
+   From command line: `git apply error_handling.patch`
 
 ### Run the server
 
