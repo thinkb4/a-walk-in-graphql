@@ -8,6 +8,16 @@ Read the instructions on the [Day 7 exercise](../day_07.md#exercise) definition
 
 Java 1.8 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
 
+HINTS:
+* `graphql-java` provides the `GraphQLError` interface representing a GraphQL standard error that our exceptions will implement.
+* When we throw an exception while fetching data, this exception is handled by default by the `SimpleDataFetcherExceptionHandler`. This handler wraps our exception into an `ExceptionWhileDataFetching` error and adds this error to the list of errors of the query result.
+After this process, another handler (`DefaultGraphQLErrorHandler`), defined by the kickstart graphql-spring-boot library comes into action to handle the returned list of errors.
+* Apply the following "hint" git patch to get an example of defending and informative error handling strategies: ".../a-walk-in-graphql/lessons/day_07/java/src/main/resources/Java_day_07_Error_Handling.patch".
+    * From command line: git apply src/main/resources/Java_day_07_Error_Handling.patch
+    * From IntelliJ IDEA:
+        * Open the "VCS" menu > "Apply Patch.."
+        * Select the ".../a-walk-in-graphql/lessons/day_07/java/src/main/resources/Java_day_07_Error_Handling.patch" file patch > OK
+
 ### Keep in mind
 
 * The `GraphQL Tools` library works by processing GraphQL Schema files to build the correct structure and then wires special beans to this structure. 
