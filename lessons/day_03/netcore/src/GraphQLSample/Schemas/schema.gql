@@ -1,0 +1,29 @@
+type Skill {
+  # This is only a comment
+  id: ID
+  parent: Skill
+  name: String!
+  now: String! @deprecated(reason: "This is just an example of a virtual field.")
+}
+
+type Person {
+  id: ID
+  name: String!
+  surname: String
+  fullName: String
+  email: String
+  age: Int
+  eyeColor: String
+  friends (id: ID): [Person!]
+  skills (id: ID): [Skill!]
+  favSkill: Skill
+}
+
+type Query {
+  randomSkill: Skill!
+  randomPerson: Person!
+  skill (id: ID): Skill
+  person (id: ID): Person
+  skills (id: ID): [Skill!]
+  persons (id: ID): [Person!]
+}
