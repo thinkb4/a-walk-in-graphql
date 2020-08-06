@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GraphQLNetCore.Models
+﻿namespace GraphQLNetCore.Models
 {
     public class Skill
     {
-        public string id { get; set; }
-        public int? parent { get; set; }
-        public string name { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int? ParentId { get; set; }
+        public virtual Skill Parent { get; set; }
     }
 }
