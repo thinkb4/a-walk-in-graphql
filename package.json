@@ -1,6 +1,6 @@
 {
   "name": "a-walk-in-graphql",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "A progressive learning path to grok GraphQL from 0 to X as a generic concept with the assistance of different language specific examples.",
   "repository": {
     "type": "git",
@@ -20,7 +20,9 @@
     "Ezequiel Alvarez <ezequielalvarez@gmail.com>",
     "Ezequiel Tejerina <tejerinae@gmail.com>",
     "Franco Gribaudo <francogribaudo@gmail.com>",
-    "Cristian Buffa <cristianbuffa@hotmail.com>"
+    "Cristian Buffa <cristianbuffa@hotmail.com>",
+    "Cristian Buffa <cristianbuffa@hotmail.com>",
+    "José Ignacio Aguilera <jiaguilera@gmail.com>"
   ],
   "license": "MIT",
   "bugs": {
