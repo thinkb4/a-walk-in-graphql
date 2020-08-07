@@ -1,4 +1,4 @@
-# [A walk in GraphQL](/README.md)
+# [A walk in GraphQL](../../../README.md)
 
 ## Day 2 exercise - Javascript
 
