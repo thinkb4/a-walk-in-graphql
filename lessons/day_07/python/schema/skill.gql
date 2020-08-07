@@ -1,0 +1,32 @@
+# INPUTS
+
+input InputSkill {
+  id: ID
+  name: String
+}
+
+input InputSkillCreate {
+  name: String!
+  parent: ID
+}
+
+# OBJECT TYPES
+
+type Skill {
+  id: ID
+  parent: Skill
+  name: String!
+  now: String! @deprecated(reason: "This is just an example of a virtual field.")
+}
+
+# ROOT OPERATIONS
+
+extend type Query {
+  randomSkill: Skill!
+  skill (input: InputSkill): Skill
+  skills (input: InputSkill): [Skill!]
+}
+
+extend type Mutation {
+  createSkill (input: InputSkillCreate): Skill!
+}

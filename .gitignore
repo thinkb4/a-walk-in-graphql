@@ -1,0 +1,24 @@
+node_modules
+coverage
+live_demo.js
+*.log
+yarn.lock
+
+### Java ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+**/package-lock.json
+
+### Python ###
+venv/
+.vscode/
+__pycache__/
+
+### NetCore
+.vs

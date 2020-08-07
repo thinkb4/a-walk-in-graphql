@@ -1,0 +1,11 @@
+type Skill {
+  # This is only a comment
+  id: ID
+  parent: Skill
+  name: String!
+  now: String! @deprecated(reason: "This is just an example of a virtual field.")
+}
+
+type Query {
+  randomSkill: Skill!
+}

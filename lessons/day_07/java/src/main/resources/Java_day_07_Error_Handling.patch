@@ -1,0 +1,243 @@
+Index: lessons/day_07/java/src/main/java/com/example/DemoGraphQL/resolver/Mutation.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_07/java/src/main/java/com/example/DemoGraphQL/resolver/Mutation.java	(revision 5f94821d6bd09b03ab35eab2d9cbcb2328d61c44)
++++ lessons/day_07/java/src/main/java/com/example/DemoGraphQL/resolver/Mutation.java	(date 1596228861443)
+@@ -1,15 +1,22 @@
+ package com.example.DemoGraphQL.resolver;
+ 
++import com.example.DemoGraphQL.error.SkillNotFoundGraphQLError;
+ import com.example.DemoGraphQL.input.InputCandidateCreate;
+ import com.example.DemoGraphQL.input.InputEngineerCreate;
+ import com.example.DemoGraphQL.input.InputPersonCreate;
+ import com.example.DemoGraphQL.input.InputSkillCreate;
+-import com.example.DemoGraphQL.model.*;
++import com.example.DemoGraphQL.model.Candidate;
++import com.example.DemoGraphQL.model.Engineer;
++import com.example.DemoGraphQL.model.Person;
++import com.example.DemoGraphQL.model.Skill;
+ import com.example.DemoGraphQL.service.PersonService;
+ import com.example.DemoGraphQL.service.SkillService;
++import graphql.execution.DataFetcherResult;
+ import graphql.kickstart.tools.GraphQLMutationResolver;
+ import org.springframework.stereotype.Component;
+ 
++import java.util.Optional;
++
+ /**
+  * Top-Level resolver for Mutation
+  */
+@@ -28,6 +35,24 @@
+         return this.skillService.createSkill(input);
+     }
+ 
++    public Skill createSkillDefensiveErrorHandling(final InputSkillCreate input) {
++        return this.skillService.createSkillDefensiveErrorHandling(input);
++    }
++
++    public DataFetcherResult<Skill> createSkillInformativeErrorHandling(final InputSkillCreate input) {
++        return Optional.ofNullable(input).map(v -> {
++            DataFetcherResult.Builder<Skill> builder = DataFetcherResult.<Skill>newResult();
++            Skill parent = null;
++            if (v.getParent() != null) {
++                parent = this.skillService.getSkill(v.getParent()).orElse(null);
++                if (parent == null)
++                    builder = builder.error(new SkillNotFoundGraphQLError("Skill with ID " + v.getParent() + " could not be found in the database", "parent"));
++            }
++            builder = builder.data(this.skillService.saveSkill(v.getName(), parent));
++            return builder.build();
++        }).orElse(null);
++    }
++
+     public Person createPerson(final InputPersonCreate input) {
+         return this.personService.createPerson(input);
+     }
+Index: lessons/day_07/java/src/main/resources/graphql/skill.graphqls
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_07/java/src/main/resources/graphql/skill.graphqls	(revision 5f94821d6bd09b03ab35eab2d9cbcb2328d61c44)
++++ lessons/day_07/java/src/main/resources/graphql/skill.graphqls	(date 1596228861463)
+@@ -26,4 +26,6 @@
+ 
+ extend type Mutation {
+     createSkill (input: InputSkillCreate): Skill!
++    createSkillDefensiveErrorHandling (input: InputSkillCreate): Skill!
++    createSkillInformativeErrorHandling (input: InputSkillCreate): Skill!
+ }
+Index: lessons/day_07/java/src/main/java/com/example/DemoGraphQL/service/SkillService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_07/java/src/main/java/com/example/DemoGraphQL/service/SkillService.java	(revision 5f94821d6bd09b03ab35eab2d9cbcb2328d61c44)
++++ lessons/day_07/java/src/main/java/com/example/DemoGraphQL/service/SkillService.java	(date 1596307406360)
+@@ -1,5 +1,7 @@
+ package com.example.DemoGraphQL.service;
+ 
++import com.example.DemoGraphQL.error.SkillNotFoundException;
++import com.example.DemoGraphQL.error.SkillNotFoundGraphQLError;
+ import com.example.DemoGraphQL.input.InputSkill;
+ import com.example.DemoGraphQL.input.InputSkillCreate;
+ import com.example.DemoGraphQL.model.Skill;
+@@ -9,7 +11,6 @@
+ import org.springframework.data.domain.PageRequest;
+ import org.springframework.stereotype.Service;
+ 
+-import java.util.ArrayList;
+ import java.util.List;
+ import java.util.Optional;
+ import java.util.Random;
+@@ -48,6 +49,19 @@
+             return skillRepository.save(newSkill);
+         }).orElse(null);
+     }
++
++    public Skill createSkillDefensiveErrorHandling(InputSkillCreate input) {
++        return Optional.ofNullable(input).map(v -> {
++            Skill parent = null;
++            if (v.getParent() != null) {
++                parent = getSkill(v.getParent())
++//                        .orElseThrow(() -> new SkillNotFoundException("Skill with ID " + v.getParent() + " could not be found in the database"));
++                        .orElseThrow(() -> new SkillNotFoundGraphQLError("Skill with ID " + v.getParent() + " could not be found in the database", "parent"));
++            }
++            Skill newSkill = new Skill(v.getName(), parent);
++            return skillRepository.save(newSkill);
++        }).orElse(null);
++    }
+ 
+     public List<Skill> searchByName(String searchTerm) {
+         Skill filterBy = new Skill();
+@@ -75,4 +89,7 @@
+         return this.skillRepository.findAll(Example.of(filterBy));
+     }
+ 
++    public Skill saveSkill(String name, Skill parent) {
++        return this.skillRepository.save(new Skill(name, parent));
++    }
+ }
+Index: lessons/day_07/java/src/main/java/com/example/DemoGraphQL/error/SkillNotFoundException.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_07/java/src/main/java/com/example/DemoGraphQL/error/SkillNotFoundException.java	(date 1596118412221)
++++ lessons/day_07/java/src/main/java/com/example/DemoGraphQL/error/SkillNotFoundException.java	(date 1596118412221)
+@@ -0,0 +1,8 @@
++package com.example.DemoGraphQL.error;
++
++public class SkillNotFoundException extends RuntimeException {
++
++    public SkillNotFoundException(String message) {
++        super(message);
++    }
++}
+\ No newline at end of file
+Index: lessons/day_07/java/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_07/java/src/main/resources/application.properties	(revision 5f94821d6bd09b03ab35eab2d9cbcb2328d61c44)
++++ lessons/day_07/java/src/main/resources/application.properties	(date 1596228861475)
+@@ -5,3 +5,5 @@
+ 
+ spring.h2.console.enabled=true
+ spring.datasource.name=graphQL
++
++#graphql.servlet.exception-handlers-enabled=true
+\ No newline at end of file
+Index: lessons/day_07/java/src/main/java/com/example/DemoGraphQL/error/handler/GraphQLErrorHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_07/java/src/main/java/com/example/DemoGraphQL/error/handler/GraphQLErrorHandler.java	(date 1596306901724)
++++ lessons/day_07/java/src/main/java/com/example/DemoGraphQL/error/handler/GraphQLErrorHandler.java	(date 1596306901724)
+@@ -0,0 +1,28 @@
++package com.example.DemoGraphQL.error.handler;
++
++import graphql.ExceptionWhileDataFetching;
++import graphql.GraphQLError;
++import org.springframework.stereotype.Component;
++
++import java.util.List;
++import java.util.stream.Collectors;
++
++@Component
++public class GraphQLErrorHandler implements graphql.kickstart.execution.error.GraphQLErrorHandler {
++
++    @Override
++    public List<GraphQLError> processErrors(List<GraphQLError> list) {
++        return list.stream().map(this::getNested).collect(Collectors.toList());
++    }
++
++    private GraphQLError getNested(GraphQLError error) {
++        if (error instanceof ExceptionWhileDataFetching) {
++            ExceptionWhileDataFetching exceptionError = (ExceptionWhileDataFetching) error;
++            if (exceptionError.getException() instanceof GraphQLError) {
++                return (GraphQLError) exceptionError.getException();
++            }
++        }
++        return error;
++    }
++
++}
+\ No newline at end of file
+Index: lessons/day_07/java/src/main/java/com/example/DemoGraphQL/error/SkillNotFoundGraphQLError.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lessons/day_07/java/src/main/java/com/example/DemoGraphQL/error/SkillNotFoundGraphQLError.java	(date 1596118355197)
++++ lessons/day_07/java/src/main/java/com/example/DemoGraphQL/error/SkillNotFoundGraphQLError.java	(date 1596118355197)
+@@ -0,0 +1,45 @@
++package com.example.DemoGraphQL.error;
++
++import graphql.ErrorClassification;
++import graphql.ErrorType;
++import graphql.GraphQLError;
++import graphql.language.SourceLocation;
++
++import java.util.Collections;
++import java.util.List;
++import java.util.Map;
++
++public class SkillNotFoundGraphQLError extends RuntimeException implements GraphQLError {
++
++    private String invalidField;
++
++    public SkillNotFoundGraphQLError(String message, String invalidField) {
++        super(message);
++        this.invalidField = invalidField;
++    }
++
++    @Override
++    public String getMessage() {
++        return super.getMessage();
++    }
++
++    @Override
++    public List<Object> getPath() {
++        return null;
++    }
++
++    @Override
++    public List<SourceLocation> getLocations() {
++        return null;
++    }
++
++    @Override
++    public ErrorClassification getErrorType() {
++        return ErrorType.ValidationError;
++    }
++
++    @Override
++    public Map<String, Object> getExtensions() {
++        return Collections.singletonMap("invalidField", invalidField);
++    }
++}
+\ No newline at end of file

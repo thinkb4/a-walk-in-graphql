@@ -1,0 +1,62 @@
+
+"""
+This is a description notation
+@see [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Descriptions)
+"""
+type Skill {
+  # This is only a comment
+  id: ID
+
+  "This defines a relationship with a Skill Object Type value"
+  parent: Skill
+
+  "this is a field level description"
+  name: String!
+
+  """
+  This field has a @deprecated directive
+  @see [Using schema directives](https://www.apollographql.com/docs/apollo-server/schema/directives/)
+  """
+  now: String! @deprecated(reason: "This is just an example of a virtual field.")
+}
+
+enum EyeColor {
+  BLUE
+  GREEN
+  BROWN
+  BLACK
+}
+
+input InputPerson {
+  id: ID
+  age: Int
+  eyeColor: EyeColor
+  favSkill: ID
+}
+
+input InputSkill {
+  id: ID
+  name: String
+}
+
+type Person {
+  id: ID
+  name: String!
+  surname: String
+  fullName: String
+  email: String
+  age: Int
+  eyeColor: EyeColor
+  friends (input: InputPerson): [Person!]
+  skills (input: InputSkill): [Skill!]
+  favSkill: Skill
+}
+
+type Query {
+  randomSkill: Skill!
+  randomPerson: Person!
+  skill (input: InputSkill): Skill
+  person (input: InputPerson): Person
+  skills (input: InputSkill): [Skill!]
+  persons (input: InputPerson): [Person!]
+}

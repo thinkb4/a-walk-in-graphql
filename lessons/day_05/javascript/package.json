@@ -1,0 +1,51 @@
+{
+  "name": "js_05",
+  "version": "1.0.0",
+  "description": "Lesson 05 exercises - JavaScript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jaxolotl/a-walk-in-graphql.git"
+  },
+  "scripts": {
+    "start": "nodemon -e js,gql src/server.js"
+  },
+  "keywords": [
+    "javascript",
+    "JS",
+    "ES6",
+    "ECMAScript",
+    "graphql",
+    "apollo",
+    "query",
+    "resolver",
+    "argument",
+    "variable",
+    "input type",
+    "inputType",
+    "enum",
+    "mutation",
+    "mutations",
+    "interface",
+    "union"
+  ],
+  "author": "Javier Valderrama <jaxolotl@gmail.com>",
+  "contributors": [
+    "Ezequiel Alvarez <ezequielalvarez@gmail.com>"
+  ],
+  "engines" : { 
+    "node" : ">=10.17.0"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jaxolotl/a-walk-in-graphql/issues"
+  },
+  "homepage": "https://github.com/Jaxolotl/a-walk-in-graphql#readme",
+  "private": true,
+  "dependencies": {
+    "apollo-server": ">=2.14.2",
+    "graphql-tag": "~2.10.3",
+    "lowdb": "~1.0.0",
+    "nanoid": "~2.1.11",
+    "nodemon": "~2.0.3"
+  }
+}

@@ -1,0 +1,20 @@
+
+# INPUTS
+
+input InputGlobalSearch {
+  name: String!
+}
+
+# UNIONS
+
+union GlobalSearch = 
+  | Skill
+  | Engineer
+  | Candidate
+  | Contact
+
+# ROOT OPERATIONS
+
+extend type Query {
+  search (input: InputGlobalSearch): [GlobalSearch!]
+}
