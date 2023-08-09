@@ -1,6 +1,15 @@
 package com.example.DemoGraphQL.model;
 
-import javax.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -82,7 +91,9 @@ public class Skill {
         return "Skill{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", parent=" + parent.name +
+                ", parent=" + (parent != null ? parent.name : "null") +
                 '}';
     }
+    
+    
 }
