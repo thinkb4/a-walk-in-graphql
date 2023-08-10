@@ -3,6 +3,7 @@ coverage
 live_demo.js
 *.log
 yarn.lock
+.DS_Store
 
 ### Java ###
 target/

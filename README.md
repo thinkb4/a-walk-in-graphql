@@ -11,27 +11,28 @@ Hopefully your walk will be much easier than ours!
 
 ### Collaborators
 
-- Ezequiel Alvarez - [@ealvarezk](https://github.com/ealvarezk)
-  - Execution coordinator and reviewer
-- Ezequiel Tejerina - [@quequitejerina](https://github.com/quequitejerina)
-  - Python exercise contributor and reviewer
-- Franco Gribaudo - [@fgriba](https://github.com/fgriba)
-  - Java exercise contributor and reviewer
-- Cristian Buffa - [@cristianbuffa](https://github.com/cristianbuffa) & José Ignacio Aguilera - [@jiaguilera](https://github.com/jiaguilera)
-  - NetCore exercise contributors and reviewers
-- Javier Valderrama - [@Jaxolotl](https://github.com/Jaxolotl)
-  - Course writer, JavaScript exercise contributor and reviewer
+- Execution coordinator and reviewer
+  - Ezequiel Alvarez - [@ealvarezk](https://github.com/ealvarezk)
+- Python exercise contributor and reviewer
+  - Ezequiel Tejerina - [@quequitejerina](https://github.com/quequitejerina)
+- Java exercise contributor and reviewer
+  - Franco Gribaudo - [@fgriba](https://github.com/fgriba)
+  - Santiago Ciappesoni [@sciappesoni](https://github.com/sciappesoni)
+- NetCore exercise contributors and reviewers
+  - Cristian Buffa - [@cristianbuffa](https://github.com/cristianbuffa)
+  - José Ignacio Aguilera - [@jiaguilera](https://github.com/jiaguilera)
+- Course writer, JavaScript exercise contributor and reviewer
+  - Javier Valderrama - [@Jaxolotl](https://github.com/Jaxolotl)
 
 #### Special thanks to our external reviewers!
 
-- Eloy Colella - [@ehx](https://github.com/ehx)
-  - Python reviewer
-- Ciro Grbavac- [@ciro599](https://github.com/ciro599)
-  - Java reviewer
-- Lucas Mari - [@lucasmari76](https://github.com/lucasmari76)
-  - Java reviewer
-- Alejandro Freiberg - [@alejandrofreiberg](https://github.com/alejandrofreiberg)
-  - NetCore reviewer
+- Python
+  - Eloy Colella - [@ehx](https://github.com/ehx)
+- Java
+  - Ciro Grbavac - [@ciro599](https://github.com/ciro599)
+  - Lucas Mari - [@lucasmari76](https://github.com/lucasmari76)
+- NetCore
+  - Alejandro Freiberg - [@alejandrofreiberg](https://github.com/alejandrofreiberg)
 
 ## Table of contents
 
