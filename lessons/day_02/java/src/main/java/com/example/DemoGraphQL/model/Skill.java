@@ -1,6 +1,7 @@
 package com.example.DemoGraphQL.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -68,8 +69,8 @@ public class Skill {
         if (!(o instanceof Skill)) return false;
         Skill skill = (Skill) o;
         return Objects.equals(getId(), skill.getId()) &&
-                Objects.equals(getName(), skill.getName()) &&
-                Objects.equals(getParent(), skill.getParent());
+               Objects.equals(getName(), skill.getName()) &&
+               Objects.equals(getParent(), skill.getParent());
     }
 
     @Override
@@ -80,9 +81,9 @@ public class Skill {
     @Override
     public String toString() {
         return "Skill{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", parent=" + parent.name +
-                '}';
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", parent=" + parent.name +
+               '}';
     }
 }

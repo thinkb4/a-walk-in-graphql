@@ -2,14 +2,13 @@ package com.example.DemoGraphQL.resolver;
 
 import com.example.DemoGraphQL.model.Person;
 import com.example.DemoGraphQL.service.PersonService;
-import graphql.kickstart.tools.GraphQLResolver;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 /**
  * Field-level resolver for Person class
  */
-@Component
-public class PersonResolver implements GraphQLResolver<Person> {
+@Controller
+public class PersonResolver {
 
     private final PersonService personService;
 

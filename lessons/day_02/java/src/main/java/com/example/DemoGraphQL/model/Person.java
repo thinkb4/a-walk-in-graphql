@@ -1,6 +1,7 @@
 package com.example.DemoGraphQL.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -146,15 +147,15 @@ public class Person {
         if (!(o instanceof Person)) return false;
         Person person = (Person) o;
         return getAge() == person.getAge() &&
-                Objects.equals(getId(), person.getId()) &&
-                Objects.equals(getName(), person.getName()) &&
-                Objects.equals(getSurname(), person.getSurname()) &&
-                Objects.equals(getEmail(), person.getEmail()) &&
-                Objects.equals(getEyeColor(), person.getEyeColor()) &&
-                Objects.equals(getFriends(), person.getFriends()) &&
-                Objects.equals(getFriendOf(), person.getFriendOf()) &&
-                Objects.equals(getSkills(), person.getSkills()) &&
-                Objects.equals(getFavSkill(), person.getFavSkill());
+               Objects.equals(getId(), person.getId()) &&
+               Objects.equals(getName(), person.getName()) &&
+               Objects.equals(getSurname(), person.getSurname()) &&
+               Objects.equals(getEmail(), person.getEmail()) &&
+               Objects.equals(getEyeColor(), person.getEyeColor()) &&
+               Objects.equals(getFriends(), person.getFriends()) &&
+               Objects.equals(getFriendOf(), person.getFriendOf()) &&
+               Objects.equals(getSkills(), person.getSkills()) &&
+               Objects.equals(getFavSkill(), person.getFavSkill());
     }
 
     @Override
@@ -165,12 +166,12 @@ public class Person {
     @Override
     public String toString() {
         return "Person{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                ", eyeColor='" + eyeColor + '\'' +
-                ", age=" + age +
-                '}';
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", surname='" + surname + '\'' +
+               ", email='" + email + '\'' +
+               ", eyeColor='" + eyeColor + '\'' +
+               ", age=" + age +
+               '}';
     }
 }
