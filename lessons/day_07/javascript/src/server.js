@@ -1,8 +1,8 @@
-
 const fs = require('fs');
 const path = require('path');
 
-const { ApolloServer } = require('apollo-server');
+const { ApolloServer } = require('@apollo/server');
+const { startStandaloneServer } = require('@apollo/server/standalone');
 
 const resolvers = require('./resolvers/resolvers');
 const TD_BASE = fs.readFileSync('./src/schema/schema.gql', "utf8").toString();
@@ -12,18 +12,19 @@ const TD_GLOBAL_SEARCH = fs.readFileSync('./src/schema/globalSearch.gql', "utf8"
 
 const { models } = require('./db');
 
+
+
 /**
  * 
  * @see https://www.apollographql.com/docs/apollo-server/api/apollo-server/
  */
-const server = new ApolloServer({
-  typeDefs: [TD_BASE, TD_PERSON, TD_SKILL, TD_GLOBAL_SEARCH],
-  resolvers,
-  context() {
-    return { models };
-  }
-});
+const server = new ApolloServer({ typeDefs: [TD_BASE, TD_PERSON, TD_SKILL, TD_GLOBAL_SEARCH], resolvers });
 
-server.listen(4000).then(({ url }) => {
+(async () => {
+  const { url } = await startStandaloneServer(server, {
+    context: async () => ({ models }),
+    listen: { port: 4000 },
+  });
+
   console.log(`💥 BANG! I'm listening to ${url}`);
-});
+})();

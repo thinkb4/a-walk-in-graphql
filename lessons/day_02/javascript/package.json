@@ -25,20 +25,24 @@
   "contributors": [
     "Ezequiel Alvarez <ezequielalvarez@gmail.com>"
   ],
-  "engines" : { 
-    "node" : ">=10.17.0"
-  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Jaxolotl/a-walk-in-graphql/issues"
   },
   "homepage": "https://github.com/Jaxolotl/a-walk-in-graphql#readme",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-    "apollo-server": ">=2.14.2",
-    "graphql-tag": "~2.10.3",
+    "@apollo/server": "^4.9.1",
+    "graphql": "^16.7.1",
+    "lodash": "^4.17.21",
     "lowdb": "~1.0.0",
     "nanoid": "~2.1.11",
     "nodemon": "~2.0.3"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4"
   }
 }
