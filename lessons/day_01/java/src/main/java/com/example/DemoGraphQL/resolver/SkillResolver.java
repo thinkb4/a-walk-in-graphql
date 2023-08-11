@@ -8,11 +8,11 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class SkillQuery {
+public class SkillResolver {
 
     private final SkillService skillService;
     
-    public SkillQuery(SkillService skillService) {
+    public SkillResolver(SkillService skillService) {
         this.skillService = skillService;
     }
 
