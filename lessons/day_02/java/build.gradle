@@ -1,7 +1,16 @@
 plugins {
     id 'java'
+        id 'application'    
     id 'org.springframework.boot' version '3.1.2'
     id 'io.spring.dependency-management' version '1.1.2'
+}
+
+ext {
+   javaMainClass = "com.example.DemoGraphQL.DemoGraphQlApplication"
+}
+
+application {
+    mainClassName = javaMainClass
 }
 
 group = 'com.example'
