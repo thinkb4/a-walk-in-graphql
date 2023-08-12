@@ -79,5 +79,5 @@ After starting the application, you can navigate to:
 ## Learning Resources
 
 * [GraphQL official documentation](https://graphql.org/learn/)
-* [GraphQL java official documentation] (https://www.graphql-java.com/documentation/getting-started)
+* [GraphQL java official documentation](https://www.graphql-java.com/documentation/getting-started)
 * [Spring Boot GraphQL documentation](https://spring.io/projects/spring-graphql)
