@@ -1,5 +1,5 @@
 from ariadne import QueryType, ObjectType
-from random import randint
+from random import choice
 from models import Skill, Person
 from data import session
 from datetime import datetime
@@ -15,16 +15,14 @@ person = ObjectType("Person")
 # Top level resolvers
 @query.field("randomSkill")
 def resolve_random_skill(_, info):
-    records = session.query(Skill).count()
-    random_id = str(randint(1, records))
-    return session.query(Skill).get(random_id)
+    records = [skill.id for skill in session.query(Skill.id)]
+    return session.query(Skill).get(choice(records))
 
 
 @query.field("randomPerson")
 def resolve_random_person(_, info):
-    records = session.query(Person).count()
-    random_id = str(randint(1, records))
-    return session.query(Person).get(random_id)
+    records = [person.id for person in session.query(Person.id)]
+    return session.query(Person).get(choice(records))
 
 
 @query.field("persons")
