@@ -19,9 +19,9 @@ Installers are currently available for Windows®, Linux®, and macOS® JDK and J
 
 ### Project Plugins
 
-* `java` Java JVM to be used for compile an run the code. (Required to use java source code)
-* `org.springframework.boot` Spring boot frework ot be used into the project. (Required to use spring boot)
-* `io.spring.dependency-management` (Required to use dependencies into spring framework)
+* `java` Java JVM to be used for compile and run the code Gradle Plugin. (Required to use java source code)
+* `org.springframework.boot` Spring Boot Gradle Plugin. (Required to use Spring boot)
+* `io.spring.dependency-management` A Gradle plugin that provides Maven-like dependency management funtionallity. (Required to use dependencies in the project)
 
 ### Project Dependencies
 
@@ -42,13 +42,17 @@ Spring Boot will automatically pick these up and set up the appropriate handlers
   and @MutationMapping (for mutation), respectively.
 * `Beans Representing Types:` Every complex type in the GraphQL server is represented by a Java bean with corresponding spring annotation. Fields inside the Java bean will mapped onto fields with corresponging spring annotation, in the GraphQL response based on the name of the field.
 * Sometimes, the value of a field is non-trivial to load. This might involve database lookups, complex calculations, or anything else. GraphQL Tools has a concept of a "Field Resolver" that is used for this purpose. 
-  The field resolver is any method contatined into the "Entity Resolver" in the Spring Context that has the same name as the data bean, with the suffix @SchemaMapping spring annotation. Methods on the field resolver bean follow all of the same rules as on the data bean but are also provided the data bean itself as a first parameter. 
+  The field resolver is any method contatined into the "Entity Resolver" in the Spring Context that has the same name as the data bean, with the suffix @SchemaMapping spring annotation. Methods on the field resolver bean follow all of the same rules like the data bean. The method should be annotated using @SchemaMapping and into the method, the data bean instance it's  passed as first parameter.
 
 ## Run Application
 
 ### Using Gradle Wrapper
 
-The Gradle Wrapper is an excellent choice for projects that need a specific version depdency from Maven central or custom respositories.
+Gradle is a build automation tool known for its flexibility to build software. 
+The recommended way to execute any Gradle build is with the help of the Gradle Wrapper (in short just “Wrapper”). 
+The Wrapper is a script that invokes a declared version of Gradle, downloading it beforehand if necessary. 
+As a result, developers can get up and running with a Gradle project quickly without having to follow manual installation processes saving your company time and money.
+[https://docs.gradle.org/current/userguide/gradle_wrapper.html]
 
 ### Run the app using Gradle 
 1. Open a terminal
