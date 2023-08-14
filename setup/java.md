@@ -64,7 +64,7 @@ The Gradle Wrapper is an excellent choice for projects that need a specific vers
 
 ## Testing GraphQL queries
 
-To display a GUI for editing and testing GraphQL queries and mutations against the server you can open your browser and type [http://localhost:8080/graphiq](http://localhost:8080/graphiq)
+To display a GUI for editing and testing GraphQL queries and mutations against the server you can open your browser and type [http://localhost:8080/graphiql](http://localhost:8080/graphiql)
 
 ## Inspect the Database
 
