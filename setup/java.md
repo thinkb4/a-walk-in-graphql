@@ -12,9 +12,10 @@ The [Spring Boot GraphQL Starter](https://github.com/graphql-java-kickstart/grap
 
 Installers are currently available for Windows®, Linux®, and macOS® JDK and JRE packages. Installation steps are covered in the following sections:
 
-* [Windows MSI installer packages](https://adoptopenjdk.net/installation.html?variant=openjdk8&jvmVariant=hotspot#windows-msi)
-* [macOS PKG installer packages](https://adoptopenjdk.net/installation.html?variant=openjdk8&jvmVariant=hotspot#macos-pkg)
-* [Linux RPM and DEB installer packages](https://adoptopenjdk.net/installation.html?variant=openjdk8&jvmVariant=hotspot#linux-pkg)
+* [Main page command line installation](https://adoptium.net/es/installation/) 
+* [Windows MSI installer packages](https://adoptium.net/es/installation/windows/)
+* [macOS PKG installer packages](https://adoptium.net/es/installation/macOS/)
+* [Linux RPM and DEB installer packages](https://adoptium.net/es/installation/linux/)
 * [Alternatively if you want to use multiples JDK and multiple tools versions administered you can use SDKMAN!](https://sdkman.io/)
 
 ### Project Plugins
