@@ -57,7 +57,7 @@ As a result, developers can get up and running with a Gradle project quickly wit
 ### Run the app using Gradle 
 1. Open a terminal
 2. go to the java exercise directory
-3. run `./gradle run `(linux) or `gradle.bat run`(windows) to start the GraphQL server.
+3. run `./gradlew bootRun `(linux) or `gradlew.bat bootRun`(windows) to start the GraphQL server.
 
 ### Using the IDE (IntelliJ IDEA)
 
@@ -68,7 +68,7 @@ As a result, developers can get up and running with a Gradle project quickly wit
 
 ## Testing GraphQL queries
 
-To display a GUI for editing and testing GraphQL queries and mutations against the server you can open your browser and type [http://localhost:8080/graphiql](http://localhost:8080/graphiql)
+To display a GUI for editing and testing GraphQL queries and mutations against the server you can open your browser and type [http://localhost:8080/playground](http://localhost:8080/playground)
 
 ## Inspect the Database
 
