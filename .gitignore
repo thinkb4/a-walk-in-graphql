@@ -7,7 +7,7 @@ yarn.lock
 
 ### Java ###
 target/
-!.mvn/wrapper/maven-wrapper.jar
+*.jpb
 
 ### IntelliJ IDEA ###
 .idea
@@ -16,6 +16,9 @@ target/
 *.ipr
 **/package-lock.json
 
+### NetBeans IDE ###
+nbproject/
+
 ### Python ###
 venv/
 .vscode/
@@ -23,3 +26,16 @@ __pycache__/
 
 ### NetCore
 .vs
+/nbproject/private/
+
+### Gradle ###
+.gradle
+**/build/
+!src/**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+.gradletasknamecache
+.project
+.classpath 
+gradle.properties

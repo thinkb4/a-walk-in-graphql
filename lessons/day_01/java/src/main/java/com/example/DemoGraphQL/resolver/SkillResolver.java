@@ -2,37 +2,28 @@ package com.example.DemoGraphQL.resolver;
 
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.SkillService;
-import graphql.kickstart.tools.GraphQLResolver;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.stereotype.Controller;
 
-/**
- * Field-level resolver for Skill class
- */
-@Component
-public class SkillResolver implements GraphQLResolver<Skill> {
+@Controller
+public class SkillResolver {
 
     private final SkillService skillService;
-
+    
     public SkillResolver(SkillService skillService) {
         this.skillService = skillService;
     }
 
-    /**
-     * This is a resolver for "parent" entity field
-     */
-    public Skill getParent(Skill skill) {
-        Skill parent = null;
-        if (skill.getParent() != null)
-            parent = skillService.getSkill(skill.getParent().getId()).get();
-        return parent;
+    @QueryMapping
+    public Skill randomSkill() {
+        return this.skillService.getRandomSkill();
     }
 
-    /**
-     * This is just a sample resolver for a virtual field
-     */
-    public String getNow(Skill skill) {
+    @SchemaMapping
+    public String now(Skill skill) {
         return LocalDateTime.now().toString();
-    }
+    } 
+    
 }

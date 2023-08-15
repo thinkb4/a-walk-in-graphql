@@ -6,42 +6,59 @@ The [Spring Boot GraphQL Starter](https://github.com/graphql-java-kickstart/grap
 
 ### Requirements
 
-* Java 1.8
+* Java 17
 
-#### AdoptOpenJDK 8 (LTS) Installation
+#### AdoptOpenJDK 17 (LTS) Installation
 
 Installers are currently available for Windows®, Linux®, and macOS® JDK and JRE packages. Installation steps are covered in the following sections:
 
-* [Windows MSI installer packages](https://adoptopenjdk.net/installation.html?variant=openjdk8&jvmVariant=hotspot#windows-msi)
-* [macOS PKG installer packages](https://adoptopenjdk.net/installation.html?variant=openjdk8&jvmVariant=hotspot#macos-pkg)
-* [Linux RPM and DEB installer packages](https://adoptopenjdk.net/installation.html?variant=openjdk8&jvmVariant=hotspot#linux-pkg)
+* [Main page command line installation](https://adoptium.net/es/installation/) 
+* [Windows MSI installer packages](https://adoptium.net/es/installation/windows/)
+* [macOS PKG installer packages](https://adoptium.net/es/installation/macOS/)
+* [Linux RPM and DEB installer packages](https://adoptium.net/es/installation/linux/)
+* [Alternatively if you want to use multiples JDK and multiple tools versions administered you can use SDKMAN!](https://sdkman.io/)
+
+### Project Plugins
+
+* `java` Java JVM to be used for compile and run the code Gradle Plugin. (Required to use java source code)
+* `org.springframework.boot` Spring Boot Gradle Plugin. (Required to use Spring boot)
+* `io.spring.dependency-management` A Gradle plugin that provides Maven-like dependency management funtionallity. (Required to use dependencies in the project)
 
 ### Project Dependencies
 
-* `graphql-spring-boot-starter` to turn your boot application into GraphQL server. (see [graphql-java-servlet](https://github.com/graphql-java-kickstart/graphql-java-servlet))
-* `playground-spring-boot-starter` to embed GraphQL Playground tool for schema introspection and query debugging (see [GraphQL Playground](https://github.com/prisma/graphql-playground))
-* `graphql-java-tools` a schema-first tool that allows us to use the GraphQL schema language to build your graphql-java schema (see [graphql-java-tools](https://github.com/graphql-java-kickstart/graphql-java-tools)). Inspired by apollo [graphql-tools](https://github.com/apollographql/graphql-tools), it parses the given GraphQL schema and allows you to BYOO (bring your own object) to fill in the implementations.
+* `spring-boot-starter` Core starter, including auto-configuration support, logging and YAML. [https://docs.spring.io/spring-boot/docs/3.1.2/reference/htmlsingle/#using.build-systems.starters]
+* `spring-boot-starter-data-jpa` Starter for using Spring Data JPA with Hibernate. [https://docs.spring.io/spring-boot/docs/3.1.2/reference/htmlsingle/#using.build-systems.starters]
+* `spring-boot-starter-graphql` Starter for building GraphQL applications with Spring GraphQL [https://docs.spring.io/spring-graphql/docs/current/api/] 
+* `spring-boot-starter-web` Starter for building web, including RESTful, applications using Spring MVC. Uses Tomcat as the default embedded container. [https://docs.spring.io/spring-boot/docs/3.1.2/reference/htmlsingle/#using.build-systems.starters]
+* Aditional Spring Boot Starters doc [https://github.com/spring-projects/spring-boot/blob/main/README.adoc#spring-boot-starters]
+
 
 Spring Boot will automatically pick these up and set up the appropriate handlers to work automatically. By default, this will expose the GraphQL Service on the `/graphql` endpoint of our application and will accept POST requests containing the GraphQL Payload. This endpoint can be customised in our `application.properties` file if necessary.
 
 ### Keep in mind
 
-* The `GraphQL Tools` library works by processing GraphQL Schema files to build the correct structure and then wires special beans to this structure. 
+* The `GraphQL Tools` library works by processing GraphQL Schema files to build the correct structure and then wires special beans to this structure.
 * The `Spring Boot GraphQL starter` automatically finds these schema files, we just need to save these files with the extension ".graphqls" on the classpath.
-* Query and Mutation objects are root GraphQL objects. They don’t have any associated "data" class. In such cases, the "resolver" classes would implement `GraphQLQueryResolver` or `GraphQLMutationResolver`.
-* `Beans Representing Types:` Every complex type in the GraphQL server is represented by a Java bean. Fields inside the Java bean will directly map onto fields in the GraphQL response based on the name of the field.
+* Query and Mutation objects are root GraphQL objects. They don’t have any associated "data" class. In such cases, the "resolver" classes can be @Component or @Controller spring annotated, and @QueryMapping (for query) 
+  and @MutationMapping (for mutation), respectively.
+* `Beans Representing Types:` Every complex type in the GraphQL server is represented by a Java bean with corresponding spring annotation. Fields inside the Java bean will mapped onto fields with corresponging spring annotation, in the GraphQL response based on the name of the field.
 * Sometimes, the value of a field is non-trivial to load. This might involve database lookups, complex calculations, or anything else. GraphQL Tools has a concept of a "Field Resolver" that is used for this purpose. 
-The field resolver is any bean in the Spring Context that has the same name as the data bean, with the suffix "Resolver", and that implements the `GraphQLResolver` interface. Methods on the field resolver bean follow all of the same rules as on the data bean but are also provided the data bean itself as a first parameter. If a field resolver and the data bean both have methods for the same GraphQL field then the field resolver will take precedence.
+  The field resolver is any method contatined into the "Entity Resolver" in the Spring Context that has the same name as the data bean, with the suffix @SchemaMapping spring annotation. Methods on the field resolver bean follow all of the same rules like the data bean. The method should be annotated using @SchemaMapping and into the method, the data bean instance it's  passed as first parameter.
 
 ## Run Application
 
-### Using Maven Wrapper
+### Using Gradle Wrapper
 
-The Maven Wrapper is an excellent choice for projects that need a specific version of Maven (or for users that don't want to install Maven at all).
+Gradle is a build automation tool known for its flexibility to build software. 
+The recommended way to execute any Gradle build is with the help of the Gradle Wrapper (in short just “Wrapper”). 
+The Wrapper is a script that invokes a declared version of Gradle, downloading it beforehand if necessary. 
+As a result, developers can get up and running with a Gradle project quickly without having to follow manual installation processes saving your company time and money.
+[https://docs.gradle.org/current/userguide/gradle_wrapper.html]
 
+### Run the app using Gradle 
 1. Open a terminal
 2. go to the java exercise directory
-3. run `./mvnw spring-boot:run`(linux) or `mvnw.cmd spring-boot:run`(windows) to start the GraphQL server.
+3. run `./gradlew bootRun `(linux) or `gradlew.bat bootRun`(windows) to start the GraphQL server.
 
 ### Using the IDE (IntelliJ IDEA)
 
@@ -66,7 +83,6 @@ After starting the application, you can navigate to:
 
 ## Learning Resources
 
-* [GrapQL official documentation](https://graphql.org/learn/)
-* [graphql-java documentation](https://www.graphql-java.com/documentation/)
-* [GraphQL Java Kickstart - Springboot](https://www.graphql-java-kickstart.com/spring-boot/)
-* [GraphQL Java Kickstart - Tools](https://www.graphql-java-kickstart.com/tools/)
+* [GraphQL official documentation](https://graphql.org/learn/)
+* [GraphQL java official documentation](https://www.graphql-java.com/documentation/getting-started)
+* [Spring Boot GraphQL documentation](https://spring.io/projects/spring-graphql)
