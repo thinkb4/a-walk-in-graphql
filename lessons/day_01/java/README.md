@@ -6,7 +6,7 @@ Read the instructions on the [Day 1 exercise](../day_01.md#exercise) definition
 
 ### Requirements
 
-Java 1.8 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
+Java 17 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
 
 ### Keep in mind
 
