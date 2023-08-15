@@ -6,7 +6,6 @@ yarn.lock
 
 ### Java ###
 target/
-!.mvn/wrapper/maven-wrapper.jar
 *.jpb
 
 ### IntelliJ IDEA ###
