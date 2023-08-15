@@ -12,9 +12,10 @@ The [Spring Boot GraphQL Starter](https://github.com/graphql-java-kickstart/grap
 
 Installers are currently available for Windows®, Linux®, and macOS® JDK and JRE packages. Installation steps are covered in the following sections:
 
-* [Windows MSI installer packages](https://adoptopenjdk.net/installation.html?variant=openjdk8&jvmVariant=hotspot#windows-msi)
-* [macOS PKG installer packages](https://adoptopenjdk.net/installation.html?variant=openjdk8&jvmVariant=hotspot#macos-pkg)
-* [Linux RPM and DEB installer packages](https://adoptopenjdk.net/installation.html?variant=openjdk8&jvmVariant=hotspot#linux-pkg)
+* [Main page command line installation](https://adoptium.net/es/installation/) 
+* [Windows MSI installer packages](https://adoptium.net/es/installation/windows/)
+* [macOS PKG installer packages](https://adoptium.net/es/installation/macOS/)
+* [Linux RPM and DEB installer packages](https://adoptium.net/es/installation/linux/)
 * [Alternatively if you want to use multiples JDK and multiple tools versions administered you can use SDKMAN!](https://sdkman.io/)
 
 ### Project Plugins
@@ -57,7 +58,7 @@ As a result, developers can get up and running with a Gradle project quickly wit
 ### Run the app using Gradle 
 1. Open a terminal
 2. go to the java exercise directory
-3. run `./gradle run `(linux) or `gradle.bat run`(windows) to start the GraphQL server.
+3. run `./gradlew bootRun `(linux) or `gradlew.bat bootRun`(windows) to start the GraphQL server.
 
 ### Using the IDE (IntelliJ IDEA)
 
@@ -68,7 +69,7 @@ As a result, developers can get up and running with a Gradle project quickly wit
 
 ## Testing GraphQL queries
 
-To display a GUI for editing and testing GraphQL queries and mutations against the server you can open your browser and type [http://localhost:8080/graphiql](http://localhost:8080/graphiql)
+To display a GUI for editing and testing GraphQL queries and mutations against the server you can open your browser and type [http://localhost:8080/playground](http://localhost:8080/playground)
 
 ## Inspect the Database
 

@@ -37,3 +37,4 @@ gradle-app.setting
 .gradletasknamecache
 .project
 .classpath 
+gradle.properties
