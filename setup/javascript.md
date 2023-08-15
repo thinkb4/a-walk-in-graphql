@@ -2,8 +2,8 @@
 
 ## JavaScript setup
 
-- Install [Node.js](https://nodejs.org/en/download/releases/) version >=10.17.0
-- (optional) Instal [Yarn](https://classic.yarnpkg.com/en/docs/install/) version >= 1.0.0
+- Install [Node.js](https://nodejs.org/en/download/releases/) version >=18
+- (optional) Instal [Yarn](https://classic.yarnpkg.com/en/docs/install/) version >= 1.22.19
 
 ### Run the server
 

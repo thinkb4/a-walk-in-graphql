@@ -32,5 +32,12 @@
   "private": true,
   "workspaces": [
     "lessons/day_[0-9][0-9]/javascript"
-  ]
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "volta": {
+    "node": "18.12.1",
+    "yarn": "1.22.19"
+  }
 }
