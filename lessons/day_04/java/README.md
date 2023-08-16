@@ -1,10 +1,8 @@
 # [A walk in GraphQL](../../../README.md)
 
-## Day 4 exercise - Java
+## Day 2 exercise - Java
 
-Read the instructions on the [Day 4 exercise](../day_04.md#exercise) definition
-
-HINT: Mutation objects are root GraphQL objects. They don’t have any associated "data" class. In such cases, the "resolver" class have to implement the `GraphQLMutationResolver` interface.
+Read the instructions on the [Day 2 exercise](../day_02.md#exercise) definition
 
 ### Requirements
 

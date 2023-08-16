@@ -1,10 +1,8 @@
 # [A walk in GraphQL](../../../README.md)
 
-## Day 3 exercise - Java
+## Day 2 exercise - Java
 
-Read the instructions on the [Day 3 exercise](../day_03.md#exercise) definition
-
-HINT: Take a look at the commented out PersonService and SkillService methods!!
+Read the instructions on the [Day 2 exercise](../day_02.md#exercise) definition
 
 ### Requirements
 
@@ -30,5 +28,3 @@ See [Testing GraphQL queries](../../../setup/java.md#testing-graphql-queries)
 ### Database
 
 See [Inspect the Database](../../../setup/java.md#inspect-the-database)
-
-
