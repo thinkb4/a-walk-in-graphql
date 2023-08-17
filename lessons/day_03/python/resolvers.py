@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import List, TypeVar
 from ariadne import QueryType, ObjectType
 from random import choice
 
@@ -14,17 +14,18 @@ query = QueryType()
 skill = ObjectType("Skill")
 person = ObjectType("Person")
 
-ID = TypeVar('ID', int, str)
+ID = TypeVar("ID", int, str)
+
 
 # Top level resolvers
 @query.field("randomSkill")
-def resolve_random_skill(_, info: GraphQLResolveInfo):
+def resolve_random_skill(_, info: GraphQLResolveInfo) -> Skill | None:
     records = [skill.id for skill in session.query(Skill.id)]
     return session.query(Skill).get(choice(records))
 
 
 @query.field("randomPerson")
-def resolve_random_person(_, info: GraphQLResolveInfo):
+def resolve_random_person(_, info: GraphQLResolveInfo) -> Skill | None:
     records = [person.id for person in session.query(Person.id)]
     return session.query(Person).get(choice(records))
 
@@ -51,30 +52,32 @@ def resolve_skill(_, info: GraphQLResolveInfo, id: ID | None = None):
 
 # Field level resolvers
 @skill.field("now")
-def resolve_now(_, info: GraphQLResolveInfo):
+def resolve_now(_, info: GraphQLResolveInfo) -> datetime:
     return datetime.now()
 
 
 @skill.field("parent")
-def resolve_parent(obj, info: GraphQLResolveInfo):
+def resolve_parent(obj, info: GraphQLResolveInfo) -> Skill:
     return obj.parent_skill
 
 
 @person.field("fullName")
-def resolve_full_name(obj, info: GraphQLResolveInfo):
-    return f'{obj.name} {obj.surname}'
+def resolve_full_name(obj, info: GraphQLResolveInfo) -> str:
+    return f"{obj.name} {obj.surname}"
 
 
 @person.field("friends")
-def resolve_friends(obj, info: GraphQLResolveInfo, id: ID | None = None):
+def resolve_friends(obj, info: GraphQLResolveInfo, id: ID | None = None) -> Person:
     return obj.friends.filter_by(id=id) if id else obj.friends
 
 
 @person.field("skills")
-def resolve_person_skills(obj, info: GraphQLResolveInfo, id: ID | None = None):
+def resolve_person_skills(
+    obj, info: GraphQLResolveInfo, id: ID | None = None
+) -> List[Skill]:
     return obj.skills.filter_by(id=id) if id else obj.skills
 
 
 @person.field("favSkill")
-def resolve_fav_skill(obj, info: GraphQLResolveInfo):
+def resolve_fav_skill(obj, info: GraphQLResolveInfo) -> Skill:
     return obj.person_favSkill

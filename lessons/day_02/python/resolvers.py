@@ -30,7 +30,11 @@ def resolve_random_person(_, info: GraphQLResolveInfo) -> Person | None:
 
 @query.field("persons")
 def resolve_persons(_, info: GraphQLResolveInfo, id: int | None = None) -> List[Person]:
-    return session.query(Person).filter_by(id=id).all() if id else session.query(Person).all()
+    return (
+        session.query(Person).filter_by(id=id).all()
+        if id
+        else session.query(Person).all()
+    )
 
 
 # Field level resolvers
@@ -46,7 +50,7 @@ def resolve_parent(obj: Any, info: GraphQLResolveInfo) -> Skill:
 
 @person.field("fullName")
 def resolve_full_name(obj: Any, info: GraphQLResolveInfo) -> str:
-    return f'{obj.name} {obj.surname}'
+    return f"{obj.name} {obj.surname}"
 
 
 @person.field("friends")
