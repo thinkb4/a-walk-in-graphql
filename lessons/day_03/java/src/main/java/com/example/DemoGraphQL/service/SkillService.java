@@ -1,9 +1,7 @@
 package com.example.DemoGraphQL.service;
 
-import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.repository.SkillRepository;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

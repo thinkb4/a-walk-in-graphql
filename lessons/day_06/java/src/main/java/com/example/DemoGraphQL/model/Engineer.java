@@ -1,6 +1,6 @@
 package com.example.DemoGraphQL.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @DiscriminatorValue("Engineer")

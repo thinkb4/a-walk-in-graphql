@@ -1,18 +1,23 @@
 package com.example.DemoGraphQL.resolver;
 
+import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.SkillService;
-import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.stereotype.Controller;
 
 /**
  * Field-level resolver for Skill class
  */
-@Component
-public class SkillResolver implements GraphQLResolver<Skill> {
+@Controller
+public class SkillResolver {
 
     private final SkillService skillService;
 
@@ -23,6 +28,7 @@ public class SkillResolver implements GraphQLResolver<Skill> {
     /**
      * This is a resolver for "parent" entity field
      */
+    @SchemaMapping(field = "parent")
     public Optional<Skill> getParent(Skill skill) {
         Optional<Skill> parent = null;
         if (skill.getParent() != null)
@@ -33,7 +39,23 @@ public class SkillResolver implements GraphQLResolver<Skill> {
     /**
      * This is just a sample resolver for a virtual field
      */
+    @SchemaMapping(field = "now")
     public String getNow(Skill skill) {
         return LocalDateTime.now().toString();
+    }
+
+    @QueryMapping
+    public Skill randomSkill() {
+        return this.skillService.getRandomSkill();
+}
+    
+    @QueryMapping
+    public Optional<Skill> skill(@Argument final InputSkill input) {
+        return this.skillService.getSkill(input);
+    }
+
+    @QueryMapping
+    public List<Skill> skills(@Argument final InputSkill input) {
+        return this.skillService.getSkills(input);
     }
 }

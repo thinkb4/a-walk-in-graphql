@@ -26,4 +26,6 @@ extend type Query {
 
 extend type Mutation {
     createSkill (input: InputSkillCreate): Skill!
+    createSkillDefensiveErrorHandling (input: InputSkillCreate): Skill!
+    createSkillInformativeErrorHandling (input: InputSkillCreate): Skill!
 }

@@ -5,16 +5,19 @@ import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.model.Person;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.PersonService;
-import graphql.kickstart.tools.GraphQLResolver;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.stereotype.Controller;
 
 /**
  * Field-level resolver for Person class
  */
-@Component
-public class PersonResolver implements GraphQLResolver<Person> {
+@Controller
+public class PersonResolver {
 
     private final PersonService personService;
 
@@ -22,15 +25,35 @@ public class PersonResolver implements GraphQLResolver<Person> {
         this.personService = personService;
     }
 
-    public String fullName(Person person) {
+    @SchemaMapping
+    public String fullName(final Person person) {
         return person.getName() + " " + person.getSurname();
     }
 
-    public List<Person> friends(final Person person, final InputPerson input) {
+    @SchemaMapping    
+    public List<Person> friends(final Person person, 
+                                @Argument(name = "input") final InputPerson input) {
         return this.personService.getFriends(person, input);
     }
 
-    public List<Skill> skills(final Person person, final InputSkill input) {
+    @SchemaMapping
+    public List<Skill> skills(final Person person, 
+                              @Argument(name = "input") final InputSkill input) {
         return this.personService.getSkills(person, input);
+    }
+    
+    @QueryMapping
+    public Person randomPerson() {
+        return this.personService.getRandomPerson();
+}
+
+    @QueryMapping
+    public Optional<Person> person(@Argument InputPerson input) {
+        return this.personService.getPerson(input);
+    }
+
+    @QueryMapping
+    public List<Person> persons(@Argument InputPerson input) {
+        return this.personService.getPersons(input);
     }
 }
