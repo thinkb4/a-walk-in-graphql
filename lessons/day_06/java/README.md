@@ -1,12 +1,19 @@
 # [A walk in GraphQL](../../../README.md)
 
-## Day 2 exercise - Java
+## Day 6 exercise - Java
 
-Read the instructions on the [Day 2 exercise](../day_02.md#exercise) definition
+Read the instructions on the [Day 6 exercise](../day_06.md#exercise) definition
+
+
+HINTS:
+
+* You can split up your schema into more than one file to keep it organized.
+* The GraphQL Tools library works by processing GraphQL Schema files to build the correct structure and then wires special beans to this structure.
+* The Spring Boot GraphQL starter automatically finds these schema files, we just need to save these files with the extension `.graphqls` on the classpath (ex: inside `src/main/resources/graphql`).
 
 ### Requirements
 
-Java 1.8 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
+Java 17 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
 
 ### Keep in mind
 

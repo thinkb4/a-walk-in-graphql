@@ -1,12 +1,14 @@
 # [A walk in GraphQL](../../../README.md)
 
-## Day 2 exercise - Java
+## Day 3 exercise - Java
 
-Read the instructions on the [Day 2 exercise](../day_02.md#exercise) definition
+Read the instructions on the [Day 3 exercise](../day_03.md#exercise) definition
+
+HINT: Take a look at the commented out PersonService and SkillService methods!!
 
 ### Requirements
 
-Java 1.8 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
+Java 17 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
 
 ### Keep in mind
 
@@ -28,3 +30,5 @@ See [Testing GraphQL queries](../../../setup/java.md#testing-graphql-queries)
 ### Database
 
 See [Inspect the Database](../../../setup/java.md#inspect-the-database)
+
+

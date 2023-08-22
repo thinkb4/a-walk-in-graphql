@@ -1,12 +1,26 @@
 # [A walk in GraphQL](../../../README.md)
 
-## Day 2 exercise - Java
+## Day 7 exercise - Java
 
-Read the instructions on the [Day 2 exercise](../day_02.md#exercise) definition
+Read the instructions on the [Day 7 exercise](../day_07.md#exercise) definition
 
 ### Requirements
 
-Java 1.8 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
+Java 17 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
+
+
+
+HINTS: 
+
+* Exceptions (https://docs.spring.io/spring-graphql/docs/current/reference/html/#execution.exceptions)
+* Spring for GraphQL registers a DataFetcherExceptionHandler that provides default handling and enables the DataFetcherExceptionResolver contract.
+
+TODO Correct the patchs descriptions
+* Apply the following "hint" git patch to get an example of defending and informative error handling strategies: ".../a-walk-in-graphql/lessons/day_07/java/src/main/resources/Java_day_07_Error_Handling.patch".
+    * From command line: git apply src/main/resources/Java_day_07_Error_Handling.patch
+    * From IntelliJ IDEA:
+        * Open the "VCS" menu > "Apply Patch.."
+        * Select the ".../a-walk-in-graphql/lessons/day_07/java/src/main/resources/Java_day_07_Error_Handling.patch" file patch > OK
 
 ### Keep in mind
 

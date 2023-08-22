@@ -1,12 +1,21 @@
 # [A walk in GraphQL](../../../README.md)
 
-## Day 2 exercise - Java
+## Day 5 exercise - Java
 
-Read the instructions on the [Day 2 exercise](../day_02.md#exercise) definition
+Read the instructions on the [Day 5 exercise](../day_05.md#exercise) definition
+
+HINT:
+* Apply the following "hint" git patch: ".../a-walk-in-graphql/lessons/day_05/java/src/main/resources/Java_day_05_Interfaces_and_Unions_hint.patch".
+    * From command line: `git apply src/main/resources/Java_day_05_Interfaces_and_Unions_hint.patch`
+    * From IntelliJ IDEA:
+        * Open the "VCS" menu > "Apply Patch.."
+        * Select the ".../a-walk-in-graphql/lessons/day_05/java/src/main/resources/Java_day_05_Interfaces_and_Unions_hint.patch" file patch > OK    
+
+Now you need to complete the Mutation and Query resolvers with the required missing methods.
 
 ### Requirements
 
-Java 1.8 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
+Java 17 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
 
 ### Keep in mind
 
