@@ -1,3 +1,4 @@
+from typing import Any, Dict, List
 from ariadne import (
     QueryType,
     ObjectType,
@@ -7,6 +8,8 @@ from ariadne import (
     UnionType
 )
 from random import choice
+
+from graphql import GraphQLResolveInfo
 from models import Skill, Person
 from data import session
 from datetime import datetime
@@ -31,7 +34,7 @@ eye_color = EnumType(
 global_search = UnionType("GlobalSearch")
 
 
-def create_persons(info, input):
+def create_persons(info: GraphQLResolveInfo, input: Dict) -> Person:
     friends = []
     skills = []
     if 'friends' in input:
@@ -56,7 +59,7 @@ def create_persons(info, input):
 
 
 @person.type_resolver
-def resolve_person_interface(obj, *_):
+def resolve_person_interface(obj: Any, *_) -> str:
     if obj.grade:
         return "Engineer"
     if obj.targetGrade:
@@ -65,7 +68,7 @@ def resolve_person_interface(obj, *_):
 
 
 @global_search.type_resolver
-def resolve_global_search_type(obj, *_):
+def resolve_global_search_type(obj: Any, *_) -> str | None:
     if isinstance(obj, Skill):
         return "Skill"
     if isinstance(obj, Person):
@@ -79,39 +82,39 @@ def resolve_global_search_type(obj, *_):
 
 # Top level resolvers
 @query.field("randomSkill")
-def resolve_random_skill(_, info):
+def resolve_random_skill(_, info: GraphQLResolveInfo) -> Skill | None:
     records = [skill.id for skill in session.query(Skill.id)]
     return session.query(Skill).get(choice(records))
 
 
 @query.field("randomPerson")
-def resolve_random_person(_, info):
+def resolve_random_person(_, info: GraphQLResolveInfo) -> Person | None:
     records = [person.id for person in session.query(Person.id)]
     return session.query(Person).get(choice(records))
 
 
 @query.field("person")
-def resolve_person(_, info, input=None):
+def resolve_person(_, info: GraphQLResolveInfo, input: Dict | None=None) -> Person:
     return session.query(Person).filter_by(**input).first() if input else None
 
 
 @query.field("persons")
-def resolve_persons(_, info, input={}):
+def resolve_persons(_, info: GraphQLResolveInfo, input: Dict={}) -> List[Person]:
     return session.query(Person).filter_by(**input).all()
 
 
 @query.field("skill")
-def resolve_skill(_, info, input=None):
+def resolve_skill(_, info: GraphQLResolveInfo, input=None) -> Skill | None:
     return session.query(Skill).filter_by(**input).first() if input else None
 
 
 @query.field("skills")
-def resolve_skills(_, info, input={}):
+def resolve_skills(_, info: GraphQLResolveInfo, input: Dict={}) -> List[Skill]:
     return session.query(Skill).filter_by(**input).all()
 
 
 @query.field("search")
-def resolve_search(_, info, input):
+def resolve_search(_, info: GraphQLResolveInfo, input: Dict) -> List[Person | Skill]:
     persons = session.query(Person).filter(Person.name.like(f'%{input["name"]}%')).all()
     skills = session.query(Skill).filter(Skill.name.like(f'%{input["name"]}%')).all()
     return persons + skills
@@ -119,7 +122,7 @@ def resolve_search(_, info, input):
 
 # Mutations
 @mutation.field("createSkill")
-def resolve_create_skill(_, info, input):
+def resolve_create_skill(_, info: GraphQLResolveInfo, input: Dict) -> Skill:
     new_skill = Skill(**input)
     new_skill.id = str(uuid4())
     try:
@@ -131,46 +134,46 @@ def resolve_create_skill(_, info, input):
 
 
 @mutation.field("createPerson")
-def resolve_create_person(_, info, input):
+def resolve_create_person(_, info: GraphQLResolveInfo, input: Dict) -> Person:
     return create_persons(info, input)
 
 
 @mutation.field("createCandidate")
-def resolve_create_candidate(_, info, input):
+def resolve_create_candidate(_, info: GraphQLResolveInfo, input: Dict) -> Person:
     return create_persons(info, input)
 
 
 @mutation.field("createEngineer")
-def resolve_create_engineer(_, info, input):
+def resolve_create_engineer(_, info: GraphQLResolveInfo, input: Dict) -> Person:
     return create_persons(info, input)
 
 
 # Field level resolvers
 @skill.field("now")
-def resolve_now(_, info):
+def resolve_now(_, info: GraphQLResolveInfo) -> datetime:
     return datetime.now()
 
 
 @skill.field("parent")
-def resolve_parent(obj, info):
+def resolve_parent(obj: Any, info: GraphQLResolveInfo) -> Skill:
     return obj.parent_skill
 
 
 @person.field("fullName")
-def resolve_full_name(obj, info):
+def resolve_full_name(obj: Any, info: GraphQLResolveInfo) -> str:
     return f'{obj.name} {obj.surname}'
 
 
 @person.field("friends")
-def resolve_friends(obj, info, input={}):
+def resolve_friends(obj: Any, info: GraphQLResolveInfo, input={}) -> List[Person]:
     return obj.friends.filter_by(**input).all()
 
 
 @person.field("skills")
-def resolve_person_skills(obj, info, input={}):
+def resolve_person_skills(obj: Any, info: GraphQLResolveInfo, input={}) -> List[Skill]:
     return obj.skills.filter_by(**input).all()
 
 
 @person.field("favSkill")
-def resolve_fav_skill(obj, info):
+def resolve_fav_skill(obj: Any, info: GraphQLResolveInfo) -> Skill:
     return obj.person_favSkill
