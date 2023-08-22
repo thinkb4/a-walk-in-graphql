@@ -35,36 +35,4 @@ public class SkillService {
             return skills;
         }).orElse(this.skillRepository.findAll());
     }
-
-//// HINTS FOR DAY 03 !! - PLEASE UNCOMMENT THESE METHODS TO PROVIDE SUPPORT FOR INPUT TYPES
-//    public Optional<Skill> getSkill(InputSkill input) {
-//        return Optional.ofNullable(input).map((InputSkill v) -> findByInput(v)).orElse(null);
-//    }
-//
-//    public List<Skill> getSkills(InputSkill input) {
-//        return Optional.ofNullable(input).map(v -> filterByInput(v)).orElse(this.skillRepository.findAll());
-//    }
-//
-//    public Skill createSkill(InputSkillCreate input) {
-//        return Optional.ofNullable(input).map(v -> {
-//            Skill parent = (v.getParent() != null) ? getSkill(v.getParent()).orElse(null) : null;
-//            Skill newSkill = new Skill(v.getName(), parent);
-//            return skillRepository.save(newSkill);
-//        }).orElse(null);
-//    }
-//
-//    private Optional<Skill> findByInput(InputSkill input) {
-//        Skill filterBy = new Skill();
-//        if (input.getId() != null) filterBy.setId(input.getId());
-//        if (input.getName() != null) filterBy.setName(input.getName());
-//        // Considering that depending on the search criteria more than one result can be obtained, we need to findAll limit to 1.
-//        return this.skillRepository.findAll(Example.of(filterBy), PageRequest.of(0,1)).get().findFirst();
-//    }
-//
-//    private List<Skill> filterByInput(InputSkill input) {
-//        Skill filterBy = new Skill();
-//        if (input.getId() != null) filterBy.setId(input.getId());
-//        if (input.getName() != null) filterBy.setName(input.getName());
-//        return this.skillRepository.findAll(Example.of(filterBy));
-//    }
 }

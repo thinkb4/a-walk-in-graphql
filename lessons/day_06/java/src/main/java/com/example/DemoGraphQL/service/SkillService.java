@@ -9,7 +9,6 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -74,5 +73,4 @@ public class SkillService {
         if (input.getName() != null) filterBy.setName(input.getName());
         return this.skillRepository.findAll(Example.of(filterBy));
     }
-
 }

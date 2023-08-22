@@ -5,11 +5,9 @@ import com.example.DemoGraphQL.input.InputSkillCreate;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.repository.SkillRepository;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;

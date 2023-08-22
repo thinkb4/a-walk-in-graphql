@@ -45,11 +45,6 @@ public class SkillResolver {
         return LocalDateTime.now().toString();
     }
 
-    @MutationMapping
-    public Skill createSkill(@Argument final InputSkillCreate input) {
-        return this.skillService.createSkill(input);
-    }
-    
     @QueryMapping
     public Skill randomSkill() {
         return this.skillService.getRandomSkill();
@@ -63,5 +58,10 @@ public class SkillResolver {
     @QueryMapping
     public List<Skill> skills(@Argument final InputSkill input) {
         return this.skillService.getSkills(input);
+    }
+
+    @MutationMapping
+    public Skill createSkill(@Argument final InputSkillCreate input) {
+        return this.skillService.createSkill(input);
     }
 }

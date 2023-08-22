@@ -1,6 +1,5 @@
 package com.example.DemoGraphQL.service;
 
-import com.example.DemoGraphQL.errors.SkillNotFoundGraphQLError;
 import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.input.InputSkillCreate;
 import com.example.DemoGraphQL.model.Skill;
@@ -10,7 +9,6 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -74,21 +72,5 @@ public class SkillService {
         if (input.getId() != null) filterBy.setId(input.getId());
         if (input.getName() != null) filterBy.setName(input.getName());
         return this.skillRepository.findAll(Example.of(filterBy));
-    }
-
-    public Skill createSkillDefensiveErrorHandling(InputSkillCreate input) {
-        return Optional.ofNullable(input).map(v -> {
-            Skill parent = null;
-            if (v.getParent() != null) {
-                parent = getSkill(v.getParent())
-                        .orElseThrow(() -> new SkillNotFoundGraphQLError("Skill with ID " + v.getParent() + " could not be found in the database", "parent"));
-            }
-            Skill newSkill = new Skill(v.getName(), parent);
-            return skillRepository.save(newSkill);
-        }).orElse(null);
-    }
-     
-    public Skill saveSkill(String name, Skill parent) {
-        return this.skillRepository.save(new Skill(name, parent));
     }
 }

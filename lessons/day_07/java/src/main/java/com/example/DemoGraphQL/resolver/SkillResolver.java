@@ -1,6 +1,5 @@
 package com.example.DemoGraphQL.resolver;
 
-import com.example.DemoGraphQL.errors.SkillNotFoundGraphQLError;
 import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.input.InputSkillCreate;
 import com.example.DemoGraphQL.model.Skill;
@@ -65,26 +64,5 @@ public class SkillResolver {
     @MutationMapping
     public Skill createSkill(@Argument final InputSkillCreate input) {
         return this.skillService.createSkill(input);
-    }
-    
-    
-    @MutationMapping
-    public Skill createSkillDefensiveErrorHandling(@Argument final InputSkillCreate input) {
-       return this.skillService.createSkillDefensiveErrorHandling(input);
-   }
-
-    @MutationMapping
-    public DataFetcherResult<Skill> createSkillInformativeErrorHandling(final InputSkillCreate input) {
-        return Optional.ofNullable(input).map(v -> {
-            DataFetcherResult.Builder<Skill> builder = DataFetcherResult.<Skill>newResult();
-            Skill parent = null;
-            if (v.getParent() != null) {
-                parent = this.skillService.getSkill(v.getParent()).orElse(null);
-                if (parent == null)
-                    builder = builder.error(new SkillNotFoundGraphQLError("Skill with ID " + v.getParent() + " could not be found in the database", "parent"));
-            }
-            builder = builder.data(this.skillService.saveSkill(v.getName(), parent));
-            return builder.build();
-        }).orElse(null);
     }
 }
