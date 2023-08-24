@@ -1,0 +1,202 @@
+diff --git a/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/errors/GlobalExceptionHandler.java b/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/errors/GlobalExceptionHandler.java
+new file mode 100644
+index 0000000..1f48e18
+--- /dev/null
++++ b/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/errors/GlobalExceptionHandler.java
+@@ -0,0 +1,23 @@
++package com.example.DemoGraphQL.errors;
++
++import graphql.GraphQLError;
++import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler;
++import org.springframework.graphql.execution.ErrorType;
++import org.springframework.web.bind.annotation.ControllerAdvice;
++
++/**
++ *
++ * @author Santiago Ciappesoni
++ */
++@ControllerAdvice
++public class GlobalExceptionHandler {
++
++    @GraphQlExceptionHandler
++    public GraphQLError handleExceptionsAcrossControllers(RuntimeException ex) {
++        return GraphQLError.newError().errorType(
++                ex instanceof SkillNotFoundGraphQLError
++                        ? ErrorType.NOT_FOUND
++                        : ErrorType.INTERNAL_ERROR
++        ).message(ex.getMessage()).build();
++    }
++}
+diff --git a/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/errors/SkillNotFoundGraphQLError.java b/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/errors/SkillNotFoundGraphQLError.java
+new file mode 100644
+index 0000000..f2e6d09
+--- /dev/null
++++ b/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/errors/SkillNotFoundGraphQLError.java
+@@ -0,0 +1,44 @@
++package com.example.DemoGraphQL.errors;
++
++import graphql.ErrorClassification;
++import graphql.ErrorType;
++import graphql.GraphQLError;
++import graphql.language.SourceLocation;
++import java.util.Collections;
++import java.util.List;
++import java.util.Map;
++
++public class SkillNotFoundGraphQLError extends RuntimeException implements GraphQLError {
++
++    private String invalidField;
++
++    public SkillNotFoundGraphQLError(String message, String invalidField) {
++        super(message);
++        this.invalidField = invalidField;
++    }
++
++    @Override
++    public String getMessage() {
++        return super.getMessage();
++    }
++
++    @Override
++    public List<Object> getPath() {
++        return null;
++    }
++
++    @Override
++    public List<SourceLocation> getLocations() {
++        return null;
++    }
++
++    @Override
++    public ErrorClassification getErrorType() {
++        return ErrorType.ValidationError;
++    }
++
++    @Override
++    public Map<String, Object> getExtensions() {
++        return Collections.singletonMap("invalidField", invalidField);
++    }
++}
+\ No newline at end of file
+diff --git a/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/resolver/SkillResolver.java b/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/resolver/SkillResolver.java
+index ffb7813..3b9efa7 100644
+--- a/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/resolver/SkillResolver.java
++++ b/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/resolver/SkillResolver.java
+@@ -1,5 +1,6 @@
+ package com.example.DemoGraphQL.resolver;
+ 
++import com.example.DemoGraphQL.errors.SkillNotFoundGraphQLError;
+ import com.example.DemoGraphQL.input.InputSkill;
+ import com.example.DemoGraphQL.input.InputSkillCreate;
+ import com.example.DemoGraphQL.model.Skill;
+@@ -33,8 +34,9 @@
+     @SchemaMapping(field = "parent")
+     public Optional<Skill> getParent(Skill skill) {
+         Optional<Skill> parent = null;
+-        if (skill.getParent() != null)
++        if (skill.getParent() != null) {
+             parent = skillService.getSkill(skill.getParent().getId());
++        }
+         return parent;
+     }
+ 
+@@ -49,8 +51,8 @@
+     @QueryMapping
+     public Skill randomSkill() {
+         return this.skillService.getRandomSkill();
+-}
+-    
++    }
++
+     @QueryMapping
+     public Optional<Skill> skill(@Argument final InputSkill input) {
+         return this.skillService.getSkill(input);
+@@ -60,9 +62,30 @@
+     public List<Skill> skills(@Argument final InputSkill input) {
+         return this.skillService.getSkills(input);
+     }
+-    
++
+     @MutationMapping
+     public Skill createSkill(@Argument final InputSkillCreate input) {
+         return this.skillService.createSkill(input);
+     }
++
++    @MutationMapping
++    public Skill createSkillDefensiveErrorHandling(@Argument final InputSkillCreate input) {
++        return this.skillService.createSkillDefensiveErrorHandling(input);
++    }
++
++    @MutationMapping
++    public DataFetcherResult<Skill> createSkillInformativeErrorHandling(@Argument final InputSkillCreate input) {
++        return Optional.ofNullable(input).map(v -> {
++            DataFetcherResult.Builder<Skill> builder = DataFetcherResult.<Skill>newResult();
++            Skill parent = null;
++            if (v.getParent() != null) {
++                parent = this.skillService.getSkill(v.getParent()).orElse(null);
++                if (parent == null) {
++                    builder = builder.error(new SkillNotFoundGraphQLError("Skill with ID " + v.getParent() + " could not be found in the database", "parent"));
++                }
++            }
++            builder = builder.data(this.skillService.saveSkill(v.getName(), parent));
++            return builder.build();
++        }).orElse(null);
++    }
+ }
+diff --git a/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/service/SkillService.java b/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/service/SkillService.java
+index 3239bd6..8cc7f30 100644
+--- a/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/service/SkillService.java
++++ b/lessons/day_07/java/src/main/java/com/example/DemoGraphQL/service/SkillService.java
+@@ -1,5 +1,6 @@
+ package com.example.DemoGraphQL.service;
+ 
++import com.example.DemoGraphQL.errors.SkillNotFoundGraphQLError;
+ import com.example.DemoGraphQL.input.InputSkill;
+ import com.example.DemoGraphQL.input.InputSkillCreate;
+ import com.example.DemoGraphQL.model.Skill;
+@@ -61,16 +62,40 @@
+ 
+     private Optional<Skill> findByInput(InputSkill input) {
+         Skill filterBy = new Skill();
+-        if (input.getId() != null) filterBy.setId(input.getId());
+-        if (input.getName() != null) filterBy.setName(input.getName());
++        if (input.getId() != null) {
++            filterBy.setId(input.getId());
++        }
++        if (input.getName() != null) {
++            filterBy.setName(input.getName());
++        }
+         // Considering that depending on the search criteria more than one result can be obtained, we need to findAll limit to 1.
+-        return this.skillRepository.findAll(Example.of(filterBy), PageRequest.of(0,1)).get().findFirst();
++        return this.skillRepository.findAll(Example.of(filterBy), PageRequest.of(0, 1)).get().findFirst();
+     }
+ 
+     private List<Skill> filterByInput(InputSkill input) {
+         Skill filterBy = new Skill();
+-        if (input.getId() != null) filterBy.setId(input.getId());
+-        if (input.getName() != null) filterBy.setName(input.getName());
++        if (input.getId() != null) {
++            filterBy.setId(input.getId());
++        }
++        if (input.getName() != null) {
++            filterBy.setName(input.getName());
++        }
+         return this.skillRepository.findAll(Example.of(filterBy));
+     }
++
++    public Skill createSkillDefensiveErrorHandling(InputSkillCreate input) {
++        return Optional.ofNullable(input).map(v -> {
++            Skill parent = null;
++            if (v.getParent() != null) {
++                parent = getSkill(v.getParent())
++                        .orElseThrow(() -> new SkillNotFoundGraphQLError("Skill with ID " + v.getParent() + " could not be found in the database", "parent"));
++            }
++            Skill newSkill = new Skill(v.getName(), parent);
++            return skillRepository.save(newSkill);
++        }).orElse(null);
++    }
++
++    public Skill saveSkill(String name, Skill parent) {
++        return this.skillRepository.save(new Skill(name, parent));
++    }
+ }
