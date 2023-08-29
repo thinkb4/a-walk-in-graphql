@@ -24,7 +24,7 @@ public class SkillResolver {
     /**
      * This is a resolver for "parent" entity field
      */
-    @SchemaMapping
+    @SchemaMapping(field = "parent")
     public Optional<Skill> getParent(Skill skill) {
         return (skill.getParent() != null) ? this.skillService.getSkill(skill.getParent().getId()) : null;
     }
@@ -32,7 +32,7 @@ public class SkillResolver {
     /**
      * This is just a sample resolver for a virtual field
      */
-    @SchemaMapping
+    @SchemaMapping(field = "now")
     public String getNow(Skill skill) {
         return LocalDateTime.now().toString();
     }

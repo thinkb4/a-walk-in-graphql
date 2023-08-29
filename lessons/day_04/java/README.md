@@ -4,11 +4,11 @@
 
 Read the instructions on the [Day 4 exercise](../day_04.md#exercise) definition
 
-HINT: Mutation objects are root GraphQL objects. They don’t have any associated "data" class. In such cases, the "resolver" class have to implement the `GraphQLMutationResolver` interface.
+HINT: Mutation objects are root GraphQL objects. They don’t have any associated "data" class. In such cases, the "resolver" class should be an annotated Spring controller.
 
 ### Requirements
 
-Java 1.8 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
+Java 17 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
 
 ### Keep in mind
 

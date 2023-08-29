@@ -32,7 +32,7 @@ public class PersonResolver {
     }
 
     @SchemaMapping
-    public String fullName(Person person) {
+    public String fullName(final Person person) {
         return person.getName() + " " + person.getSurname();
     }
 }

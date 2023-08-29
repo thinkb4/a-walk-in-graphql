@@ -1,7 +1,7 @@
 
 """
 This is a description notation
-@see [GraphQL Spec (June 2018)](https://spec.graphql.org/June2018/#sec-Descriptions)
+@see [GraphQL Spec (October 2021)](https://spec.graphql.org/October2021/#sec-Descriptions)
 """
 type Skill {
     # This is only a comment

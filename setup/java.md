@@ -39,7 +39,7 @@ Spring Boot will automatically pick these up and set up the appropriate handlers
 
 * The `GraphQL Tools` library works by processing GraphQL Schema files to build the correct structure and then wires special beans to this structure.
 * The `Spring Boot GraphQL starter` automatically finds these schema files, we just need to save these files with the extension ".graphqls" on the classpath.
-* Query and Mutation objects are root GraphQL objects. They don’t have any associated "data" class. In such cases, the "resolver" classes can be @Component or @Controller spring annotated, and @QueryMapping (for query) 
+* Query and Mutation objects are root GraphQL objects. They don’t have any associated "data" class. In such cases, the "resolver" classes should @Controller spring annotated, and @QueryMapping (for query) 
   and @MutationMapping (for mutation), respectively.
 * `Beans Representing Types:` Every complex type in the GraphQL server is represented by a Java bean with corresponding spring annotation. Fields inside the Java bean will mapped onto fields with corresponging spring annotation, in the GraphQL response based on the name of the field.
 * Sometimes, the value of a field is non-trivial to load. This might involve database lookups, complex calculations, or anything else. GraphQL Tools has a concept of a "Field Resolver" that is used for this purpose. 
