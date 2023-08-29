@@ -4,7 +4,6 @@ import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.input.InputSkillCreate;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.SkillService;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;

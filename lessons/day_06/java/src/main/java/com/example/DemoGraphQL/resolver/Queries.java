@@ -2,9 +2,7 @@ package com.example.DemoGraphQL.resolver;
 
 import com.example.DemoGraphQL.input.InputGlobalSearch;
 import com.example.DemoGraphQL.input.InputPerson;
-import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.model.Person;
-import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.PersonService;
 import com.example.DemoGraphQL.service.SkillService;
 
@@ -47,8 +45,8 @@ public class Queries {
     @QueryMapping
     public List<Object> search(@Argument final InputGlobalSearch input) {
         List<Object> searchList = new ArrayList<>();
-        searchList.addAll(this.personService.searchByName(input.getName()));
-        searchList.addAll(this.skillService.searchByName(input.getName()));
+        searchList.addAll(this.personService.searchByName(input.name()));
+        searchList.addAll(this.skillService.searchByName(input.name()));
         return searchList;
     }
 }

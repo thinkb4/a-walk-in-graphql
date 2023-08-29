@@ -4,8 +4,6 @@ import com.example.DemoGraphQL.input.InputSkill;
 import com.example.DemoGraphQL.input.InputSkillCreate;
 import com.example.DemoGraphQL.model.Skill;
 import com.example.DemoGraphQL.service.SkillService;
-import graphql.execution.DataFetcherResult;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
