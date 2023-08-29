@@ -8,30 +8,28 @@ Read the instructions on the [Day 7 exercise](../day_07.md#exercise) definition
 
 Java 17 is required. Please look at [here](../../../setup/java.md#requirements) if you do not have it installed on your local environment. 
 
-
-
 HINTS: 
 
 * Exceptions (https://docs.spring.io/spring-graphql/docs/current/reference/html/#execution.exceptions)
 * Spring for GraphQL registers a DataFetcherExceptionHandler that provides default handling and enables the DataFetcherExceptionResolver contract.
 * Apply the following "hint" git patch to get an example of defending and informative error handling strategies. Implemented 
   three ways to treat the exceptions. (The patches to apply to the source code are mutually exclusive. They are each one just an example how can be treat the exceptions.)
-     a.- Using Controller advice and graphql spring-boot annotations. 
+  * a.- Using Controller advice and graphql spring-boot annotations. 
          Catch the exception globally across controllers.
-     b.- Usgin a CustomExceptionResolver extending DataFetcherExceptionResolverAdapter provided by graphql spring boot implementations. 
-         Catch the exceptions from a java component programatically globally in the application context.
-     c.- Using spring-boot annotations for catch specific entity methods exceptions into a controller.
+  * b.- Using a CustomExceptionResolver extending DataFetcherExceptionResolverAdapter provided by graphql spring boot implementations. 
+         Catch the exceptions from a java component programmatically globally in the application context.
+  * c.- Using spring-boot annotations for catch specific entity methods exceptions into a controller.
          Catch the exceptions for a user defined only specific controller.
 * From command line: 
-                    a.- git apply  src/main/resources/Java_day_07_Error_Handling_Using_ControllerAdvice_GraphQlExceptionHandler_across_controllers.patch
-                    b.- git apply  src/main/resources/Java_day_07_Error_Handling_Using_CustomExceptionResolver.patch
-                    c.- git apply  src/main/resources/Java_day_07_Error_Handling_Using_GraphQlExceptionHandler_for_specific_controller.patch
+  * a.- git apply  src/main/resources/Java_day_07_Error_Handling_Using_ControllerAdvice_GraphQlExceptionHandler_across_controllers.patch
+  * b.- git apply  src/main/resources/Java_day_07_Error_Handling_Using_CustomExceptionResolver.patch
+  * c.- git apply  src/main/resources/Java_day_07_Error_Handling_Using_GraphQlExceptionHandler_for_specific_controller.patch
 * From IntelliJ IDEA:
      * Open the "VCS" menu > "Apply Patch.."
      * Select the:
-                    a.- ".../a-walk-in-graphql/lessons/day_07/java/src/main/resources/Java_day_07_Error_Handling_Using_ControllerAdvice_GraphQlExceptionHandler_across_controllers.patch" file patch > OK
-                    b.- ".../a-walk-in-graphql/lessons/day_07/java/src/main/resources/Java_day_07_Error_Handling_Using_CustomExceptionResolver.patch" file patch > OK
-                    c.- ".../a-walk-in-graphql/lessons/day_07/java/src/main/resources/Java_day_07_Error_Handling_Using_GraphQlExceptionHandler_for_specific_controller.patch" file patch > OK
+       * a.- ".../a-walk-in-graphql/lessons/day_07/java/src/main/resources/Java_day_07_Error_Handling_Using_ControllerAdvice_GraphQlExceptionHandler_across_controllers.patch" file patch > OK
+       * b.- ".../a-walk-in-graphql/lessons/day_07/java/src/main/resources/Java_day_07_Error_Handling_Using_CustomExceptionResolver.patch" file patch > OK
+       * c.- ".../a-walk-in-graphql/lessons/day_07/java/src/main/resources/Java_day_07_Error_Handling_Using_GraphQlExceptionHandler_for_specific_controller.patch" file patch > OK
 
 ### Keep in mind
 
